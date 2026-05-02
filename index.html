@@ -267,6 +267,25 @@ function stopScroll() { if(scrollTmr){ clearInterval(scrollTmr); scrollTmr=null;
 
 function restartIfOn() { if(scrollTmr){ stopScroll(); startScroll(); } }
 
+// Double tap to fullscreen
+var lastTap = 0;
+document.getElementById('imgScroll').addEventListener('touchend', function(e) {
+  var now = Date.now();
+  if (now - lastTap < 300) {
+    var el = document.getElementById('viewScreen');
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      if (el.requestFullscreen) el.requestFullscreen();
+      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    } else {
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    }
+    lastTap = 0;
+  } else {
+    lastTap = now;
+  }
+});
+
 async function acquireWake() {
   var pill = document.getElementById('wakePill');
   try {
@@ -278,7 +297,6 @@ async function acquireWake() {
   } catch(e){ pill.style.display='none'; }
 }
 
-  
 // init
 document.querySelectorAll('.screen').forEach(function(s){ s.style.display='none'; });
 load();
