@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🎸 คอร์ดของฉัน</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; background: #f5f4f0; color: #1a1a1a; min-height: 100vh; }
+
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: block; }
+
+/* HOME */
+#home { background: #f5f4f0; }
+.home-top { background: #1a1a1a; color: #fff; padding: 40px 20px 28px; }
+.home-top h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+.home-top p { font-size: 13px; color: #888; margin-top: 4px; }
+
+.home-body { padding: 16px; }
+
+.add-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 16px; background: #fff; border: 2px dashed #ccc; border-radius: 16px; font-size: 16px; color: #555; cursor: pointer; margin-bottom: 20px; font-family: inherit; transition: border-color 0.15s; }
+.add-btn:active { background: #f0f0f0; }
+
+.section-label { font-size: 12px; font-weight: 600; color: #999; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+.song-list { display: flex; flex-direction: column; gap: 8px; }
+.song-card { display: flex; align-items: center; gap: 14px; background: #fff; border-radius: 14px; padding: 14px 16px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.song-card:active { opacity: 0.7; }
+.song-icon { width: 46px; height: 46px; border-radius: 10px; background: #1a1a1a; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.song-info { flex: 1; min-width: 0; }
+.song-name { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.song-artist { font-size: 13px; color: #888; margin-top: 2px; }
+.song-del { background: none; border: none; color: #ccc; font-size: 20px; cursor: pointer; padding: 4px 0 4px 10px; flex-shrink: 0; }
+.song-del:active { color: #e74c3c; }
+
+.empty { text-align: center; padding: 50px 20px; color: #bbb; font-size: 15px; line-height: 2; }
+
+/* ADD */
+#addScreen { background: #f5f4f0; }
+.nav-bar { display: flex; align-items: center; gap: 12px; padding: 50px 16px 16px; background: #fff; border-bottom: 1px solid #eee; }
+.nav-back { background: none; border: none; font-size: 28px; cursor: pointer; color: #555; line-height: 1; padding: 0; font-family: inherit; }
+.nav-title { font-size: 18px; font-weight: 600; }
+
+.form-body { padding: 20px 16px; }
+.f-label { font-size: 13px; color: #888; margin-bottom: 6px; font-weight: 500; display: block; }
+.f-input { width: 100%; padding: 13px 14px; border: 1.5px solid #e0e0e0; border-radius: 12px; font-size: 16px; background: #fff; font-family: inherit; color: #1a1a1a; margin-bottom: 16px; }
+.f-input:focus { outline: none; border-color: #1a1a1a; }
+
+.upload-zone { width: 100%; min-height: 160px; border: 2px dashed #d0d0d0; border-radius: 16px; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; position: relative; overflow: hidden; margin-bottom: 8px; }
+.upload-zone input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; font-size: 0; }
+.uz-ico { font-size: 36px; }
+.uz-txt { font-size: 15px; color: #666; font-weight: 500; }
+.uz-sub { font-size: 12px; color: #aaa; }
+
+#previewWrap { display: none; margin-bottom: 16px; }
+#previewWrap img { width: 100%; border-radius: 12px; display: block; }
+.re-upload { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 10px; background: none; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; color: #666; cursor: pointer; margin-top: 8px; font-family: inherit; }
+
+.save-btn { width: 100%; padding: 16px; background: #1a1a1a; color: #fff; border: none; border-radius: 14px; font-size: 17px; font-weight: 600; cursor: pointer; font-family: inherit; margin-top: 4px; }
+.save-btn:disabled { background: #ccc; cursor: not-allowed; }
+.save-btn:active:not(:disabled) { opacity: 0.8; }
+
+/* VIEW */
+#viewScreen { background: #000; display: flex; flex-direction: column; height: 100vh; }
+.view-nav { background: #1a1a1a; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 48px 14px 12px; flex-shrink: 0; }
+.vn-back { background: none; border: none; color: #fff; font-size: 26px; cursor: pointer; padding: 0; line-height: 1; }
+.vn-title { font-size: 15px; font-weight: 600; color: #fff; flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0 10px; }
+.scroll-btn { background: #fff; color: #1a1a1a; border: none; border-radius: 20px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; }
+.scroll-btn.on { background: #f39c12; color: #fff; }
+
+.toolbar { background: #111; display: flex; align-items: center; gap: 6px; padding: 8px 14px; flex-shrink: 0; }
+.z-btn { width: 34px; height: 34px; background: #333; border: none; border-radius: 8px; font-size: 20px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.z-btn:active { background: #555; }
+.z-pct { font-size: 13px; color: #aaa; min-width: 44px; text-align: center; }
+.wake-pill { margin-left: auto; background: #1e4d2b; color: #4ade80; border-radius: 20px; padding: 4px 10px; font-size: 11px; display: none; }
+
+.img-scroll { flex: 1; overflow-y: auto; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.img-scroll img { display: block; min-height: 100%; }
+
+.speed-bar { background: #111; display: flex; align-items: center; gap: 10px; padding: 10px 16px 24px; flex-shrink: 0; }
+.speed-bar label { font-size: 13px; color: #888; white-space: nowrap; }
+.speed-bar input[type=range] { flex: 1; accent-color: #f39c12; }
+.speed-bar span { font-size: 13px; color: #aaa; min-width: 18px; }
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+  <div class="home-top">
+    <h1>🎸 คอร์ดของฉัน</h1>
+    <p>เก็บภาพเนื้อเพลง + คอร์ดส่วนตัว</p>
+  </div>
+  <div class="home-body">
+    <button class="add-btn" onclick="goAdd()">＋ เพิ่มเพลงใหม่</button>
+    <div class="section-label">เพลงของฉัน</div>
+    <div class="song-list" id="songList"></div>
+    <div class="empty" id="emptyState">ยังไม่มีเพลง<br>กด "เพิ่มเพลงใหม่" ด้านบน 🎵</div>
+  </div>
+</div>
+
+<!-- ADD -->
+<div id="addScreen" class="screen">
+  <div class="nav-bar">
+    <button class="nav-back" onclick="goHome()">‹</button>
+    <span class="nav-title">เพิ่มเพลงใหม่</span>
+  </div>
+  <div class="form-body">
+    <label class="f-label">ชื่อเพลง</label>
+    <input class="f-input" type="text" id="songName" placeholder="เช่น แสงสุดท้าย" />
+    <label class="f-label">ศิลปิน (ไม่บังคับ)</label>
+    <input class="f-input" type="text" id="artistName" placeholder="เช่น Potato" />
+    <label class="f-label">ภาพเนื้อเพลง + คอร์ด</label>
+    <div class="upload-zone" id="uploadZone">
+      <input type="file" accept="image/*" id="fileInput" onchange="handleFile(this)" />
+      <span class="uz-ico">📷</span>
+      <span class="uz-txt">แตะเพื่อเลือกภาพ</span>
+      <span class="uz-sub">จากกล้องหรือคลังภาพ</span>
+    </div>
+    <div id="previewWrap">
+      <img id="previewImg" />
+      <button class="re-upload" onclick="reupload()">🔄 เปลี่ยนภาพ</button>
+    </div>
+    <button class="save-btn" id="saveBtn" onclick="saveSong()" disabled>บันทึกเพลง</button>
+  </div>
+</div>
+
+<!-- VIEW -->
+<div id="viewScreen" class="screen">
+  <div class="view-nav">
+    <button class="vn-back" onclick="stopScroll(); goHome()">‹</button>
+    <span class="vn-title" id="vTitle"></span>
+    <button class="scroll-btn" id="scrollBtn" onclick="toggleScroll()">▶ เลื่อน</button>
+  </div>
+  <div class="toolbar">
+    <button class="z-btn" onclick="zoom(-10)">−</button>
+    <span class="z-pct" id="zPct">100%</span>
+    <button class="z-btn" onclick="zoom(10)">+</button>
+    <span style="font-size:12px;color:#666;margin-left:2px;">ซูม</span>
+    <span class="wake-pill" id="wakePill">🔆 ไม่ดับ</span>
+  </div>
+  <div class="img-scroll" id="imgScroll">
+    <img id="viewImg" />
+  </div>
+  <div class="speed-bar">
+    <label>ความเร็ว</label>
+    <input type="range" min="1" max="10" step="1" value="3" id="speedSlider" oninput="document.getElementById('speedVal').textContent=this.value; restartIfOn()" />
+    <span id="speedVal">3</span>
+  </div>
+</div>
+
+<script>
+var songs = [], pending = null, scrollTmr = null, zoomLvl = 100, wakeLock = null;
+
+function load() {
+  try { var d = localStorage.getItem('chords_app'); if(d) songs = JSON.parse(d); } catch(e){}
+  render();
+}
+
+function persist() { try { localStorage.setItem('chords_app', JSON.stringify(songs)); } catch(e){} }
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); s.style.display='none'; });
+  var el = document.getElementById(id);
+  el.style.display = id === 'viewScreen' ? 'flex' : 'block';
+  el.classList.add('active');
+}
+
+function render() {
+  var list = document.getElementById('songList');
+  var empty = document.getElementById('emptyState');
+  list.innerHTML = '';
+  empty.style.display = songs.length ? 'none' : 'block';
+  songs.forEach(function(s, i) {
+    var c = document.createElement('div');
+    c.className = 'song-card';
+    c.innerHTML = '<div class="song-icon">🎵</div><div class="song-info"><div class="song-name">'+s.name+'</div><div class="song-artist">'+(s.artist||'ไม่ระบุศิลปิน')+'</div></div><button class="song-del" onclick="event.stopPropagation();delSong('+i+')">✕</button>';
+    c.addEventListener('click', function(){ openSong(i); });
+    list.appendChild(c);
+  });
+}
+
+function goHome() { show('home'); }
+
+function goAdd() {
+  document.getElementById('songName').value = '';
+  document.getElementById('artistName').value = '';
+  document.getElementById('previewWrap').style.display = 'none';
+  document.getElementById('uploadZone').style.display = 'flex';
+  document.getElementById('saveBtn').disabled = true;
+  pending = null;
+  show('addScreen');
+}
+
+function handleFile(inp) {
+  var f = inp.files[0]; if(!f) return;
+  var r = new FileReader();
+  r.onload = function(e) {
+    pending = e.target.result;
+    document.getElementById('previewImg').src = pending;
+    document.getElementById('previewWrap').style.display = 'block';
+    document.getElementById('uploadZone').style.display = 'none';
+    document.getElementById('saveBtn').disabled = false;
+  };
+  r.readAsDataURL(f);
+}
+
+function reupload() {
+  document.getElementById('previewWrap').style.display = 'none';
+  document.getElementById('uploadZone').style.display = 'flex';
+  document.getElementById('fileInput').value = '';
+  document.getElementById('saveBtn').disabled = true;
+  pending = null;
+}
+
+function saveSong() {
+  var name = document.getElementById('songName').value.trim() || 'ไม่มีชื่อ';
+  var artist = document.getElementById('artistName').value.trim();
+  songs.push({ name: name, artist: artist, img: pending });
+  persist(); render(); goHome();
+}
+
+function delSong(i) {
+  if(confirm('ลบ "'+songs[i].name+'" ?')) { songs.splice(i,1); persist(); render(); }
+}
+
+function openSong(i) {
+  var s = songs[i];
+  document.getElementById('vTitle').textContent = s.name;
+  document.getElementById('viewImg').src = s.img;
+  zoomLvl = 100;
+  document.getElementById('zPct').textContent = '100%';
+  document.getElementById('viewImg').style.width = '100%';
+  document.getElementById('imgScroll').scrollTop = 0;
+  stopScroll();
+  document.getElementById('scrollBtn').textContent = '▶ เลื่อน';
+  document.getElementById('scrollBtn').classList.remove('on');
+  show('viewScreen');
+  acquireWake();
+}
+
+function zoom(d) {
+  zoomLvl = Math.max(50, Math.min(400, zoomLvl + d));
+  document.getElementById('zPct').textContent = zoomLvl + '%';
+  document.getElementById('viewImg').style.width = zoomLvl + '%';
+}
+
+function toggleScroll() {
+  if(scrollTmr) { stopScroll(); document.getElementById('scrollBtn').textContent='▶ เลื่อน'; document.getElementById('scrollBtn').classList.remove('on'); }
+  else { startScroll(); document.getElementById('scrollBtn').textContent='⏸ หยุด'; document.getElementById('scrollBtn').classList.add('on'); }
+}
+
+function startScroll() {
+  var spd = parseInt(document.getElementById('speedSlider').value);
+  var body = document.getElementById('imgScroll');
+  scrollTmr = setInterval(function() {
+    body.scrollTop += spd * 0.4;
+    if(body.scrollTop + body.clientHeight >= body.scrollHeight - 4) {
+      stopScroll();
+      document.getElementById('scrollBtn').textContent='▶ เลื่อน';
+      document.getElementById('scrollBtn').classList.remove('on');
+    }
+  }, 30);
+}
+
+function stopScroll() { if(scrollTmr){ clearInterval(scrollTmr); scrollTmr=null; } }
+
+function restartIfOn() { if(scrollTmr){ stopScroll(); startScroll(); } }
+
+async function acquireWake() {
+  var pill = document.getElementById('wakePill');
+  try {
+    if('wakeLock' in navigator) {
+      wakeLock = await navigator.wakeLock.request('screen');
+      pill.style.display = 'inline-block';
+      wakeLock.addEventListener('release', function(){ pill.style.display='none'; });
+    }
+  } catch(e){ pill.style.display='none'; }
+}
+
+// init
+document.querySelectorAll('.screen').forEach(function(s){ s.style.display='none'; });
+load();
+show('home');
+</script>
+</body>
+</html>
