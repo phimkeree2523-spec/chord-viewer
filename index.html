@@ -1238,6 +1238,7 @@ function lrTickBeat(){
     });
   }
 
+  
   LR.currentBeat=(LR.currentBeat+1)%LR.beatsPerBar;
   LR.beatTimer=setTimeout(lrTickBeat, beatSec*1000);
 }
