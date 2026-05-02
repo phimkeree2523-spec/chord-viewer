@@ -202,71 +202,89 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
 .pl-nav-btn { background:#333; border:none; color:#fff; border-radius:20px; padding:7px 12px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap; }
 .pl-nav-btn:active { background:#555; }
 
-/* ── LOOP RECORDER ── */
-#loopScreen { background:#0d0d0d; min-height:100vh; display:none; flex-direction:column; }
+/* ══════════════════════════════════════════
+   LOOP PEDAL
+══════════════════════════════════════════ */
+#loopScreen { background:#0a0a0a; min-height:100vh; display:none; flex-direction:column; }
 #loopScreen.active { display:flex; }
-.lr-header { background:#111; padding:48px 16px 14px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
-.lr-title { font-size:18px; font-weight:700; color:#fff; }
-.lr-bpm-wrap { display:flex; align-items:center; gap:8px; }
-.lr-bpm-label { font-size:12px; color:#666; }
-.lr-bpm-val { font-size:18px; font-weight:700; color:#f39c12; min-width:36px; text-align:center; }
-.lr-bpm-btn { background:#222; border:none; color:#aaa; font-size:18px; width:30px; height:30px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-.lr-transport { background:#111; display:flex; align-items:center; justify-content:center; gap:14px; padding:12px 16px; flex-shrink:0; border-bottom:1px solid #1e1e1e; }
-.lr-play-btn { width:56px; height:56px; border-radius:50%; border:none; font-size:24px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.lr-play-btn.stopped { background:#f39c12; color:#fff; }
-.lr-play-btn.playing { background:#27ae60; color:#fff; }
-.lr-metronome-btn { background:#1e1e1e; border:none; color:#888; border-radius:20px; padding:8px 14px; font-size:13px; cursor:pointer; font-family:inherit; }
-.lr-metronome-btn.on { background:#1a3a5c; color:#7ec8ff; }
-.lr-clear-all { background:#1e1e1e; border:none; color:#e74c3c; border-radius:20px; padding:8px 14px; font-size:13px; cursor:pointer; font-family:inherit; }
-.lr-beat-row { display:flex; justify-content:center; gap:8px; padding:8px 16px; flex-shrink:0; }
-.lr-beat-dot { width:10px; height:10px; border-radius:50%; background:#222; transition:background .05s; }
-.lr-beat-dot.active { background:#f39c12; }
-.lr-tracks { flex:1; overflow-y:auto; padding:12px 14px; }
-.lr-track { background:#181818; border-radius:14px; margin-bottom:10px; overflow:hidden; border:1.5px solid #222; }
-.lr-track.recording { border-color:#e74c3c; box-shadow:0 0 0 2px rgba(231,76,60,.3); }
-.lr-track.has-audio { border-color:#2a3a2a; }
-.lr-track-header { display:flex; align-items:center; gap:10px; padding:10px 14px; }
-.lr-track-num { width:28px; height:28px; border-radius:50%; background:#222; color:#666; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.lr-track-num.active { background:#f39c12; color:#fff; }
-.lr-track-name { flex:1; font-size:14px; font-weight:600; color:#ccc; }
-.lr-track-status { font-size:11px; color:#555; }
-.lr-vol-row { display:flex; align-items:center; gap:8px; padding:0 14px 10px; }
-.lr-vol-icon { font-size:14px; color:#555; }
-.lr-vol-slider { flex:1; accent-color:#f39c12; }
-.lr-mute-btn { background:#222; border:none; color:#888; border-radius:8px; padding:5px 10px; font-size:12px; cursor:pointer; font-family:inherit; }
-.lr-mute-btn.muted { background:#3a1a1a; color:#e74c3c; }
-.lr-wave-wrap { padding:0 14px 10px; }
-.lr-wave { width:100%; height:40px; border-radius:8px; background:#0d0d0d; display:block; }
-.lr-btn-row { display:flex; gap:8px; padding:0 14px 12px; }
-.lr-rec-btn { flex:1; padding:10px; border-radius:10px; border:none; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; display:flex; align-items:center; justify-content:center; gap:6px; }
-.lr-rec-btn.idle      { background:#2a1a1a; color:#e74c3c; }
-.lr-rec-btn.arming    { background:#3a2200; color:#f39c12; animation:pulse-arm .4s infinite alternate; }
-.lr-rec-btn.recording { background:#e74c3c; color:#fff; animation:pulse-rec .6s infinite alternate; }
-.lr-rec-btn.done      { background:#1a2a1a; color:#27ae60; }
-.lr-del-btn { background:#1e1e1e; border:none; color:#555; border-radius:10px; padding:10px 14px; font-size:16px; cursor:pointer; }
-.lr-del-btn:active { color:#e74c3c; }
-.lr-add-track { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:13px; background:transparent; border:2px dashed #222; border-radius:14px; font-size:14px; color:#444; cursor:pointer; font-family:inherit; margin-top:4px; }
-.lr-add-track:active { border-color:#444; color:#888; }
-@keyframes pulse-rec { from{opacity:1} to{opacity:.5} }
-@keyframes pulse-arm { from{opacity:1} to{opacity:.4} }
 
-/* per-track play button */
-.lr-ctrl-row { display:flex; align-items:center; gap:8px; padding:0 14px 10px; }
-.lr-tplay-btn { width:34px; height:34px; border-radius:50%; border:none; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:#1a3a1a; color:#27ae60; transition:background .15s; }
-.lr-tplay-btn:disabled { background:#1a1a1a; color:#333; cursor:not-allowed; }
-.lr-tplay-btn.playing { background:#27ae60; color:#fff; }
-/* solo button */
-.lr-solo-btn { width:28px; height:28px; border-radius:8px; border:none; background:#1e1e1e; color:#888; font-size:12px; font-weight:700; cursor:pointer; flex-shrink:0; margin-right:4px; }
-.lr-solo-btn.on { background:#f39c12; color:#fff; }
-/* playhead */
-.lr-playhead { position:absolute; top:0; bottom:0; width:2px; background:#f39c12; opacity:0; pointer-events:none; transition:left .05s linear; border-radius:1px; }
-.lr-playhead.visible { opacity:1; }
-/* no-audio overlay */
-.lr-no-audio { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:12px; color:#444; pointer-events:none; }
-.lr-no-audio.hidden { display:none; }
-/* track status colours */
-.lr-track-status.playing { color:#27ae60; }
-.lr-track-status.recording { color:#e74c3c; }
+/* header */
+.lp-header { background:#111; padding:48px 16px 12px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.lp-title { font-size:17px; font-weight:700; color:#fff; }
+.lp-clear { background:none; border:1px solid #333; color:#666; border-radius:20px; padding:6px 14px; font-size:13px; cursor:pointer; font-family:inherit; }
+.lp-clear:active { color:#e74c3c; border-color:#e74c3c; }
+
+/* status bar */
+.lp-status-bar { background:#000; padding:8px 16px; text-align:center; flex-shrink:0; border-bottom:1px solid #1a1a1a; }
+.lp-status-txt { font-size:12px; color:#555; letter-spacing:.5px; }
+.lp-status-txt.active { color:#27ae60; }
+.lp-status-txt.rec { color:#e74c3c; }
+
+/* scrollable track list */
+.lp-tracks { flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:10px; }
+
+/* individual track card */
+.lp-track { background:#161616; border-radius:16px; border:1.5px solid #242424; overflow:hidden; transition:border-color .2s; }
+.lp-track.state-rec  { border-color:#e74c3c; box-shadow:0 0 0 3px rgba(231,76,60,.18); }
+.lp-track.state-play { border-color:#27ae60; }
+.lp-track.state-done { border-color:#2a3a2a; }
+
+/* track top row */
+.lp-track-top { display:flex; align-items:center; gap:10px; padding:12px 14px 8px; }
+.lp-track-num { width:26px; height:26px; border-radius:50%; background:#1e1e1e; color:#555; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.lp-track-num.rec  { background:#e74c3c; color:#fff; }
+.lp-track-num.play { background:#27ae60; color:#fff; }
+.lp-track-label { flex:1; font-size:13px; color:#666; }
+.lp-track-label.rec  { color:#e74c3c; }
+.lp-track-label.play { color:#27ae60; }
+.lp-del-btn { background:none; border:none; color:#333; font-size:18px; cursor:pointer; padding:2px 4px; flex-shrink:0; }
+.lp-del-btn:active { color:#e74c3c; }
+
+/* waveform */
+.lp-wave-wrap { padding:0 14px 4px; position:relative; height:44px; }
+.lp-wave { width:100%; height:44px; display:block; border-radius:8px; background:#0d0d0d; }
+.lp-ph { position:absolute; top:0; bottom:0; width:2px; background:#f39c12; border-radius:1px; pointer-events:none; opacity:0; left:0; }
+.lp-ph.on { opacity:1; }
+.lp-wave-hint { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:11px; color:#333; pointer-events:none; }
+.lp-wave-hint.hide { display:none; }
+
+/* BIG tap button */
+.lp-tap-btn {
+  margin:10px 14px 14px;
+  width:calc(100% - 28px);
+  padding:18px;
+  border-radius:14px;
+  border:none;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  font-family:inherit;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  transition:background .15s, transform .08s;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+}
+.lp-tap-btn:active { transform:scale(.97); }
+/* states */
+.lp-tap-btn.s-empty { background:#1e1e1e; color:#888; border:2px dashed #2a2a2a; }
+.lp-tap-btn.s-rec   { background:#e74c3c; color:#fff; animation:lp-pulse .7s infinite alternate; }
+.lp-tap-btn.s-play  { background:#1a3a1a; color:#27ae60; }
+.lp-tap-btn.s-muted { background:#1a1a1a; color:#555; border:2px solid #252525; }
+
+/* controls row (vol + mute) */
+.lp-ctrl-row { display:flex; align-items:center; gap:8px; padding:0 14px 12px; }
+.lp-vol { flex:1; accent-color:#f39c12; }
+.lp-mute { background:#222; border:none; color:#888; border-radius:8px; padding:5px 12px; font-size:12px; cursor:pointer; font-family:inherit; white-space:nowrap; }
+.lp-mute.on { background:#3a1a1a; color:#e74c3c; }
+
+/* add track */
+.lp-add-btn { margin:0 14px 28px; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:transparent; border:2px dashed #1e1e1e; border-radius:14px; font-size:14px; color:#3a3a3a; cursor:pointer; font-family:inherit; }
+.lp-add-btn:active { border-color:#444; color:#888; }
+
+@keyframes lp-pulse { from{opacity:1} to{opacity:.55} }
 </style>
 </head>
 <body>
@@ -436,34 +454,20 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
   </div>
 </div>
 
-<!-- LOOP RECORDER -->
+<!-- LOOP PEDAL -->
 <div id="loopScreen" class="screen">
-  <div class="lr-header">
+  <div class="lp-header">
     <div style="display:flex;align-items:center;gap:10px;">
       <button onclick="goHome()" style="background:none;border:none;color:#aaa;font-size:26px;cursor:pointer;padding:0;line-height:1;">‹</button>
-      <span class="lr-title">🎙 Loop Recorder</span>
+      <span class="lp-title">🎸 Loop Pedal</span>
     </div>
-    <div class="lr-bpm-wrap">
-      <button class="lr-bpm-btn" onclick="changeBpm(-5)">−</button>
-      <span class="lr-bpm-label">BPM</span>
-      <span class="lr-bpm-val" id="lrBpmVal">90</span>
-      <button class="lr-bpm-btn" onclick="changeBpm(5)">+</button>
-    </div>
+    <button class="lp-clear" onclick="lpClearAll()">🗑 ล้างทั้งหมด</button>
   </div>
-
-  <div class="lr-transport">
-    <button class="lr-metronome-btn" id="lrMetBtn" onclick="toggleMetronome()">🥁 เมตรอนอม</button>
-    <button class="lr-play-btn stopped" id="lrMasterBtn" onclick="toggleMaster()">▶</button>
-    <button class="lr-clear-all" onclick="clearAllTracks()">🗑 ล้างทั้งหมด</button>
+  <div class="lp-status-bar">
+    <span class="lp-status-txt" id="lpStatusTxt">พร้อมใช้งาน — กดปุ่ม ⏺ บนแทร็กเพื่อเริ่มอัด</span>
   </div>
-  <div class="lr-beat-row" id="lrBeatRow"></div>
-  <div style="font-size:11px;color:#444;text-align:center;padding:2px 0 6px;" id="lrBarInfo">หยุด</div>
-
-  <div class="lr-tracks" id="lrTracks"></div>
-
-  <div style="padding:0 14px 24px;">
-    <button class="lr-add-track" onclick="lrAddTrack()">＋ เพิ่มแทร็กใหม่</button>
-  </div>
+  <div class="lp-tracks" id="lpTracks"></div>
+  <button class="lp-add-btn" onclick="lpAddTrack()">＋ เพิ่มแทร็กใหม่</button>
 </div>
 
 <script>
@@ -1121,482 +1125,406 @@ load();
 show('home');
 
 /* ============================================================
-   LOOP RECORDER
+   LOOP PEDAL  — tap once to record, tap again to stop+loop
+   Each track is independent. First track sets the loop length.
 ============================================================ */
-var LR = {
-  audioCtx: null,
-  tracks: [],           // [{id, name, buffer, sourceNode, gainNode, muteBtn, volSlider, recBtn, waveCanvas, muted, armed, recording, mediaRec, chunks, volume}]
-  isPlaying: false,
-  isMetronome: false,
-  bpm: 90,
-  beatsPerBar: 4,
-  currentBeat: 0,
-  loopLength: 0,        // seconds — set on first track record stop
-  loopStart: 0,         // audioCtx time when loop started
-  beatTimer: null,
-  metBuffer: null,
-  metBuffer2: null,
-  trackCounter: 0
+var LP = {
+  audioCtx:    null,
+  tracks:      [],   // array of track objects
+  loopLength:  0,    // seconds; set when first track finishes recording
+  loopStart:   0,    // audioCtx.currentTime when playback began
+  isPlaying:   false,
+  trackCounter:0
 };
 
+/* ── Boot ── */
 function goLoopRecorder(){
   show('loopScreen');
-  if(!LR.audioCtx){
-    LR.audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-    lrBuildBeatDots();
-    lrMakeMet();
-    if(!LR.tracks.length) lrAddTrack();
+  if(!LP.audioCtx){
+    LP.audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    if(!LP.tracks.length) lpAddTrack();
+  }
+  lpUpdateStatus();
+}
+
+/* ── AudioContext resume (needed after user gesture on iOS) ── */
+function lpEnsureCtx(){
+  if(LP.audioCtx && LP.audioCtx.state==='suspended') LP.audioCtx.resume();
+}
+
+/* ── Status bar ── */
+function lpUpdateStatus(){
+  var el=document.getElementById('lpStatusTxt');
+  if(!el) return;
+  var anyRec = LP.tracks.some(function(t){ return t.recording; });
+  var anyPlay= LP.isPlaying;
+  if(anyRec){
+    el.textContent='⏺ กำลังอัดเสียง… กดปุ่มอีกครั้งเพื่อหยุดและวนลูป';
+    el.className='lp-status-txt rec';
+  } else if(anyPlay){
+    var loopSec = LP.loopLength>0 ? LP.loopLength.toFixed(1)+'s' : '';
+    el.textContent='▶ วนลูปอยู่'+( loopSec?' ('+loopSec+')'  :'');
+    el.className='lp-status-txt active';
+  } else {
+    el.textContent='พร้อมใช้งาน — กดปุ่ม ⏺ บนแทร็กเพื่อเริ่มอัด';
+    el.className='lp-status-txt';
   }
 }
 
-/* ── Beat dots ── */
-function lrBuildBeatDots(){
-  var row = document.getElementById('lrBeatRow');
-  row.innerHTML='';
-  for(var i=0;i<LR.beatsPerBar;i++){
-    var d=document.createElement('div');
-    d.className='lr-beat-dot';
-    row.appendChild(d);
+/* ═══════════════════════════════════════════
+   TAP — single button does everything
+   EMPTY  → start recording
+   REC    → stop + loop immediately
+   PLAYING→ mute/unmute (double-tap to re-record: long press handled by re-rec btn)
+═══════════════════════════════════════════ */
+function lpTap(id){
+  lpEnsureCtx();
+  var t = LP.tracks.find(function(x){ return x.id===id; });
+  if(!t) return;
+
+  if(t.recording){
+    // ── STOP recording → finalise → loop ──
+    lpStopRec(t);
+  } else if(!t.buffer){
+    // ── START recording ──
+    lpStartRec(t);
+  } else {
+    // ── has audio: mute/unmute ──
+    lpToggleMute(id);
   }
 }
-function lrHighlightBeat(b){
-  var dots=document.getElementById('lrBeatRow').querySelectorAll('.lr-beat-dot');
-  dots.forEach(function(d,i){ d.classList.toggle('active', i===b); });
-}
 
-/* ── Metronome clicks (synthesised) ── */
-function lrMakeMet(){
-  var ctx=LR.audioCtx;
-  // downbeat click
-  var buf1=ctx.createBuffer(1,ctx.sampleRate*0.05,ctx.sampleRate);
-  var d1=buf1.getChannelData(0);
-  for(var i=0;i<d1.length;i++) d1[i]=Math.sin(2*Math.PI*1200*i/ctx.sampleRate)*Math.exp(-i/(ctx.sampleRate*0.012));
-  LR.metBuffer=buf1;
-  // other beats
-  var buf2=ctx.createBuffer(1,ctx.sampleRate*0.05,ctx.sampleRate);
-  var d2=buf2.getChannelData(0);
-  for(var j=0;j<d2.length;j++) d2[j]=Math.sin(2*Math.PI*800*j/ctx.sampleRate)*Math.exp(-j/(ctx.sampleRate*0.01));
-  LR.metBuffer2=buf2;
-}
-function lrPlayMetClick(beat){
-  if(!LR.isMetronome) return;
-  var ctx=LR.audioCtx;
-  var src=ctx.createBufferSource();
-  src.buffer = beat===0 ? LR.metBuffer : LR.metBuffer2;
-  var g=ctx.createGain(); g.gain.value=0.6;
-  src.connect(g); g.connect(ctx.destination);
-  src.start();
-}
-
-/* ── Master play/stop ── */
-function toggleMaster(){
-  if(LR.isPlaying) lrStop(); else lrPlay();
-}
-function lrPlay(){
-  if(LR.isPlaying) return;
-  LR.audioCtx.resume();
-  LR.isPlaying=true;
-  LR.loopStart=LR.audioCtx.currentTime;
-  LR.currentBeat=0;
-  document.getElementById('lrMasterBtn').className='lr-play-btn playing';
-  document.getElementById('lrMasterBtn').textContent='⏹';
-  lrTickBeat();
-  lrStartAllPlayback();
-  setTimeout(function(){ LR.tracks.forEach(function(t){ if(t.buffer){ lrUpdateTrackPlayBtn(t); lrAnimatePlayhead(t); } }); },50);
-}
-function lrStop(){
-  LR.isPlaying=false;
-  if(LR.beatTimer){ clearTimeout(LR.beatTimer); LR.beatTimer=null; }
-  document.getElementById('lrMasterBtn').className='lr-play-btn stopped';
-  document.getElementById('lrMasterBtn').textContent='▶';
-  document.getElementById('lrBarInfo').textContent='หยุด';
-  lrHighlightBeat(-1);
-  // stop all sources
-  LR.tracks.forEach(function(t){
-    if(t.sourceNode){ try{ t.sourceNode.stop(); }catch(e){} t.sourceNode=null; }
-    if(t.recording) lrStopRecordTrack(t);
-    if(t.playhead) t.playhead.classList.remove('visible');
-    lrUpdateTrackPlayBtn(t);
-    lrUpdateStatusLabel(t);
-  });
-}
-function lrTickBeat(){
-  if(!LR.isPlaying) return;
-  var beatSec = 60/LR.bpm;
-  lrHighlightBeat(LR.currentBeat);
-  lrPlayMetClick(LR.currentBeat);
-
-  var bar = LR.loopLength>0 ? Math.floor((LR.audioCtx.currentTime - LR.loopStart) / (beatSec*LR.beatsPerBar)) : 0;
-  document.getElementById('lrBarInfo').textContent = LR.loopLength>0
-    ? '▶  บาร์ ' + (bar+1) + '  •  จังหวะ ' + (LR.currentBeat+1) + '/' + LR.beatsPerBar
-    : '▶  จังหวะ ' + (LR.currentBeat+1) + '/' + LR.beatsPerBar;
-
-  // fire armed tracks on beat 0 of new loop
-  if(LR.currentBeat===0 && LR.loopLength>0){
-    LR.tracks.forEach(function(t){
-      if(t.armed && !t.recording) lrStartRecordTrack(t);
-    });
-  }
-
-  
-  LR.currentBeat=(LR.currentBeat+1)%LR.beatsPerBar;
-  LR.beatTimer=setTimeout(lrTickBeat, beatSec*1000);
-}
-
-/* ── Playback all buffered tracks ── */
-function lrStartAllPlayback(){
-  LR.tracks.forEach(function(t){
-    if(t.buffer) lrPlayTrack(t);
-  });
-}
-function lrPlayTrack(t){
-  if(!t.buffer||!LR.isPlaying) return;
-  if(t.sourceNode){ try{ t.sourceNode.stop(); }catch(e){} }
-  var src=LR.audioCtx.createBufferSource();
-  src.buffer=t.buffer;
-  src.loop=true;
-  if(LR.loopLength>0) src.loopEnd=LR.loopLength;
-  src.connect(t.gainNode);
-  src.start(0, (LR.audioCtx.currentTime - LR.loopStart) % (LR.loopLength||src.buffer.duration));
-  t.sourceNode=src;
-}
-
-/* ── Record a track ── */
-function lrArmTrack(t){
-  if(t.recording) return;
-  if(t.armed){ t.armed=false; lrUpdateRecBtn(t); return; }
-  t.armed=true;
-  lrUpdateRecBtn(t);
-  // if already playing, start immediately on next beat-0 (handled in tick)
-  // if not playing, start play now
-  if(!LR.isPlaying) lrPlay();
-}
-function lrStartRecordTrack(t){
-  if(t.recording) return;
-  navigator.mediaDevices.getUserMedia({audio:true, video:false}).then(function(stream){
-    t.stream=stream;
-    t.chunks=[];
-    t.armed=false;
-    t.recording=true;
-    t.recStart=LR.audioCtx.currentTime;
-    var mr=new MediaRecorder(stream, {mimeType: lrGetMime()});
-    mr.ondataavailable=function(e){ if(e.data.size>0) t.chunks.push(e.data); };
-    mr.onstop=function(){ lrFinaliseTrack(t); };
-    mr.start();
-    t.mediaRec=mr;
-    lrUpdateRecBtn(t);
-    lrUpdateTrackStyle(t);
+/* ═══════════════════════════════════════════
+   RECORDING
+═══════════════════════════════════════════ */
+function lpStartRec(t){
+  navigator.mediaDevices.getUserMedia({audio:true,video:false}).then(function(stream){
+    t.stream   = stream;
+    t.chunks   = [];
+    t.recording= true;
+    t.recStart = LP.audioCtx.currentTime;
+    var mime   = lpGetMime();
+    var mr     = new MediaRecorder(stream, mime?{mimeType:mime}:{});
+    mr.ondataavailable = function(e){ if(e.data.size>0) t.chunks.push(e.data); };
+    mr.onstop  = function(){ lpFinalise(t); };
+    mr.start(100); // collect every 100ms for low latency
+    t.mediaRec = mr;
+    lpRenderTrackState(t);
+    lpUpdateStatus();
   }).catch(function(err){
-    showToast('⚠️ ไม่สามารถเข้าถึงไมค์: '+err.message);
-    t.armed=false; t.recording=false;
-    lrUpdateRecBtn(t);
+    var msg='🎤 ไมค์: ';
+    if(err.name==='NotAllowedError'||err.name==='PermissionDeniedError')
+      msg='🚫 ไม่ได้รับอนุญาตใช้ไมค์ — กรุณาอนุญาตในการตั้งค่าเบราว์เซอร์';
+    else if(err.name==='NotFoundError')
+      msg='🎤 ไม่พบไมค์ในอุปกรณ์นี้';
+    else msg='⚠️ '+err.message;
+    showToast(msg);
   });
 }
-function lrStopRecordTrack(t){
+
+function lpStopRec(t){
   if(!t.recording) return;
   t.recording=false;
   if(t.mediaRec && t.mediaRec.state!=='inactive') t.mediaRec.stop();
   if(t.stream) t.stream.getTracks().forEach(function(tr){ tr.stop(); });
-  lrUpdateRecBtn(t);
-  lrUpdateTrackStyle(t);
+  lpRenderTrackState(t);
+  lpUpdateStatus();
 }
-function lrGetMime(){
+
+function lpGetMime(){
   var types=['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4'];
   for(var i=0;i<types.length;i++){ if(MediaRecorder.isTypeSupported(types[i])) return types[i]; }
   return '';
 }
-function lrFinaliseTrack(t){
-  var blob=new Blob(t.chunks, {type: lrGetMime()||'audio/webm'});
-  var url=URL.createObjectURL(blob);
-  var duration=LR.audioCtx.currentTime - t.recStart;
-  // set loop length on first track
-  if(LR.loopLength===0){
-    var beatSec=60/LR.bpm;
-    var bars=Math.max(1,Math.round(duration/(beatSec*LR.beatsPerBar)));
-    LR.loopLength=bars*beatSec*LR.beatsPerBar;
+
+/* ── Finalise: decode → set loopLength → start playing ── */
+function lpFinalise(t){
+  var blob = new Blob(t.chunks,{type: lpGetMime()||'audio/webm'});
+  var url  = URL.createObjectURL(blob);
+  var duration = LP.audioCtx.currentTime - t.recStart;
+  if(duration < 0.3){ showToast('⚠️ อัดสั้นเกินไป กรุณาลองใหม่'); lpRenderTrackState(t); return; }
+
+  // If this is the FIRST track, it defines the loop length
+  if(LP.loopLength===0){
+    LP.loopLength = duration;
+    LP.loopStart  = t.recStart; // loop reference point
   }
-  // decode
+
   fetch(url).then(function(r){ return r.arrayBuffer(); }).then(function(ab){
-    LR.audioCtx.decodeAudioData(ab, function(buf){
-      // trim/pad to loopLength
-      var sampleRate=buf.sampleRate;
-      var loopSamples=Math.round(LR.loopLength*sampleRate);
-      var trimmed=LR.audioCtx.createBuffer(1,loopSamples,sampleRate);
-      var src=buf.getChannelData(0);
-      var dst=trimmed.getChannelData(0);
-      for(var i=0;i<loopSamples;i++) dst[i]=i<src.length?src[i]:0;
-      t.buffer=trimmed;
-      lrDrawWave(t);
-      lrUpdateTrackStyle(t);
-      lrUpdateTrackPlayBtn(t);
-      lrUpdateStatusLabel(t);
-      if(LR.isPlaying){ lrPlayTrack(t); lrUpdateTrackPlayBtn(t); lrAnimatePlayhead(t); }
+    LP.audioCtx.decodeAudioData(ab, function(buf){
+      // Trim/pad buffer to exactly loopLength
+      var sr       = buf.sampleRate;
+      var samples  = Math.round(LP.loopLength * sr);
+      var trimmed  = LP.audioCtx.createBuffer(1, samples, sr);
+      var src      = buf.getChannelData(0);
+      var dst      = trimmed.getChannelData(0);
+      for(var i=0;i<samples;i++) dst[i] = i<src.length ? src[i] : 0;
+      t.buffer = trimmed;
+      URL.revokeObjectURL(url);
+
+      lpDrawWave(t);
+      lpStartPlayback(t);
+      lpRenderTrackState(t);
+      lpUpdateStatus();
+      showToast('✅ วนลูปแล้ว!');
     }, function(){ showToast('⚠️ ถอดรหัสเสียงไม่สำเร็จ'); });
   });
 }
 
-/* ── Waveform drawing ── */
-function lrDrawWave(t){
-  var canvas=t.waveCanvas;
-  if(!canvas||!t.buffer) return;
-  var W=canvas.width=canvas.offsetWidth||canvas.clientWidth||300;
-  var H=canvas.height=40;
-  var ctx2=canvas.getContext('2d');
-  ctx2.clearRect(0,0,W,H);
-  var data=t.buffer.getChannelData(0);
-  var step=Math.ceil(data.length/W);
-  ctx2.strokeStyle='#27ae60';
-  ctx2.lineWidth=1;
-  ctx2.beginPath();
-  for(var x=0;x<W;x++){
-    var max=0;
-    for(var j=0;j<step;j++){ var v=Math.abs(data[x*step+j]||0); if(v>max) max=v; }
-    var y=H/2 - max*(H/2-2);
-    var y2=H/2 + max*(H/2-2);
-    if(x===0) ctx2.moveTo(x,y); else ctx2.lineTo(x,y);
-  }
-  ctx2.stroke();
-  ctx2.beginPath();
-  for(var x2=0;x2<W;x2++){
-    var max2=0;
-    for(var j2=0;j2<step;j2++){ var v2=Math.abs(data[x2*step+j2]||0); if(v2>max2) max2=v2; }
-    var yb=H/2 + max2*(H/2-2);
-    if(x2===0) ctx2.moveTo(x2,yb); else ctx2.lineTo(x2,yb);
-  }
-  ctx2.strokeStyle='#1a6a40';
-  ctx2.stroke();
+/* ═══════════════════════════════════════════
+   PLAYBACK
+═══════════════════════════════════════════ */
+function lpStartPlayback(t){
+  if(!t.buffer) return;
+  lpStopSource(t);
+  var src = LP.audioCtx.createBufferSource();
+  src.buffer  = t.buffer;
+  src.loop    = true;
+  src.loopEnd = LP.loopLength;
+  src.connect(t.gainNode);
+  // Sync to loop phase so all tracks align
+  var phase = LP.loopLength>0
+    ? (LP.audioCtx.currentTime - LP.loopStart) % LP.loopLength
+    : 0;
+  if(phase<0) phase=0;
+  src.start(0, phase);
+  t.sourceNode = src;
+  LP.isPlaying = true;
+  lpAnimatePh(t);
 }
 
-/* ── Track UI helpers ── */
-function lrUpdateRecBtn(t){
-  var btn=t.recBtn;
-  if(!btn) return;
-  if(t.recording){
-    btn.className='lr-rec-btn recording';
-    btn.innerHTML='⏹ \u0e2b\u0e22\u0e38\u0e14\u0e2d\u0e31\u0e14';
-  } else if(t.armed){
-    btn.className='lr-rec-btn arming';
-    btn.innerHTML='\u23f3 \u0e23\u0e2d\u0e08\u0e31\u0e07\u0e2b\u0e27\u0e30...';
-  } else if(t.buffer){
-    btn.className='lr-rec-btn done';
-    btn.innerHTML='\u23fa \u0e2d\u0e31\u0e14\u0e43\u0e2b\u0e21\u0e48';
-  } else {
-    btn.className='lr-rec-btn idle';
-    btn.innerHTML='\u23fa \u0e2d\u0e31\u0e14\u0e40\u0e2a\u0e35\u0e22\u0e07';
-  }
-  lrUpdateStatusLabel(t);
-}
-function lrUpdateTrackStyle(t){
-  var el=document.getElementById('lr-track-'+t.id);
-  if(!el) return;
-  el.classList.toggle('recording', !!t.recording);
-  el.classList.toggle('has-audio', !!t.buffer&&!t.recording);
-  var num=el.querySelector('.lr-track-num');
-  if(num) num.classList.toggle('active', !!t.recording||!!t.armed);
-  var status=el.querySelector('.lr-track-status');
-  if(status) status.textContent = t.recording?'● REC': t.buffer?'✓ มีเสียง':'ว่าง';
+function lpStopSource(t){
+  if(t.sourceNode){ try{ t.sourceNode.stop(); }catch(e){} t.sourceNode=null; }
 }
 
-/* ── Add / Remove track ── */
-function lrAddTrack(){
-  if(!LR.audioCtx){
-    LR.audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-    lrBuildBeatDots();
-    lrMakeMet();
-  }
-  LR.trackCounter++;
-  var id=LR.trackCounter;
-  var gainNode=LR.audioCtx.createGain();
-  gainNode.connect(LR.audioCtx.destination);
-  var t={id:id, name:'แทร็ก '+id, buffer:null, sourceNode:null, gainNode:gainNode,
-         muted:false, armed:false, recording:false, mediaRec:null, chunks:[], volume:0.8,
-         recBtn:null, waveCanvas:null, stream:null, recStart:0};
-  LR.tracks.push(t);
-  gainNode.gain.value=t.volume;
-
-  // build DOM
-  var el=document.createElement('div');
-  el.className='lr-track';
-  el.id='lr-track-'+id;
-  el.innerHTML=
-    '<div class="lr-track-header">'
-    +'<div class="lr-track-num" id="lr-num-'+id+'">'+id+'</div>'
-    +'<div style="flex:1;min-width:0;">'
-    +'<div class="lr-track-name">\u0e41\u0e17\u0e23\u0e4a\u0e01 '+id+'</div>'
-    +'<div class="lr-track-status" id="lr-status-'+id+'">\u0e27\u0e48\u0e32\u0e07 \u2014 \u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e21\u0e35\u0e40\u0e2a\u0e35\u0e22\u0e07</div>'
-    +'</div>'
-    +'<button class="lr-solo-btn" id="lr-solo-'+id+'" onclick="lrToggleSolo('+id+')" title="Solo">S</button>'
-    +'<button class="lr-del-btn" onclick="lrDelTrack('+id+')">\ud83d\uddd1</button>'
-    +'</div>'
-    +'<div class="lr-wave-wrap" style="position:relative;">'
-    +'<canvas class="lr-wave" id="lr-wave-'+id+'"></canvas>'
-    +'<div class="lr-playhead" id="lr-ph-'+id+'"></div>'
-    +'<div class="lr-no-audio" id="lr-noaudio-'+id+'">\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e21\u0e35\u0e40\u0e2a\u0e35\u0e22\u0e07 \u2014 \u0e01\u0e14 \u23fa \u0e2d\u0e31\u0e14\u0e40\u0e2a\u0e35\u0e22\u0e07</div>'
-    +'</div>'
-    +'<div class="lr-ctrl-row">'
-    +'<button class="lr-tplay-btn" id="lr-tplay-'+id+'" onclick="lrToggleTrackPlay('+id+')" disabled>\u25b6</button>'
-    +'<span class="lr-vol-icon">\ud83d\udd0a</span>'
-    +'<input type="range" class="lr-vol-slider" min="0" max="1" step="0.02" value="0.8" id="lr-vol-'+id+'" oninput="lrSetVol('+id+',this.value)">'
-    +'<button class="lr-mute-btn" id="lr-mute-'+id+'" onclick="lrToggleMute('+id+')">Mute</button>'
-    +'</div>'
-    +'<div class="lr-btn-row">'
-    +'<button class="lr-rec-btn idle" id="lr-rec-'+id+'" onclick="lrHandleRec('+id+')">\u23fa \u0e2d\u0e31\u0e14\u0e40\u0e2a\u0e35\u0e22\u0e07</button>'
-    +'</div>';
-  document.getElementById('lrTracks').appendChild(el);
-  t.recBtn    = document.getElementById('lr-rec-'+id);
-  t.waveCanvas= document.getElementById('lr-wave-'+id);
-  t.playhead  = document.getElementById('lr-ph-'+id);
-  t.tplayBtn  = document.getElementById('lr-tplay-'+id);
-  return t;
-}
-/* ── Per-track play / stop ── */
-function lrToggleTrackPlay(id){
-  var t=LR.tracks.find(function(x){ return x.id===id; });
-  if(!t||!t.buffer) return;
-  if(t.sourceNode){
-    // currently playing — stop this track only
-    try{ t.sourceNode.stop(); }catch(e){}
-    t.sourceNode=null;
-    lrUpdateTrackPlayBtn(t);
-    lrUpdateStatusLabel(t);
-    return;
-  }
-  // start playback (solo context — not master)
-  if(!LR.isPlaying){
-    // solo preview: play without looping master clock
-    LR.audioCtx.resume();
-    var src=LR.audioCtx.createBufferSource();
-    src.buffer=t.buffer;
-    src.loop=true;
-    if(LR.loopLength>0) src.loopEnd=LR.loopLength;
-    src.connect(t.gainNode);
-    src.start();
-    t.sourceNode=src;
-    src.onended=function(){ t.sourceNode=null; lrUpdateTrackPlayBtn(t); lrUpdateStatusLabel(t); };
-    lrUpdateTrackPlayBtn(t);
-    lrUpdateStatusLabel(t);
-    lrAnimatePlayhead(t);
-  } else {
-    // master already running — re-sync and play
-    lrPlayTrack(t);
-    lrUpdateTrackPlayBtn(t);
-    lrUpdateStatusLabel(t);
-  }
+function lpStopAllPlayback(){
+  LP.tracks.forEach(function(t){ lpStopSource(t); });
+  LP.isPlaying=false;
 }
 
 /* ── Playhead animation ── */
-function lrAnimatePlayhead(t){
-  if(!t.sourceNode||!t.buffer||!t.playhead) return;
-  var loopLen=LR.loopLength>0?LR.loopLength:t.buffer.duration;
-  var startTime=LR.audioCtx.currentTime;
-  t.playhead.classList.add('visible');
+function lpAnimatePh(t){
+  if(!t.sourceNode||!t.phEl||!LP.loopLength) return;
+  var loopLen = LP.loopLength;
+  var ref     = LP.loopStart;
+  var phEl    = t.phEl;
+  phEl.classList.add('on');
   function frame(){
-    if(!t.sourceNode){ t.playhead.classList.remove('visible'); return; }
-    var elapsed=(LR.audioCtx.currentTime-startTime)%loopLen;
-    var pct=elapsed/loopLen;
-    var w=t.waveCanvas?t.waveCanvas.offsetWidth:300;
-    t.playhead.style.left=(pct*w)+'px';
+    if(!t.sourceNode){ phEl.classList.remove('on'); return; }
+    var elapsed = (LP.audioCtx.currentTime - ref) % loopLen;
+    var pct = elapsed / loopLen;
+    var w   = t.waveCanvas ? (t.waveCanvas.offsetWidth||300) : 300;
+    phEl.style.left = (pct*w)+'px';
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 }
 
-/* ── Solo ── */
-function lrToggleSolo(id){
-  var t=LR.tracks.find(function(x){ return x.id===id; });
+/* ═══════════════════════════════════════════
+   WAVEFORM
+═══════════════════════════════════════════ */
+function lpDrawWave(t){
+  var c=t.waveCanvas;
+  if(!c||!t.buffer) return;
+  var W=c.width=c.offsetWidth||300;
+  var H=c.height=44;
+  var ctx2=c.getContext('2d');
+  ctx2.clearRect(0,0,W,H);
+  var data=t.buffer.getChannelData(0);
+  var step=Math.ceil(data.length/W);
+  var grad=ctx2.createLinearGradient(0,0,W,0);
+  grad.addColorStop(0,'#27ae60'); grad.addColorStop(1,'#2ecc71');
+  ctx2.strokeStyle=grad;
+  ctx2.lineWidth=1.5;
+  ctx2.beginPath();
+  for(var x=0;x<W;x++){
+    var max=0;
+    for(var j=0;j<step;j++){
+      var v=Math.abs(data[x*step+j]||0);
+      if(v>max) max=v;
+    }
+    var y=(1-max)*H/2;
+    var y2=(1+max)*H/2;
+    ctx2.moveTo(x+.5,y); ctx2.lineTo(x+.5,y2);
+  }
+  ctx2.stroke();
+}
+
+/* ═══════════════════════════════════════════
+   MUTE / VOLUME
+═══════════════════════════════════════════ */
+function lpToggleMute(id){
+  var t=LP.tracks.find(function(x){ return x.id===id; });
   if(!t) return;
-  t.solo=!t.solo;
-  var btn=document.getElementById('lr-solo-'+id);
-  if(btn){ btn.classList.toggle('on',t.solo); }
-  var anySolo=LR.tracks.some(function(x){ return x.solo; });
-  LR.tracks.forEach(function(x){
-    var active = !anySolo || x.solo;
-    x.gainNode.gain.value = x.muted ? 0 : (active ? x.volume : 0);
-  });
+  t.muted=!t.muted;
+  t.gainNode.gain.value = t.muted?0:t.volume;
+  lpRenderTrackState(t);
 }
-
-/* ── Update play button state ── */
-function lrUpdateTrackPlayBtn(t){
-  var btn=t.tplayBtn;
-  if(!btn) return;
-  btn.disabled=!t.buffer;
-  if(t.sourceNode){ btn.classList.add('playing'); btn.textContent='⏸'; }
-  else { btn.classList.remove('playing'); btn.textContent='▶'; }
-}
-
-/* ── Status label ── */
-function lrUpdateStatusLabel(t){
-  var el=document.getElementById('lr-status-'+t.id);
-  if(!el) return;
-  if(t.recording){ el.textContent='● REC...'; el.className='lr-track-status recording'; }
-  else if(t.armed){ el.textContent='⏳ รอจังหวะ...'; el.className='lr-track-status'; }
-  else if(t.sourceNode){ el.textContent='▶ กำลังเล่น'; el.className='lr-track-status playing'; }
-  else if(t.buffer){ el.textContent='✓ มีเสียง — กด ▶ เพื่อเปิด'; el.className='lr-track-status'; }
-  else { el.textContent='ว่าง — ยังไม่มีเสียง'; el.className='lr-track-status'; }
-  // show/hide no-audio overlay
-  var overlay=document.getElementById('lr-noaudio-'+t.id);
-  if(overlay) overlay.classList.toggle('hidden', !!t.buffer);
-}
-
-function lrHandleRec(id){
-  var t=LR.tracks.find(function(x){ return x.id===id; });
-  if(!t) return;
-  if(t.recording){ lrStopRecordTrack(t); }
-  else { lrArmTrack(t); }
-}
-function lrSetVol(id,val){
-  var t=LR.tracks.find(function(x){ return x.id===id; });
+function lpSetVol(id,val){
+  var t=LP.tracks.find(function(x){ return x.id===id; });
   if(!t) return;
   t.volume=parseFloat(val);
   if(!t.muted) t.gainNode.gain.value=t.volume;
 }
-function lrToggleMute(id){
-  var t=LR.tracks.find(function(x){ return x.id===id; });
+
+/* ── Re-record a track (clears buffer, starts fresh) ── */
+function lpReRec(id){
+  var t=LP.tracks.find(function(x){ return x.id===id; });
   if(!t) return;
-  t.muted=!t.muted;
-  t.gainNode.gain.value=t.muted?0:t.volume;
-  var btn=document.getElementById('lr-mute-'+id);
-  if(btn){ btn.classList.toggle('muted',t.muted); btn.textContent=t.muted?'Muted':'Mute'; }
+  lpStopSource(t);
+  t.buffer=null; t.muted=false;
+  if(t.gainNode) t.gainNode.gain.value=t.volume;
+  // clear waveform
+  if(t.waveCanvas){
+    var c=t.waveCanvas;
+    c.getContext('2d').clearRect(0,0,c.width,c.height);
+  }
+  if(t.phEl) t.phEl.classList.remove('on');
+  lpRenderTrackState(t);
+  lpUpdateStatus();
+  // If this was the only track with audio and no others remain, reset loop length
+  var anyBuf=LP.tracks.some(function(x){ return !!x.buffer; });
+  if(!anyBuf){ LP.loopLength=0; LP.isPlaying=false; }
+  // Start recording immediately
+  lpStartRec(t);
 }
-function lrDelTrack(id){
-  var idx=LR.tracks.findIndex(function(x){ return x.id===id; });
+
+/* ═══════════════════════════════════════════
+   ADD / DELETE TRACK
+═══════════════════════════════════════════ */
+function lpAddTrack(){
+  if(!LP.audioCtx){
+    LP.audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  }
+  LP.trackCounter++;
+  var id=LP.trackCounter;
+  var gainNode=LP.audioCtx.createGain();
+  gainNode.connect(LP.audioCtx.destination);
+  var t={
+    id:id, buffer:null, sourceNode:null, gainNode:gainNode,
+    muted:false, recording:false, mediaRec:null, chunks:[],
+    stream:null, recStart:0, volume:0.85,
+    waveCanvas:null, phEl:null, tapBtn:null
+  };
+  LP.tracks.push(t);
+  gainNode.gain.value=t.volume;
+
+  // ── Build DOM ──
+  var el=document.createElement('div');
+  el.className='lp-track';
+  el.id='lp-track-'+id;
+  el.innerHTML=
+    '<div class="lp-track-top">'
+      +'<div class="lp-track-num" id="lp-num-'+id+'">'+id+'</div>'
+      +'<span class="lp-track-label" id="lp-label-'+id+'">ว่าง — กด ⏺ เพื่อเริ่ม</span>'
+      +'<button class="lp-del-btn" onclick="lpDelTrack('+id+')" title="ลบแทร็ก">🗑</button>'
+    +'</div>'
+    +'<div class="lp-wave-wrap">'
+      +'<canvas class="lp-wave" id="lp-wave-'+id+'"></canvas>'
+      +'<div class="lp-ph" id="lp-ph-'+id+'"></div>'
+      +'<div class="lp-wave-hint" id="lp-hint-'+id+'">ยังไม่มีเสียง</div>'
+    +'</div>'
+    // BIG TAP BUTTON
+    +'<button class="lp-tap-btn s-empty" id="lp-tap-'+id+'" onclick="lpTap('+id+')">'
+      +'⏺ เริ่มอัดเสียง'
+    +'</button>'
+    +'<div class="lp-ctrl-row">'
+      +'<span style="font-size:13px;color:#444;">🔊</span>'
+      +'<input type="range" class="lp-vol" min="0" max="1" step="0.02" value="0.85" oninput="lpSetVol('+id+',this.value)">'
+      +'<button class="lp-mute" id="lp-mute-'+id+'" onclick="lpToggleMute('+id+')">Mute</button>'
+      +'<button style="background:#1a1a1a;border:1px solid #333;color:#888;border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;font-family:inherit;" '
+        +'id="lp-rerec-'+id+'" onclick="lpReRec('+id+')" style="display:none" title="อัดใหม่">↺ อัดใหม่</button>'
+    +'</div>';
+
+  document.getElementById('lpTracks').appendChild(el);
+  t.waveCanvas = document.getElementById('lp-wave-'+id);
+  t.phEl       = document.getElementById('lp-ph-'+id);
+  t.tapBtn     = document.getElementById('lp-tap-'+id);
+  return t;
+}
+
+function lpDelTrack(id){
+  var idx=LP.tracks.findIndex(function(x){ return x.id===id; });
   if(idx<0) return;
-  var t=LR.tracks[idx];
-  if(t.recording) lrStopRecordTrack(t);
-  if(t.sourceNode){ try{ t.sourceNode.stop(); }catch(e){} }
-  LR.tracks.splice(idx,1);
-  var el=document.getElementById('lr-track-'+id);
+  var t=LP.tracks[idx];
+  if(t.recording) lpStopRec(t);
+  lpStopSource(t);
+  LP.tracks.splice(idx,1);
+  var el=document.getElementById('lp-track-'+id);
   if(el) el.remove();
-  // reset loopLength if no tracks have audio
-  if(!LR.tracks.some(function(x){ return !!x.buffer; })) LR.loopLength=0;
+  var anyBuf=LP.tracks.some(function(x){ return !!x.buffer; });
+  if(!anyBuf){ LP.loopLength=0; LP.isPlaying=false; }
+  lpUpdateStatus();
 }
-function clearAllTracks(){
+
+function lpClearAll(){
   if(!confirm('ล้างเสียงทั้งหมด?')) return;
-  lrStop();
-  LR.tracks.forEach(function(t){
-    if(t.recording) lrStopRecordTrack(t);
-    if(t.sourceNode){ try{ t.sourceNode.stop(); }catch(e){} }
-    t.buffer=null; t.sourceNode=null; t.armed=false;
-    lrUpdateRecBtn(t); lrUpdateTrackStyle(t);
-    // clear waveform
-    if(t.waveCanvas){ var c=t.waveCanvas; var ctx2=c.getContext('2d'); ctx2.clearRect(0,0,c.width,c.height); }
+  lpStopAllPlayback();
+  LP.tracks.forEach(function(t){
+    if(t.recording) lpStopRec(t);
+    lpStopSource(t);
+    t.buffer=null; t.muted=false;
+    if(t.gainNode) t.gainNode.gain.value=t.volume;
+    if(t.waveCanvas){
+      var c=t.waveCanvas;
+      c.getContext('2d').clearRect(0,0,c.width,c.height);
+    }
+    if(t.phEl) t.phEl.classList.remove('on');
+    lpRenderTrackState(t);
   });
-  LR.loopLength=0;
+  LP.loopLength=0;
+  lpUpdateStatus();
   showToast('🗑 ล้างเสียงทั้งหมดแล้ว');
 }
 
-/* ── BPM & Metronome ── */
-function changeBpm(d){
-  LR.bpm=Math.max(40,Math.min(220,LR.bpm+d));
-  document.getElementById('lrBpmVal').textContent=LR.bpm;
-  if(LR.isPlaying){ lrStop(); setTimeout(lrPlay,100); }
+/* ═══════════════════════════════════════════
+   RENDER TRACK STATE → update all visual
+═══════════════════════════════════════════ */
+function lpRenderTrackState(t){
+  var el   = document.getElementById('lp-track-'+t.id);
+  var num  = document.getElementById('lp-num-'+t.id);
+  var lbl  = document.getElementById('lp-label-'+t.id);
+  var tapB = t.tapBtn;
+  var muteB= document.getElementById('lp-mute-'+t.id);
+  var hint = document.getElementById('lp-hint-'+t.id);
+  var rerecB = document.getElementById('lp-rerec-'+t.id);
+  if(!el) return;
+
+  // remove all state classes
+  el.classList.remove('state-rec','state-play','state-done');
+
+  if(t.recording){
+    el.classList.add('state-rec');
+    if(num){ num.className='lp-track-num rec'; num.textContent=t.id; }
+    if(lbl){ lbl.className='lp-track-label rec'; lbl.textContent='⏺ กำลังอัด… กดอีกครั้งเพื่อหยุด'; }
+    if(tapB){ tapB.className='lp-tap-btn s-rec'; tapB.innerHTML='⏹ หยุดอัด'; }
+    if(hint) hint.classList.add('hide');
+    if(rerecB) rerecB.style.display='none';
+  } else if(t.buffer && !t.muted){
+    el.classList.add('state-play');
+    if(num){ num.className='lp-track-num play'; num.textContent=t.id; }
+    if(lbl){ lbl.className='lp-track-label play'; lbl.textContent='▶ วนลูปอยู่ — กดเพื่อ Mute'; }
+    if(tapB){ tapB.className='lp-tap-btn s-play'; tapB.innerHTML='🔊 กำลังเล่น (กด = Mute)'; }
+    if(hint) hint.classList.add('hide');
+    if(rerecB) rerecB.style.display='inline-flex';
+  } else if(t.buffer && t.muted){
+    el.classList.add('state-done');
+    if(num){ num.className='lp-track-num'; num.textContent=t.id; }
+    if(lbl){ lbl.className='lp-track-label'; lbl.textContent='🔇 ปิดเสียงอยู่ — กดเพื่อเปิด'; }
+    if(tapB){ tapB.className='lp-tap-btn s-muted'; tapB.innerHTML='🔇 Muted (กด = เปิดเสียง)'; }
+    if(hint) hint.classList.add('hide');
+    if(rerecB) rerecB.style.display='inline-flex';
+  } else {
+    // empty
+    if(num){ num.className='lp-track-num'; num.textContent=t.id; }
+    if(lbl){ lbl.className='lp-track-label'; lbl.textContent='ว่าง — กด ⏺ เพื่อเริ่ม'; }
+    if(tapB){ tapB.className='lp-tap-btn s-empty'; tapB.innerHTML='⏺ เริ่มอัดเสียง'; }
+    if(hint){ hint.classList.remove('hide'); hint.textContent='ยังไม่มีเสียง'; }
+    if(rerecB) rerecB.style.display='none';
+  }
+  if(muteB){ muteB.classList.toggle('on',!!t.muted); muteB.textContent=t.muted?'Muted':'Mute'; }
 }
-function toggleMetronome(){
-  LR.isMetronome=!LR.isMetronome;
-  var btn=document.getElementById('lrMetBtn');
-  btn.classList.toggle('on',LR.isMetronome);
-  btn.textContent=LR.isMetronome?'🥁 ON':'🥁 เมตรอนอม';
-}
+
 </script>
 </body>
 </html>
