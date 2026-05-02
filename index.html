@@ -151,6 +151,56 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
 /* ── TOAST ── */
 .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(20px); background:#1a1a1a; color:#fff; padding:10px 20px; border-radius:20px; font-size:14px; opacity:0; pointer-events:none; transition:all .3s; z-index:9999; white-space:nowrap; }
 .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ── HOME TABS ── */
+.home-tabs { display:flex; gap:0; background:#f5f4f0; padding:12px 16px 0; }
+.home-tab { flex:1; padding:9px 0; text-align:center; font-size:14px; font-weight:600; color:#999; border-bottom:2px solid transparent; cursor:pointer; }
+.home-tab.active { color:#1a1a1a; border-bottom:2px solid #1a1a1a; }
+
+/* ── PLAYLIST SCREEN ── */
+#playlistScreen { background:#f5f4f0; }
+.pl-add-btn { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; padding:14px; background:#fff; border:2px dashed #ccc; border-radius:16px; font-size:15px; color:#555; cursor:pointer; margin-bottom:16px; font-family:inherit; }
+.pl-card { background:#fff; border-radius:14px; padding:14px 16px; margin-bottom:8px; box-shadow:0 1px 3px rgba(0,0,0,.06); cursor:pointer; display:flex; align-items:center; gap:12px; }
+.pl-card:active { opacity:.7; }
+.pl-icon { width:46px; height:46px; border-radius:10px; background:#1a3a5c; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.pl-info { flex:1; min-width:0; }
+.pl-name { font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pl-count { font-size:13px; color:#888; margin-top:2px; }
+.pl-del { background:none; border:none; color:#ccc; font-size:20px; cursor:pointer; padding:4px 0 4px 10px; flex-shrink:0; }
+.pl-del:active { color:#e74c3c; }
+.pl-play-btn { background:#f39c12; border:none; color:#fff; border-radius:20px; padding:7px 14px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; flex-shrink:0; }
+
+/* ── EDIT PLAYLIST SCREEN ── */
+#editPlaylist { background:#f5f4f0; }
+.ep-section { font-size:12px; font-weight:600; color:#999; letter-spacing:1px; text-transform:uppercase; margin:16px 0 8px; }
+.ep-song-row { display:flex; align-items:center; gap:12px; background:#fff; border-radius:12px; padding:12px 14px; margin-bottom:6px; box-shadow:0 1px 2px rgba(0,0,0,.05); }
+.ep-song-row .song-icon { width:38px; height:38px; font-size:18px; flex-shrink:0; }
+.ep-song-info { flex:1; min-width:0; }
+.ep-song-name { font-size:15px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ep-song-artist { font-size:12px; color:#888; }
+.ep-check { width:24px; height:24px; border-radius:50%; border:2px solid #ddd; background:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size:13px; }
+.ep-check.on { background:#1a1a1a; border-color:#1a1a1a; color:#fff; }
+.ep-order-badge { background:#f39c12; color:#fff; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; }
+.ep-drag { color:#ccc; font-size:20px; cursor:grab; padding:0 4px; flex-shrink:0; touch-action:none; }
+
+/* ── UP-NEXT PANEL ── */
+.upnext-panel { background:#111; border-top:1px solid #222; flex-shrink:0; overflow:hidden; transition:max-height .3s ease; max-height:0; }
+.upnext-panel.open { max-height:200px; }
+.upnext-header { display:flex; align-items:center; justify-content:space-between; padding:8px 14px 6px; }
+.upnext-title { font-size:12px; font-weight:700; color:#888; letter-spacing:1px; text-transform:uppercase; }
+.upnext-toggle { background:none; border:none; color:#666; font-size:18px; cursor:pointer; padding:2px 4px; }
+.upnext-list { display:flex; gap:8px; padding:0 14px 12px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.upnext-list::-webkit-scrollbar { display:none; }
+.upnext-item { flex-shrink:0; background:#1e1e1e; border-radius:10px; padding:8px 12px; min-width:120px; max-width:160px; cursor:pointer; border:2px solid transparent; }
+.upnext-item.current { border-color:#f39c12; }
+.upnext-item:active { opacity:.7; }
+.upnext-num { font-size:10px; color:#666; margin-bottom:2px; }
+.upnext-name { font-size:13px; font-weight:600; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.upnext-artist { font-size:11px; color:#888; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* playlist nav in view */
+.pl-nav-btn { background:#333; border:none; color:#fff; border-radius:20px; padding:7px 12px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap; }
+.pl-nav-btn:active { background:#555; }
 </style>
 </head>
 <body>
@@ -162,6 +212,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
   <div class="home-top">
     <h1>🎸 คอร์ดของฉัน</h1>
     <p>เก็บภาพเนื้อเพลง + คอร์ดส่วนตัว</p>
+  </div>
+  <div class="home-tabs">
+    <div class="home-tab active" id="tabSongs" onclick="switchTab('songs')">🎵 เพลง</div>
+    <div class="home-tab" id="tabPlaylists" onclick="switchTab('playlists')">📋 กลุ่มเพลง</div>
   </div>
   <div class="home-body">
     <div id="installBar" style="display:none;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:12px 16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.08);">
@@ -175,10 +229,22 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
     <div id="iosBar" style="display:none;background:#e8f4fd;border-radius:14px;padding:12px 16px;margin-bottom:14px;font-size:13px;color:#1a5276;line-height:1.6;">
       📲 <b>ติดตั้งบน iPhone:</b> แตะปุ่ม <b>แชร์</b> (☐↑) แล้วเลือก <b>"Add to Home Screen"</b>
     </div>
-    <button class="add-btn" onclick="goAdd()">＋ เพิ่มเพลงใหม่</button>
-    <div class="section-label">เพลงของฉัน</div>
-    <div class="song-list" id="songList"></div>
-    <div class="empty" id="emptyState">ยังไม่มีเพลง<br>กด "เพิ่มเพลงใหม่" ด้านบน 🎵</div>
+
+    <!-- SONGS TAB -->
+    <div id="tabContentSongs">
+      <button class="add-btn" onclick="goAdd()">＋ เพิ่มเพลงใหม่</button>
+      <div class="section-label">เพลงของฉัน</div>
+      <div class="song-list" id="songList"></div>
+      <div class="empty" id="emptyState">ยังไม่มีเพลง<br>กด "เพิ่มเพลงใหม่" ด้านบน 🎵</div>
+    </div>
+
+    <!-- PLAYLISTS TAB -->
+    <div id="tabContentPlaylists" style="display:none;">
+      <button class="pl-add-btn" onclick="goNewPlaylist()">＋ สร้างกลุ่มเพลงใหม่</button>
+      <div class="section-label">กลุ่มเพลงของฉัน</div>
+      <div id="playlistList"></div>
+      <div class="empty" id="emptyPlaylist" style="display:none;">ยังไม่มีกลุ่มเพลง<br>กด "สร้างกลุ่มเพลงใหม่" ด้านบน 📋</div>
+    </div>
   </div>
 </div>
 
@@ -251,6 +317,22 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
   </div>
 </div>
 
+<!-- EDIT PLAYLIST -->
+<div id="editPlaylist" class="screen">
+  <div class="nav-bar">
+    <button class="nav-back" onclick="goHome()">‹</button>
+    <span class="nav-title" id="epTitle">กลุ่มเพลง</span>
+    <button onclick="savePlaylist()" style="background:none;border:none;color:#f39c12;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;padding:4px 0;">บันทึก</button>
+  </div>
+  <div class="form-body">
+    <label class="f-label">ชื่อกลุ่มเพลง</label>
+    <input class="f-input" type="text" id="epName" placeholder="เช่น เพลงงานวัด" />
+    <div class="ep-section">เลือกเพลง (ลำดับจะตามที่เลือก)</div>
+    <div id="epSongList"></div>
+    <div style="font-size:13px;color:#bbb;text-align:center;padding:8px 0;" id="epEmpty">ยังไม่มีเพลง กรุณาเพิ่มเพลงก่อน</div>
+  </div>
+</div>
+
 <!-- VIEW -->
 <div id="viewScreen" class="screen">
   <div class="view-nav">
@@ -264,9 +346,20 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
     <button class="z-btn" onclick="zoom(10)">+</button>
     <span style="font-size:12px;color:#666;margin-left:2px;">ซูม</span>
     <span class="wake-pill" id="wakePill">🔆 ไม่ดับ</span>
+    <!-- playlist prev/next -->
+    <button class="pl-nav-btn" id="prevSongBtn" onclick="playlistPrev()" style="display:none;">‹ ก่อน</button>
+    <button class="pl-nav-btn" id="nextSongBtn" onclick="playlistNext()" style="display:none;">ถัดไป ›</button>
   </div>
   <div class="img-scroll" id="imgScroll">
     <img id="viewImg" />
+  </div>
+  <!-- UP NEXT PANEL -->
+  <div class="upnext-panel" id="upnextPanel">
+    <div class="upnext-header">
+      <span class="upnext-title">▶ ลำดับเพลง</span>
+      <button class="upnext-toggle" onclick="toggleUpnext()">✕</button>
+    </div>
+    <div class="upnext-list" id="upnextList"></div>
   </div>
   <div class="speed-bar">
     <label>ความเร็ว</label>
@@ -280,7 +373,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
 /* ============================================================
    STATE
 ============================================================ */
-var songs=[], pending=null, origUrl=null, scrollTmr=null, zoomLvl=100, wakeLock=null;
+var songs=[], playlists=[], pending=null, origUrl=null, scrollTmr=null, zoomLvl=100, wakeLock=null;
+/* playlist playback state */
+var currentPlaylist=null, currentPlIdx=0;
+/* edit playlist state */
+var editingPlIdx=-1, epSelected=[];
 
 /* crop state — all coords in px relative to rendered image origin */
 var CS = {
@@ -307,10 +404,19 @@ function showToast(msg){
 ============================================================ */
 function load(){
   try{ var d=localStorage.getItem('chords_v3'); if(d) songs=JSON.parse(d); }catch(e){}
+  // migrate: assign id to songs that don't have one
+  var migrated=false;
+  songs.forEach(function(s){ if(!s.id){ s.id='s'+Date.now()+Math.random(); migrated=true; } });
+  if(migrated) persist();
+  try{ var p=localStorage.getItem('chords_pl_v1'); if(p) playlists=JSON.parse(p); }catch(e){}
   render();
 }
 function persist(){
   try{ localStorage.setItem('chords_v3',JSON.stringify(songs)); }
+  catch(e){ showToast('⚠️ พื้นที่เก็บข้อมูลเต็ม'); }
+}
+function persistPlaylists(){
+  try{ localStorage.setItem('chords_pl_v1',JSON.stringify(playlists)); }
   catch(e){ showToast('⚠️ พื้นที่เก็บข้อมูลเต็ม'); }
 }
 
@@ -338,6 +444,17 @@ function goAdd(){
 }
 
 /* ============================================================
+   TABS
+============================================================ */
+function switchTab(tab){
+  document.getElementById('tabSongs').classList.toggle('active', tab==='songs');
+  document.getElementById('tabPlaylists').classList.toggle('active', tab==='playlists');
+  document.getElementById('tabContentSongs').style.display = tab==='songs'?'block':'none';
+  document.getElementById('tabContentPlaylists').style.display = tab==='playlists'?'block':'none';
+  if(tab==='playlists') renderPlaylists();
+}
+
+/* ============================================================
    RENDER LIST
 ============================================================ */
 function escHtml(t){ var d=document.createElement('div'); d.appendChild(document.createTextNode(t)); return d.innerHTML; }
@@ -355,6 +472,26 @@ function render(){
       +'<button class="song-del" onclick="event.stopPropagation();delSong('+i+')">✕</button>';
     c.addEventListener('click',function(){ openSong(i); });
     list.appendChild(c);
+  });
+}
+
+function renderPlaylists(){
+  var list=document.getElementById('playlistList');
+  var empty=document.getElementById('emptyPlaylist');
+  list.innerHTML='';
+  if(!playlists.length){ empty.style.display='block'; return; }
+  empty.style.display='none';
+  playlists.forEach(function(pl,pi){
+    var card=document.createElement('div');
+    card.className='pl-card';
+    var cnt=pl.songIds.filter(function(id){ return songs.find(function(s){ return s.id===id; }); }).length;
+    card.innerHTML='<div class="pl-icon">📋</div>'
+      +'<div class="pl-info"><div class="pl-name">'+escHtml(pl.name)+'</div>'
+      +'<div class="pl-count">'+cnt+' เพลง</div></div>'
+      +'<button class="pl-play-btn" onclick="event.stopPropagation();playPlaylist('+pi+')">▶ เล่น</button>'
+      +'<button class="pl-del" onclick="event.stopPropagation();delPlaylist('+pi+')">✕</button>';
+    card.addEventListener('click',function(){ goEditPlaylist(pi); });
+    list.appendChild(card);
   });
 }
 
@@ -573,7 +710,7 @@ function saveSong(){
   var name=document.getElementById('songName').value.trim()||'ไม่มีชื่อ';
   var artist=document.getElementById('artistName').value.trim();
   if(!pending){ showToast('กรุณาเลือกภาพก่อน'); return; }
-  songs.push({name:name,artist:artist,img:pending});
+  songs.push({id:'s'+Date.now(), name:name, artist:artist, img:pending});
   persist(); render(); goHome();
   showToast('💾 บันทึก "'+name+'" แล้ว');
 }
@@ -584,8 +721,16 @@ function delSong(i){
 /* ============================================================
    VIEW
 ============================================================ */
-function openSong(i){
+function openSong(i, playlist, plIdx){
   var s=songs[i];
+  // set playlist context
+  if(playlist !== undefined){
+    currentPlaylist=playlist;
+    currentPlIdx=plIdx;
+  } else {
+    currentPlaylist=null;
+    currentPlIdx=0;
+  }
   document.getElementById('vTitle').textContent=s.name;
   document.getElementById('viewImg').src=s.img;
   zoomLvl=100;
@@ -597,6 +742,139 @@ function openSong(i){
   document.getElementById('scrollBtn').classList.remove('on');
   show('viewScreen');
   acquireWake();
+  updatePlaylistNav();
+  renderUpnext();
+}
+
+function updatePlaylistNav(){
+  var hasPl = !!currentPlaylist;
+  var prevBtn=document.getElementById('prevSongBtn');
+  var nextBtn=document.getElementById('nextSongBtn');
+  prevBtn.style.display=hasPl?'inline-block':'none';
+  nextBtn.style.display=hasPl?'inline-block':'none';
+  if(hasPl){
+    prevBtn.style.opacity = currentPlIdx>0 ? '1':'0.3';
+    nextBtn.style.opacity = currentPlIdx<currentPlaylist.length-1 ? '1':'0.3';
+  }
+  var panel=document.getElementById('upnextPanel');
+  if(hasPl){ panel.classList.add('open'); } else { panel.classList.remove('open'); }
+}
+
+function renderUpnext(){
+  var list=document.getElementById('upnextList');
+  list.innerHTML='';
+  if(!currentPlaylist) return;
+  currentPlaylist.forEach(function(songIdx,pi){
+    var s=songs[songIdx];
+    if(!s) return;
+    var item=document.createElement('div');
+    item.className='upnext-item'+(pi===currentPlIdx?' current':'');
+    item.innerHTML='<div class="upnext-num">'+(pi+1)+'</div>'
+      +'<div class="upnext-name">'+escHtml(s.name)+'</div>'
+      +'<div class="upnext-artist">'+(s.artist||'–')+'</div>';
+    var idx=pi;
+    item.addEventListener('click',function(){ jumpPlaylist(idx); });
+    list.appendChild(item);
+  });
+  // scroll current into view
+  setTimeout(function(){
+    var items=list.querySelectorAll('.upnext-item');
+    if(items[currentPlIdx]) items[currentPlIdx].scrollIntoView({inline:'center',behavior:'smooth'});
+  },100);
+}
+
+function toggleUpnext(){
+  document.getElementById('upnextPanel').classList.remove('open');
+}
+
+function playlistNext(){
+  if(!currentPlaylist||currentPlIdx>=currentPlaylist.length-1) return;
+  jumpPlaylist(currentPlIdx+1);
+}
+function playlistPrev(){
+  if(!currentPlaylist||currentPlIdx<=0) return;
+  jumpPlaylist(currentPlIdx-1);
+}
+function jumpPlaylist(pi){
+  var songIdx=currentPlaylist[pi];
+  openSong(songIdx, currentPlaylist, pi);
+}
+
+/* ============================================================
+   PLAYLIST MANAGEMENT
+============================================================ */
+function goNewPlaylist(){
+  editingPlIdx=-1;
+  epSelected=[];
+  document.getElementById('epName').value='';
+  renderEpSongs();
+  document.getElementById('epTitle').textContent='สร้างกลุ่มเพลง';
+  show('editPlaylist');
+}
+function goEditPlaylist(pi){
+  editingPlIdx=pi;
+  var pl=playlists[pi];
+  document.getElementById('epName').value=pl.name;
+  // epSelected = indices into songs[] in order
+  epSelected=pl.songIds.map(function(id){
+    return songs.findIndex(function(s){ return s.id===id; });
+  }).filter(function(i){ return i>=0; });
+  renderEpSongs();
+  document.getElementById('epTitle').textContent='แก้ไขกลุ่มเพลง';
+  show('editPlaylist');
+}
+function renderEpSongs(){
+  var list=document.getElementById('epSongList');
+  var empty=document.getElementById('epEmpty');
+  list.innerHTML='';
+  if(!songs.length){ empty.style.display='block'; return; }
+  empty.style.display='none';
+  songs.forEach(function(s,i){
+    var orderIdx=epSelected.indexOf(i);
+    var isOn=orderIdx>=0;
+    var row=document.createElement('div');
+    row.className='ep-song-row';
+    row.innerHTML='<div class="song-icon ep-song-icon" style="width:38px;height:38px;font-size:18px;">🎵</div>'
+      +'<div class="ep-song-info"><div class="ep-song-name">'+escHtml(s.name)+'</div>'
+      +'<div class="ep-song-artist">'+(s.artist||'ไม่ระบุศิลปิน')+'</div></div>'
+      +(isOn?'<div class="ep-order-badge">'+(orderIdx+1)+'</div>':'')
+      +'<div class="ep-check'+(isOn?' on':'')+'">'+( isOn?'✓':'')+'</div>';
+    var idx=i;
+    row.addEventListener('click',function(){
+      var pos=epSelected.indexOf(idx);
+      if(pos>=0){ epSelected.splice(pos,1); } else { epSelected.push(idx); }
+      renderEpSongs();
+    });
+    list.appendChild(row);
+  });
+}
+function savePlaylist(){
+  var name=document.getElementById('epName').value.trim()||'กลุ่มเพลงใหม่';
+  if(!epSelected.length){ showToast('⚠️ กรุณาเลือกเพลงอย่างน้อย 1 เพลง'); return; }
+  var songIds=epSelected.map(function(i){ return songs[i].id; });
+  if(editingPlIdx>=0){
+    playlists[editingPlIdx]={name:name,songIds:songIds};
+    showToast('✅ บันทึก "'+name+'" แล้ว');
+  } else {
+    playlists.push({id:'pl'+Date.now(),name:name,songIds:songIds});
+    showToast('✅ สร้าง "'+name+'" แล้ว');
+  }
+  persistPlaylists();
+  goHome();
+  switchTab('playlists');
+}
+function delPlaylist(pi){
+  if(confirm('ลบกลุ่มเพลง "'+playlists[pi].name+'" ?')){
+    playlists.splice(pi,1); persistPlaylists(); renderPlaylists();
+  }
+}
+function playPlaylist(pi){
+  var pl=playlists[pi];
+  var indices=pl.songIds.map(function(id){
+    return songs.findIndex(function(s){ return s.id===id; });
+  }).filter(function(i){ return i>=0; });
+  if(!indices.length){ showToast('⚠️ ไม่มีเพลงในกลุ่มนี้'); return; }
+  openSong(indices[0], indices, 0);
 }
 function zoom(d){
   zoomLvl=Math.max(50,Math.min(400,zoomLvl+d));
@@ -732,7 +1010,6 @@ function installApp(){
   }
 }
 
-  
 /* ── iOS hint (Safari, not standalone) ── */
 (function(){
   var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
