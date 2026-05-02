@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>🎸 คอร์ดของฉัน</title>
+<link rel="manifest" id="manifestLink">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="คอร์ดของฉัน">
+<meta name="theme-color" content="#1a1a1a">
+<link rel="apple-touch-icon" id="appleIcon">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; background: #f5f4f0; color: #1a1a1a; min-height: 100vh; }
@@ -157,6 +164,17 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
     <p>เก็บภาพเนื้อเพลง + คอร์ดส่วนตัว</p>
   </div>
   <div class="home-body">
+    <div id="installBar" style="display:none;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:12px 16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.08);">
+      <span style="font-size:22px;">📲</span>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:14px;font-weight:600;">ติดตั้งเป็นแอปบนมือถือ</div>
+        <div style="font-size:12px;color:#888;margin-top:2px;">ใช้งานแบบออฟไลน์ได้</div>
+      </div>
+      <button onclick="installApp()" style="background:#1a1a1a;color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;">ติดตั้ง</button>
+    </div>
+    <div id="iosBar" style="display:none;background:#e8f4fd;border-radius:14px;padding:12px 16px;margin-bottom:14px;font-size:13px;color:#1a5276;line-height:1.6;">
+      📲 <b>ติดตั้งบน iPhone:</b> แตะปุ่ม <b>แชร์</b> (☐↑) แล้วเลือก <b>"Add to Home Screen"</b>
+    </div>
     <button class="add-btn" onclick="goAdd()">＋ เพิ่มเพลงใหม่</button>
     <div class="section-label">เพลงของฉัน</div>
     <div class="song-list" id="songList"></div>
@@ -252,9 +270,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
   </div>
   <div class="speed-bar">
     <label>ความเร็ว</label>
-    <input type="range" min="1" max="10" step="1" value="3" id="speedSlider"
+    <input type="range" min="1" max="10" step="1" value="2" id="speedSlider"
       oninput="document.getElementById('speedVal').textContent=this.value; restartIfOn()"/>
-    <span id="speedVal">3</span>
+    <span id="speedVal">2</span>
   </div>
 </div>
 
@@ -598,9 +616,11 @@ function toggleScroll(){
 }
 function startScroll(){
   var spd=parseInt(document.getElementById('speedSlider').value);
+  // px per tick (every 30ms): level 1=0.2px, level 10=2px
+  var pxPerTick = spd * 0.2;
   var body=document.getElementById('imgScroll');
   scrollTmr=setInterval(function(){
-    body.scrollTop+=spd*0.4;
+    body.scrollTop+=pxPerTick;
     if(body.scrollTop+body.clientHeight>=body.scrollHeight-4){
       stopScroll();
       document.getElementById('scrollBtn').textContent='▶ เลื่อน';
@@ -628,7 +648,6 @@ document.getElementById('imgScroll').addEventListener('touchend',function(e){
   } else { lastTap=now; }
 });
 
-  
 async function acquireWake(){
   var pill=document.getElementById('wakePill');
   try{
@@ -641,8 +660,87 @@ async function acquireWake(){
 }
 
 /* ============================================================
-   BOOT
+   PWA — inject manifest blob + register service worker
 ============================================================ */
+(function(){
+  // ── App icon (simple SVG guitar emoji style) ──
+  var iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#1a1a1a"/><text y="340" x="256" text-anchor="middle" font-size="300">🎸</text></svg>';
+  var iconBlob = new Blob([iconSvg], {type:'image/svg+xml'});
+  var iconUrl  = URL.createObjectURL(iconBlob);
+
+  // apple-touch-icon
+  document.getElementById('appleIcon').href = iconUrl;
+
+  // ── Manifest ──
+  var manifest = {
+    name: 'คอร์ดของฉัน',
+    short_name: 'คอร์ด',
+    description: 'เก็บภาพเนื้อเพลง + คอร์ดกีตาร์ส่วนตัว',
+    start_url: location.href,
+    display: 'standalone',
+    orientation: 'portrait',
+    background_color: '#1a1a1a',
+    theme_color: '#1a1a1a',
+    icons: [
+      {src: iconUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable'}
+    ]
+  };
+  var mBlob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+  var mUrl  = URL.createObjectURL(mBlob);
+  document.getElementById('manifestLink').href = mUrl;
+
+  // ── Service Worker (inline via blob) ──
+  var swCode = [
+    'var CACHE="chords-v1";',
+    'self.addEventListener("install",function(e){',
+    '  e.waitUntil(caches.open(CACHE).then(function(c){',
+    '    return c.addAll([location.href]);',
+    '  }));',
+    '  self.skipWaiting();',
+    '});',
+    'self.addEventListener("activate",function(e){',
+    '  e.waitUntil(clients.claim());',
+    '});',
+    'self.addEventListener("fetch",function(e){',
+    '  e.respondWith(',
+    '    caches.match(e.request).then(function(r){ return r||fetch(e.request); })',
+    '  );',
+    '});'
+  ].join('\n');
+  if('serviceWorker' in navigator){
+    var swBlob = new Blob([swCode], {type:'application/javascript'});
+    var swUrl  = URL.createObjectURL(swBlob);
+    navigator.serviceWorker.register(swUrl, {scope: '/'}).catch(function(){});
+  }
+})();
+
+/* ── Install prompt (Android Chrome) ── */
+var deferredInstall = null;
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault();
+  deferredInstall = e;
+  document.getElementById('installBar').style.display = 'flex';
+});
+window.addEventListener('appinstalled', function(){
+  document.getElementById('installBar').style.display = 'none';
+  showToast('✅ ติดตั้งแอปสำเร็จแล้ว!');
+});
+function installApp(){
+  if(deferredInstall){
+    deferredInstall.prompt();
+    deferredInstall.userChoice.then(function(){ deferredInstall=null; });
+  }
+}
+
+/* ── iOS hint (Safari, not standalone) ── */
+(function(){
+  var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  var isSafari = /safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent);
+  var isStandalone = ('standalone' in navigator) && navigator.standalone;
+  if(isIos && isSafari && !isStandalone){
+    document.getElementById('iosBar').style.display = 'block';
+  }
+})();
 document.querySelectorAll('.screen').forEach(function(s){ s.style.display='none'; });
 load();
 show('home');
