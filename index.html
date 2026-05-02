@@ -192,15 +192,48 @@ function goAdd() {
   show('addScreen');
 }
 
+function autoCrop(dataUrl, callback) {
+  var img = new Image();
+  img.onload = function() {
+    var canvas = document.createElement('canvas');
+    canvas.width = img.width; canvas.height = img.height;
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    var px = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+    var w = canvas.width, h = canvas.height, thresh = 230;
+    var top=h, bottom=0, left=w, right=0;
+    for(var y=0;y<h;y++) for(var x=0;x<w;x++) {
+      var i=(y*w+x)*4;
+      if(px[i]<thresh||px[i+1]<thresh||px[i+2]<thresh) {
+        if(y<top) top=y; if(y>bottom) bottom=y;
+        if(x<left) left=x; if(x>right) right=x;
+      }
+    }
+    var pad=12;
+    top=Math.max(0,top-pad); bottom=Math.min(h,bottom+pad);
+    left=Math.max(0,left-pad); right=Math.min(w,right+pad);
+    var cw=right-left, ch=bottom-top;
+    if(cw<10||ch<10){ callback(dataUrl); return; }
+    var out=document.createElement('canvas');
+    out.width=cw; out.height=ch;
+    out.getContext('2d').drawImage(canvas,left,top,cw,ch,0,0,cw,ch);
+    callback(out.toDataURL('image/jpeg',0.93));
+  };
+  img.src = dataUrl;
+}
+
 function handleFile(inp) {
   var f = inp.files[0]; if(!f) return;
+  document.getElementById('uz-txt') && (document.querySelector('.uz-txt').textContent = 'กำลังประมวลผล...');
   var r = new FileReader();
   r.onload = function(e) {
-    pending = e.target.result;
-    document.getElementById('previewImg').src = pending;
-    document.getElementById('previewWrap').style.display = 'block';
-    document.getElementById('uploadZone').style.display = 'none';
-    document.getElementById('saveBtn').disabled = false;
+    autoCrop(e.target.result, function(cropped) {
+      pending = cropped;
+      document.getElementById('previewImg').src = pending;
+      document.getElementById('previewWrap').style.display = 'block';
+      document.getElementById('uploadZone').style.display = 'none';
+      document.getElementById('saveBtn').disabled = false;
+    });
   };
   r.readAsDataURL(f);
 }
@@ -286,7 +319,6 @@ document.getElementById('imgScroll').addEventListener('touchend', function(e) {
   }
 });
 
-  
 async function acquireWake() {
   var pill = document.getElementById('wakePill');
   try {
