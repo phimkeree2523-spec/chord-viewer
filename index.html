@@ -162,30 +162,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
 .search-clear.show { display:block; }
 .search-count { font-size:12px; color:#aaa; margin-bottom:8px; display:block; }
 
-/* ── VOICE SEARCH OVERLAY ── */
-.vs-overlay { position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:8000; display:none; flex-direction:column; align-items:center; justify-content:flex-start; padding-top:80px; }
-.vs-overlay.open { display:flex; }
-.vs-box { background:#1a1a1a; border-radius:24px; padding:28px 24px 20px; width:calc(100% - 40px); max-width:400px; }
-.vs-title { font-size:14px; color:#888; text-align:center; margin-bottom:18px; letter-spacing:.5px; }
-.vs-mic-ring { width:80px; height:80px; border-radius:50%; background:#111; border:3px solid #333; display:flex; align-items:center; justify-content:center; font-size:34px; margin:0 auto 16px; transition:border-color .2s, box-shadow .2s; }
-.vs-mic-ring.listening { border-color:#e74c3c; box-shadow:0 0 0 8px rgba(231,76,60,.18); animation:vs-pulse .8s infinite alternate; }
-.vs-mic-ring.found     { border-color:#27ae60; box-shadow:0 0 0 8px rgba(39,174,96,.18); }
-@keyframes vs-pulse { from{box-shadow:0 0 0 4px rgba(231,76,60,.2)} to{box-shadow:0 0 0 14px rgba(231,76,60,.05)} }
-.vs-status { font-size:15px; color:#aaa; text-align:center; min-height:22px; margin-bottom:14px; }
-.vs-heard  { font-size:13px; color:#666; text-align:center; min-height:18px; font-style:italic; margin-bottom:16px; }
-.vs-results { display:flex; flex-direction:column; gap:8px; max-height:240px; overflow-y:auto; margin-bottom:16px; }
-.vs-result-item { display:flex; align-items:center; gap:12px; background:#252525; border-radius:12px; padding:11px 14px; cursor:pointer; border:2px solid transparent; }
-.vs-result-item:active { opacity:.7; }
-.vs-result-item.highlight { border-color:#f39c12; }
-.vs-result-name { flex:1; min-width:0; }
-.vs-result-song { font-size:15px; font-weight:600; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.vs-result-art  { font-size:12px; color:#888; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.vs-score { font-size:11px; color:#f39c12; font-weight:700; flex-shrink:0; }
-.vs-cancel { width:100%; padding:13px; background:#2a2a2a; border:none; border-radius:14px; color:#888; font-size:15px; cursor:pointer; font-family:inherit; }
-.vs-cancel:active { background:#333; }
-.vs-search-btn { background:#1a3a5c; border:none; color:#7ec8ff; border-radius:20px; padding:7px 13px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap; flex-shrink:0; }
-.vs-search-btn.listening { background:#3a1a1a; color:#e74c3c; border:1px solid #e74c3c; }
-
 .home-tabs { display:flex; gap:0; background:#f5f4f0; padding:12px 16px 0; }
 .home-tab { flex:1; padding:9px 0; text-align:center; font-size:14px; font-weight:600; color:#999; border-bottom:2px solid transparent; cursor:pointer; }
 .home-tab.active { color:#1a1a1a; border-bottom:2px solid #1a1a1a; }
@@ -464,27 +440,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
   </div>
 </div>
 
-<!-- VOICE SEARCH OVERLAY -->
-<div class="vs-overlay" id="vsOverlay">
-  <div class="vs-box">
-    <div class="vs-title">🎤 ค้นหาเพลงด้วยเสียง</div>
-    <div class="vs-mic-ring" id="vsMicRing">🎤</div>
-    <div class="vs-status" id="vsStatus">กำลังฟัง…</div>
-    <div class="vs-heard"  id="vsHeard"></div>
-    <div class="vs-results" id="vsResults"></div>
-    <button class="vs-cancel" onclick="vsClose()">ยกเลิก</button>
-  </div>
-</div>
-
 <!-- VIEW -->
 <div id="viewScreen" class="screen">
   <div class="view-nav">
     <button class="vn-back" onclick="stopScroll();goHome()">‹</button>
     <span class="vn-title" id="vTitle"></span>
-    <button onclick="viewReplaceImg()" style="background:none;border:none;color:#aaa;font-size:13px;cursor:pointer;font-family:inherit;padding:4px 6px;white-space:nowrap;flex-shrink:0;">📷 เปลี่ยนรูป</button>
     <button class="scroll-btn" id="scrollBtn" onclick="toggleScroll()">▶ เลื่อน</button>
   </div>
-  <input type="file" accept="image/*" id="viewReplaceInput" style="display:none;" onchange="viewReplaceFile(this)" />
   <div class="toolbar">
     <button class="z-btn" onclick="zoom(-10)">−</button>
     <span class="z-pct" id="zPct">100%</span>
@@ -494,8 +456,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
     <!-- playlist prev/next -->
     <button class="pl-nav-btn" id="prevSongBtn" onclick="playlistPrev()" style="display:none;">‹ ก่อน</button>
     <button class="pl-nav-btn" id="nextSongBtn" onclick="playlistNext()" style="display:none;">ถัดไป ›</button>
-    <!-- voice search -->
-    <button class="vs-search-btn" id="vsBtn" onclick="vsOpen()" style="margin-left:auto;">🔍🎤</button>
   </div>
   <div class="img-scroll" id="imgScroll">
     <img id="viewImg" />
@@ -528,7 +488,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
 ============================================================ */
 var songs=[], playlists=[], pending=null, origUrl=null, scrollTmr=null, zoomLvl=100, wakeLock=null;
 /* playlist playback state */
-var currentPlaylist=null, currentPlIdx=0, currentSongIdx=-1;
+var currentPlaylist=null, currentPlIdx=0;
 /* edit playlist state */
 var editingPlIdx=-1, epSelected=[];
 
@@ -641,18 +601,16 @@ function _putMeta(key, val, cb){
 function _compress(dataUrl, cb){
   var img = new Image();
   img.onload = function(){
-    /* ใช้ขนาดใหญ่พอให้อ่านคอร์ดได้ชัด แต่ไม่เปลืองพื้นที่เกิน */
-    var MAX = 1800;      /* px ด้านยาวสูงสุด */
-    var QUALITY = 0.88;  /* JPEG quality สูงขึ้น ตัวหนังสือคมขึ้น */
+    /* มือถือมี storage จำกัด — ใช้ขนาดเล็กลง */
+    var isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
+    var MAX = isMobile ? 900 : 1400;
+    var QUALITY = isMobile ? 0.65 : 0.80;
     var w=img.width, h=img.height;
     if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
     if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}
     var c=document.createElement('canvas');
     c.width=w; c.height=h;
-    var ctx = c.getContext('2d');
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
-    ctx.drawImage(img,0,0,w,h);
+    c.getContext('2d').drawImage(img,0,0,w,h);
     cb(c.toDataURL('image/jpeg', QUALITY));
   };
   img.onerror=function(){ cb(dataUrl); };
@@ -1099,7 +1057,6 @@ function delSong(i){
 ============================================================ */
 function openSong(i, playlist, plIdx){
   var s=songs[i];
-  currentSongIdx = i;
   // set playlist context
   if(playlist !== undefined){
     currentPlaylist=playlist;
@@ -1457,187 +1414,6 @@ function updateVoiceBtn(){
   else        { b.textContent='🎤 เสียง';   b.style.background='#222';    b.style.color='#888';    b.style.borderColor='#333'; }
 }
 
-/* ============================================================
-   REPLACE IMAGE IN VIEW (เปลี่ยนรูปโดยไม่ต้องลบแล้วเพิ่มใหม่)
-============================================================ */
-function viewReplaceImg(){
-  document.getElementById('viewReplaceInput').value = '';
-  document.getElementById('viewReplaceInput').click();
-}
-function viewReplaceFile(inp){
-  var f = inp.files[0]; if(!f) return;
-  if(currentSongIdx < 0 || currentSongIdx >= songs.length){ showToast('⚠️ ไม่พบเพลง'); return; }
-  var r = new FileReader();
-  r.onload = function(e){
-    showToast('⏳ กำลังบันทึกรูปใหม่…');
-    _compress(e.target.result, function(img){
-      songs[currentSongIdx].img = img;
-      document.getElementById('viewImg').src = img;
-      _putSong(songs[currentSongIdx], function(){
-        _backupToLS();
-        showToast('✅ เปลี่ยนรูปสำเร็จแล้ว!');
-      });
-    });
-  };
-  r.readAsDataURL(f);
-}
-
-/* ============================================================
-   VOICE SEARCH — ค้นหาชื่อเพลงด้วยเสียง
-============================================================ */
-var vsRec = null, vsListening = false;
-
-function vsOpen(){
-  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SR){ showToast('⚠️ เบราว์เซอร์นี้ไม่รองรับ กรุณาใช้ Chrome'); return; }
-  document.getElementById('vsOverlay').classList.add('open');
-  document.getElementById('vsResults').innerHTML = '';
-  document.getElementById('vsHeard').textContent = '';
-  vsSetStatus('listening', 'กำลังฟัง… พูดชื่อเพลง');
-  vsStartListening();
-}
-
-function vsClose(){
-  document.getElementById('vsOverlay').classList.remove('open');
-  if(vsRec){ try{ vsRec.stop(); }catch(e){} vsRec=null; }
-  vsListening = false;
-  var btn = document.getElementById('vsBtn');
-  if(btn) btn.classList.remove('listening');
-}
-
-function vsSetStatus(state, msg){
-  var ring = document.getElementById('vsMicRing');
-  var stat = document.getElementById('vsStatus');
-  ring.className = 'vs-mic-ring' + (state==='listening' ? ' listening' : state==='found' ? ' found' : '');
-  stat.textContent = msg;
-  var btn = document.getElementById('vsBtn');
-  if(btn) btn.classList.toggle('listening', state==='listening');
-}
-
-function vsStartListening(){
-  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SR || vsListening) return;
-  vsRec = new SR();
-  vsRec.lang = 'th-TH';
-  vsRec.continuous = false;
-  vsRec.interimResults = true;
-
-  vsRec.onstart = function(){ vsListening = true; };
-
-  vsRec.onresult = function(e){
-    var interim = '', final = '';
-    for(var i = e.resultIndex; i < e.results.length; i++){
-      if(e.results[i].isFinal) final += e.results[i][0].transcript;
-      else interim += e.results[i][0].transcript;
-    }
-    var heard = (final || interim).trim();
-    document.getElementById('vsHeard').textContent = heard ? '"' + heard + '"' : '';
-    if(final){
-      vsSearch(final.trim());
-    }
-  };
-
-  vsRec.onerror = function(e){
-    vsListening = false;
-    if(e.error === 'not-allowed'){
-      vsSetStatus('', '🚫 กรุณาอนุญาตไมโครโฟน');
-    } else if(e.error === 'no-speech'){
-      vsSetStatus('', 'ไม่ได้ยินเสียง ลองใหม่อีกครั้ง');
-      setTimeout(function(){ if(document.getElementById('vsOverlay').classList.contains('open')) vsOpen2(); }, 1200);
-    } else {
-      vsSetStatus('', 'เกิดข้อผิดพลาด: ' + e.error);
-    }
-  };
-
-  vsRec.onend = function(){
-    vsListening = false;
-  };
-
-  try{ vsRec.start(); }catch(e){ vsListening=false; }
-}
-
-function vsOpen2(){
-  /* restart after no-speech without resetting results */
-  document.getElementById('vsHeard').textContent = '';
-  vsSetStatus('listening', 'กำลังฟัง… พูดชื่อเพลง');
-  vsStartListening();
-}
-
-/* fuzzy match — คืนค่า 0-100 */
-function vsFuzzy(query, target){
-  query  = query.toLowerCase().trim();
-  target = target.toLowerCase().trim();
-  if(!query) return 0;
-  if(target === query) return 100;
-  if(target.indexOf(query) !== -1) return 90;
-  if(query.indexOf(target) !== -1) return 85;
-  /* character overlap score */
-  var matches = 0;
-  var used = target.split('');
-  for(var i=0; i<query.length; i++){
-    var idx = used.indexOf(query[i]);
-    if(idx !== -1){ matches++; used.splice(idx,1); }
-  }
-  return Math.round((matches / Math.max(query.length, target.length)) * 70);
-}
-
-function vsSearch(query){
-  vsRec = null; vsListening = false;
-  if(!query){ vsSetStatus('', 'ไม่ได้ยินชื่อเพลง'); return; }
-
-  var scored = songs.map(function(s, i){
-    var nameScore   = vsFuzzy(query, s.name   || '');
-    var artistScore = vsFuzzy(query, s.artist || '') * 0.6;
-    return { s:s, i:i, score: Math.max(nameScore, artistScore) };
-  }).filter(function(x){ return x.score >= 30; })
-    .sort(function(a,b){ return b.score - a.score; })
-    .slice(0, 5);
-
-  var resEl = document.getElementById('vsResults');
-  resEl.innerHTML = '';
-
-  if(!scored.length){
-    vsSetStatus('', 'ไม่พบเพลง "' + query + '"');
-    document.getElementById('vsHeard').textContent = 'ลองพูดใหม่อีกครั้ง';
-    /* ฟังใหม่อัตโนมัติ */
-    setTimeout(function(){ if(document.getElementById('vsOverlay').classList.contains('open')) vsOpen2(); }, 1500);
-    return;
-  }
-
-  vsSetStatus('found', 'พบ ' + scored.length + ' เพลง — แตะเพื่อเปิด');
-
-  scored.forEach(function(x, ri){
-    var item = document.createElement('div');
-    item.className = 'vs-result-item' + (ri===0?' highlight':'');
-    item.innerHTML =
-      '<span style="font-size:22px;flex-shrink:0;">🎵</span>'
-      +'<div class="vs-result-name">'
-        +'<div class="vs-result-song">'+escHtml(x.s.name)+'</div>'
-        +(x.s.artist ? '<div class="vs-result-art">'+escHtml(x.s.artist)+'</div>' : '')
-      +'</div>'
-      +'<span class="vs-score">'+Math.round(x.score)+'%</span>';
-    var idx = x.i;
-    item.addEventListener('click', function(){
-      vsClose();
-      openSong(idx);
-    });
-    resEl.appendChild(item);
-  });
-
-  /* เปิดอันดับ 1 อัตโนมัติถ้าคะแนน >= 85 */
-  if(scored[0].score >= 85){
-    setTimeout(function(){
-      if(document.getElementById('vsOverlay').classList.contains('open')){
-        vsClose();
-        openSong(scored[0].i);
-        showToast('🎤 เปิด "' + scored[0].s.name + '"');
-      }
-    }, 900);
-  }
-}
-
-
-  
 </script>
 </body>
 </html>
