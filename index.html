@@ -1493,6 +1493,7 @@ function lpRenderTrackState(t){
   // remove all state classes
   el.classList.remove('state-rec','state-play','state-done');
 
+  
   if(t.recording){
     el.classList.add('state-rec');
     if(num){ num.className='lp-track-num rec'; num.textContent=t.id; }
