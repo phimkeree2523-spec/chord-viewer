@@ -311,8 +311,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
       </div>
       <button onclick="installApp()" style="background:#1a1a1a;color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;">ติดตั้ง</button>
     </div>
-    <div id="iosBar" style="display:none;background:#e8f4fd;border-radius:14px;padding:12px 16px;margin-bottom:14px;font-size:13px;color:#1a5276;line-height:1.6;">
-      📲 <b>ติดตั้งบน iPhone:</b> แตะปุ่ม <b>แชร์</b> (☐↑) แล้วเลือก <b>"Add to Home Screen"</b>
+    <div id="iosBar" style="display:none;background:#fff3cd;border-radius:14px;padding:12px 16px;margin-bottom:14px;font-size:13px;color:#856404;line-height:1.8;border:1px solid #ffc107;">
+      ⚠️ <b>สำคัญสำหรับ iPhone/iPad:</b><br>
+      Safari อาจลบข้อมูลถ้าไม่ได้ติดตั้งเป็นแอป<br>
+      แตะปุ่ม <b>แชร์</b> (☐↑) → <b>"Add to Home Screen"</b><br>
+      แล้วเปิดจาก icon บนหน้าจอแทน เพื่อให้ข้อมูลถาวร
     </div>
 
     <!-- SONGS TAB -->
@@ -522,12 +525,32 @@ function _loadSongs(cb){
 }
 
 /* ---------- save / delete one song ---------- */
-function _putSong(s, cb){
+function _putSong(s, cb, errCb){
   _openDB(function(db){
     var tx = db.transaction('songs','readwrite');
-    tx.objectStore('songs').put(s);
+    var req = tx.objectStore('songs').put(s);
     tx.oncomplete = function(){ if(cb)cb(); };
-    tx.onerror    = function(e){ showToast('⚠️ บันทึกไม่สำเร็จ'); };
+    tx.onerror    = function(e){
+      var msg = e.target && e.target.error ? e.target.error.message : '';
+      var isQuota = msg.toLowerCase().indexOf('quota') !== -1
+                 || msg.toLowerCase().indexOf('storage') !== -1
+                 || (e.target && e.target.error && e.target.error.name === 'QuotaExceededError');
+      if(isQuota){
+        showToast('❌ พื้นที่จัดเก็บเต็ม! ลบเพลงเก่าออกบ้าง');
+      } else {
+        showToast('⚠️ บันทึกไม่สำเร็จ: ' + (msg||'unknown'));
+      }
+      if(errCb) errCb(e);
+    };
+    tx.onabort = function(e){
+      var err = tx.error;
+      if(err && err.name === 'QuotaExceededError'){
+        showToast('❌ พื้นที่จัดเก็บเต็ม! ลบเพลงเก่าออกบ้าง');
+      } else {
+        showToast('⚠️ บันทึกถูกยกเลิก');
+      }
+      if(errCb) errCb(e);
+    };
   });
 }
 function _delSong(id, cb){
@@ -559,20 +582,51 @@ function _putMeta(key, val, cb){
 function _compress(dataUrl, cb){
   var img = new Image();
   img.onload = function(){
-    var MAX=1400, w=img.width, h=img.height;
+    /* มือถือมี storage จำกัด — ใช้ขนาดเล็กลง */
+    var isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
+    var MAX = isMobile ? 900 : 1400;
+    var QUALITY = isMobile ? 0.65 : 0.80;
+    var w=img.width, h=img.height;
     if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
     if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}
     var c=document.createElement('canvas');
     c.width=w; c.height=h;
     c.getContext('2d').drawImage(img,0,0,w,h);
-    cb(c.toDataURL('image/jpeg',0.80));
+    cb(c.toDataURL('image/jpeg', QUALITY));
   };
   img.onerror=function(){ cb(dataUrl); };
   img.src=dataUrl;
 }
 
+/* ---------- ขอ persistent storage (ป้องกัน iOS/Android ล้างข้อมูล) ---------- */
+function _requestPersist(){
+  if(navigator.storage && navigator.storage.persist){
+    navigator.storage.persist().then(function(granted){
+      if(!granted){
+        /* iOS Safari ไม่ให้ persist ผ่าน JS — ต้องบันทึกไว้ Home Screen */
+        var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+        var isStandalone = ('standalone' in navigator) && navigator.standalone;
+        if(isIos && !isStandalone){
+          /* จะแสดง hint ที่ home screen แทน */
+        }
+      }
+    }).catch(function(){});
+  }
+}
+
+/* ---------- backup เพลงทั้งหมดลง localStorage ด้วย (เป็น safety net) ---------- */
+function _backupToLS(){
+  try{
+    /* เก็บแค่ id/name/artist ไม่เก็บรูป (รูปใหญ่เกิน LS limit) */
+    var meta = songs.map(function(s){ return {id:s.id, name:s.name, artist:s.artist}; });
+    localStorage.setItem('chords_meta_v4', JSON.stringify(meta));
+    localStorage.setItem('chords_pl_v2', JSON.stringify(playlists));
+  }catch(e){}
+}
+
 /* ---------- public API (same names as before) ---------- */
 function load(){
+  _requestPersist();
   _openDB(function(){
     _loadSongs(function(rows){
       /* migrate from old localStorage once */
@@ -598,15 +652,18 @@ function load(){
         if(songs.length) songs.forEach(function(s){ _putSong(s); });
         if(playlists.length) _putMeta('playlists',playlists);
         try{ localStorage.removeItem('chords_v3'); localStorage.removeItem('chords_pl_v1'); }catch(e){}
+        _backupToLS();
       });
     });
   });
 }
 function persist(){
   songs.forEach(function(s){ _putSong(s); });
+  _backupToLS();
 }
 function persistPlaylists(){
   _putMeta('playlists', playlists);
+  _backupToLS();
 }
 
 /* ============================================================
@@ -906,8 +963,14 @@ function saveSong(){
     songs.push(s);
     _putSong(s, function(){
       btn.disabled=false; btn.textContent='บันทึกเพลง';
+      _backupToLS();
       render(); goHome();
       showToast('💾 บันทึก "'+name+'" แล้ว');
+    }, function(){
+      /* rollback in-memory array if DB write failed */
+      var idx = songs.indexOf(s);
+      if(idx !== -1) songs.splice(idx, 1);
+      btn.disabled=false; btn.textContent='บันทึกเพลง';
     });
   });
 }
@@ -1211,12 +1274,11 @@ function installApp(){
   }
 }
 
-/* ── iOS hint (Safari, not standalone) ── */
+/* ── iOS hint (all browsers on iOS, not standalone) ── */
 (function(){
   var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  var isSafari = /safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent);
   var isStandalone = ('standalone' in navigator) && navigator.standalone;
-  if(isIos && isSafari && !isStandalone){
+  if(isIos && !isStandalone){
     document.getElementById('iosBar').style.display = 'block';
   }
 })();
@@ -1283,7 +1345,6 @@ function updateVoiceBtn(){
   else        { b.textContent='🎤 เสียง';   b.style.background='#222';    b.style.color='#888';    b.style.borderColor='#333'; }
 }
 
-  
 </script>
 </body>
 </html>
