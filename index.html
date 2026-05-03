@@ -481,8 +481,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
   <div class="view-nav">
     <button class="vn-back" onclick="stopScroll();goHome()">‹</button>
     <span class="vn-title" id="vTitle"></span>
+    <button onclick="viewReplaceImg()" style="background:none;border:none;color:#aaa;font-size:13px;cursor:pointer;font-family:inherit;padding:4px 6px;white-space:nowrap;flex-shrink:0;">📷 เปลี่ยนรูป</button>
     <button class="scroll-btn" id="scrollBtn" onclick="toggleScroll()">▶ เลื่อน</button>
   </div>
+  <input type="file" accept="image/*" id="viewReplaceInput" style="display:none;" onchange="viewReplaceFile(this)" />
   <div class="toolbar">
     <button class="z-btn" onclick="zoom(-10)">−</button>
     <span class="z-pct" id="zPct">100%</span>
@@ -526,7 +528,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
 ============================================================ */
 var songs=[], playlists=[], pending=null, origUrl=null, scrollTmr=null, zoomLvl=100, wakeLock=null;
 /* playlist playback state */
-var currentPlaylist=null, currentPlIdx=0;
+var currentPlaylist=null, currentPlIdx=0, currentSongIdx=-1;
 /* edit playlist state */
 var editingPlIdx=-1, epSelected=[];
 
@@ -639,16 +641,18 @@ function _putMeta(key, val, cb){
 function _compress(dataUrl, cb){
   var img = new Image();
   img.onload = function(){
-    /* มือถือมี storage จำกัด — ใช้ขนาดเล็กลง */
-    var isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
-    var MAX = isMobile ? 900 : 1400;
-    var QUALITY = isMobile ? 0.65 : 0.80;
+    /* ใช้ขนาดใหญ่พอให้อ่านคอร์ดได้ชัด แต่ไม่เปลืองพื้นที่เกิน */
+    var MAX = 1800;      /* px ด้านยาวสูงสุด */
+    var QUALITY = 0.88;  /* JPEG quality สูงขึ้น ตัวหนังสือคมขึ้น */
     var w=img.width, h=img.height;
     if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
     if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}
     var c=document.createElement('canvas');
     c.width=w; c.height=h;
-    c.getContext('2d').drawImage(img,0,0,w,h);
+    var ctx = c.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(img,0,0,w,h);
     cb(c.toDataURL('image/jpeg', QUALITY));
   };
   img.onerror=function(){ cb(dataUrl); };
@@ -1095,6 +1099,7 @@ function delSong(i){
 ============================================================ */
 function openSong(i, playlist, plIdx){
   var s=songs[i];
+  currentSongIdx = i;
   // set playlist context
   if(playlist !== undefined){
     currentPlaylist=playlist;
@@ -1453,6 +1458,31 @@ function updateVoiceBtn(){
 }
 
 /* ============================================================
+   REPLACE IMAGE IN VIEW (เปลี่ยนรูปโดยไม่ต้องลบแล้วเพิ่มใหม่)
+============================================================ */
+function viewReplaceImg(){
+  document.getElementById('viewReplaceInput').value = '';
+  document.getElementById('viewReplaceInput').click();
+}
+function viewReplaceFile(inp){
+  var f = inp.files[0]; if(!f) return;
+  if(currentSongIdx < 0 || currentSongIdx >= songs.length){ showToast('⚠️ ไม่พบเพลง'); return; }
+  var r = new FileReader();
+  r.onload = function(e){
+    showToast('⏳ กำลังบันทึกรูปใหม่…');
+    _compress(e.target.result, function(img){
+      songs[currentSongIdx].img = img;
+      document.getElementById('viewImg').src = img;
+      _putSong(songs[currentSongIdx], function(){
+        _backupToLS();
+        showToast('✅ เปลี่ยนรูปสำเร็จแล้ว!');
+      });
+    });
+  };
+  r.readAsDataURL(f);
+}
+
+/* ============================================================
    VOICE SEARCH — ค้นหาชื่อเพลงด้วยเสียง
 ============================================================ */
 var vsRec = null, vsListening = false;
@@ -1607,7 +1637,6 @@ function vsSearch(query){
 }
 
 
-  
 </script>
 </body>
 </html>
