@@ -152,7 +152,15 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
 .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(20px); background:#1a1a1a; color:#fff; padding:10px 20px; border-radius:20px; font-size:14px; opacity:0; pointer-events:none; transition:all .3s; z-index:9999; white-space:nowrap; }
 .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
-/* ── HOME TABS ── */
+/* ── SEARCH ── */
+.search-wrap { position:relative; margin-bottom:14px; }
+.search-input { width:100%; padding:12px 14px 12px 40px; border:1.5px solid #e8e8e8; border-radius:14px; font-size:15px; background:#fff; font-family:inherit; color:#1a1a1a; outline:none; box-shadow:0 1px 3px rgba(0,0,0,.05); -webkit-appearance:none; }
+.search-input:focus { border-color:#1a1a1a; }
+.search-ico { position:absolute; left:13px; top:50%; transform:translateY(-50%); font-size:16px; pointer-events:none; }
+.search-clear { position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:#bbb; font-size:18px; cursor:pointer; padding:4px 6px; display:none; line-height:1; }
+.search-clear.show { display:block; }
+.search-count { font-size:12px; color:#aaa; margin-bottom:8px; }
+
 .home-tabs { display:flex; gap:0; background:#f5f4f0; padding:12px 16px 0; }
 .home-tab { flex:1; padding:9px 0; text-align:center; font-size:14px; font-weight:600; color:#999; border-bottom:2px solid transparent; cursor:pointer; }
 .home-tab.active { color:#1a1a1a; border-bottom:2px solid #1a1a1a; }
@@ -321,9 +329,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; ba
     <!-- SONGS TAB -->
     <div id="tabContentSongs">
       <button class="add-btn" onclick="goAdd()">＋ เพิ่มเพลงใหม่</button>
-      <div class="section-label">เพลงของฉัน</div>
+      <div class="search-wrap">
+        <span class="search-ico">🔍</span>
+        <input class="search-input" type="search" id="searchInput" placeholder="ค้นหาชื่อเพลง / ศิลปิน…" oninput="onSearch(this.value)" />
+        <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+      </div>
+      <div class="search-count" id="searchCount" style="display:none;"></div>
+      <div class="section-label" id="songListLabel">เพลงของฉัน</div>
       <div class="song-list" id="songList"></div>
       <div class="empty" id="emptyState">ยังไม่มีเพลง<br>กด "เพิ่มเพลงใหม่" ด้านบน 🎵</div>
+      <div class="empty" id="emptySearch" style="display:none;">ไม่พบเพลงที่ค้นหา 🔍</div>
     </div>
 
     <!-- PLAYLISTS TAB -->
@@ -704,22 +719,72 @@ function switchTab(tab){
    RENDER LIST
 ============================================================ */
 function escHtml(t){ var d=document.createElement('div'); d.appendChild(document.createTextNode(t)); return d.innerHTML; }
+
+var _searchQ = '';
+
+function onSearch(q){
+  _searchQ = q.trim().toLowerCase();
+  var clr = document.getElementById('searchClear');
+  clr.classList.toggle('show', _searchQ.length > 0);
+  render();
+}
+function clearSearch(){
+  _searchQ = '';
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchClear').classList.remove('show');
+  render();
+  document.getElementById('searchInput').focus();
+}
+
 function render(){
   var list=document.getElementById('songList');
   var empty=document.getElementById('emptyState');
+  var emptySearch=document.getElementById('emptySearch');
+  var countEl=document.getElementById('searchCount');
+  var labelEl=document.getElementById('songListLabel');
   list.innerHTML='';
-  empty.style.display=songs.length?'none':'block';
-  songs.forEach(function(s,i){
+
+  var filtered = songs.map(function(s,i){ return {s:s, i:i}; }).filter(function(x){
+    if(!_searchQ) return true;
+    return (x.s.name||'').toLowerCase().indexOf(_searchQ) !== -1
+        || (x.s.artist||'').toLowerCase().indexOf(_searchQ) !== -1;
+  });
+
+  var noSongs = songs.length === 0;
+  var noResult = !noSongs && filtered.length === 0;
+
+  empty.style.display = noSongs ? 'block' : 'none';
+  emptySearch.style.display = noResult ? 'block' : 'none';
+
+  if(_searchQ){
+    countEl.style.display = 'block';
+    countEl.textContent = 'พบ ' + filtered.length + ' จาก ' + songs.length + ' เพลง';
+    labelEl.textContent = 'ผลการค้นหา';
+  } else {
+    countEl.style.display = 'none';
+    labelEl.textContent = 'เพลงของฉัน';
+  }
+
+  filtered.forEach(function(x){
+    var s=x.s, i=x.i;
+    var nameHtml = _searchQ
+      ? escHtml(s.name).replace(new RegExp('('+escRegex(_searchQ)+')', 'gi'), '<mark style="background:#fff3cd;border-radius:3px;padding:0 2px;">$1</mark>')
+      : escHtml(s.name);
+    var artistHtml = _searchQ && s.artist
+      ? escHtml(s.artist).replace(new RegExp('('+escRegex(_searchQ)+')', 'gi'), '<mark style="background:#fff3cd;border-radius:3px;padding:0 2px;">$1</mark>')
+      : (s.artist ? escHtml(s.artist) : 'ไม่ระบุศิลปิน');
     var c=document.createElement('div');
     c.className='song-card';
     c.innerHTML='<div class="song-icon">🎵</div>'
-      +'<div class="song-info"><div class="song-name">'+escHtml(s.name)+'</div>'
-      +'<div class="song-artist">'+(s.artist?escHtml(s.artist):'ไม่ระบุศิลปิน')+'</div></div>'
+      +'<div class="song-info"><div class="song-name">'+nameHtml+'</div>'
+      +'<div class="song-artist">'+artistHtml+'</div></div>'
       +'<button class="song-del" onclick="event.stopPropagation();delSong('+i+')">✕</button>';
     c.addEventListener('click',function(){ openSong(i); });
     list.appendChild(c);
   });
 }
+
+function escRegex(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
 
 function renderPlaylists(){
   var list=document.getElementById('playlistList');
@@ -1345,7 +1410,6 @@ function updateVoiceBtn(){
   else        { b.textContent='🎤 เสียง';   b.style.background='#222';    b.style.color='#888';    b.style.borderColor='#333'; }
 }
 
-  
 </script>
 </body>
 </html>
