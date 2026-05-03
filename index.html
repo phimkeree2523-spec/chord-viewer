@@ -491,24 +491,122 @@ function showToast(msg){
 }
 
 /* ============================================================
-   STORAGE
+   STORAGE  — IndexedDB  (ไม่มีลิมิต 5MB เหมือน localStorage)
+   songs store  : { id, name, artist, img }
+   meta  store  : playlists
 ============================================================ */
+var _db = null;
+
+function _openDB(cb){
+  if(_db){ cb(_db); return; }
+  var r = indexedDB.open('chords4', 2);
+  r.onupgradeneeded = function(e){
+    var db = e.target.result;
+    if(!db.objectStoreNames.contains('songs'))
+      db.createObjectStore('songs', {keyPath:'id'});
+    if(!db.objectStoreNames.contains('meta'))
+      db.createObjectStore('meta');
+  };
+  r.onsuccess = function(e){ _db = e.target.result; cb(_db); };
+  r.onerror   = function(e){ showToast('⚠️ DB error: '+e.target.error); };
+}
+
+/* ---------- read all songs ---------- */
+function _loadSongs(cb){
+  _openDB(function(db){
+    var tx = db.transaction('songs','readonly');
+    var req = tx.objectStore('songs').getAll();
+    req.onsuccess = function(){ cb(req.result||[]); };
+    req.onerror   = function(){ cb([]); };
+  });
+}
+
+/* ---------- save / delete one song ---------- */
+function _putSong(s, cb){
+  _openDB(function(db){
+    var tx = db.transaction('songs','readwrite');
+    tx.objectStore('songs').put(s);
+    tx.oncomplete = function(){ if(cb)cb(); };
+    tx.onerror    = function(e){ showToast('⚠️ บันทึกไม่สำเร็จ'); };
+  });
+}
+function _delSong(id, cb){
+  _openDB(function(db){
+    var tx = db.transaction('songs','readwrite');
+    tx.objectStore('songs').delete(id);
+    tx.oncomplete = function(){ if(cb)cb(); };
+  });
+}
+
+/* ---------- playlists (เล็กมาก เก็บใน meta store) ---------- */
+function _loadMeta(key, cb){
+  _openDB(function(db){
+    var tx = db.transaction('meta','readonly');
+    var req = tx.objectStore('meta').get(key);
+    req.onsuccess = function(){ cb(req.result||null); };
+    req.onerror   = function(){ cb(null); };
+  });
+}
+function _putMeta(key, val, cb){
+  _openDB(function(db){
+    var tx = db.transaction('meta','readwrite');
+    tx.objectStore('meta').put(val, key);
+    tx.oncomplete = function(){ if(cb)cb(); };
+  });
+}
+
+/* ---------- compress image before saving ---------- */
+function _compress(dataUrl, cb){
+  var img = new Image();
+  img.onload = function(){
+    var MAX=1400, w=img.width, h=img.height;
+    if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
+    if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}
+    var c=document.createElement('canvas');
+    c.width=w; c.height=h;
+    c.getContext('2d').drawImage(img,0,0,w,h);
+    cb(c.toDataURL('image/jpeg',0.80));
+  };
+  img.onerror=function(){ cb(dataUrl); };
+  img.src=dataUrl;
+}
+
+/* ---------- public API (same names as before) ---------- */
 function load(){
-  try{ var d=localStorage.getItem('chords_v3'); if(d) songs=JSON.parse(d); }catch(e){}
-  // migrate: assign id to songs that don't have one
-  var migrated=false;
-  songs.forEach(function(s){ if(!s.id){ s.id='s'+Date.now()+Math.random(); migrated=true; } });
-  if(migrated) persist();
-  try{ var p=localStorage.getItem('chords_pl_v1'); if(p) playlists=JSON.parse(p); }catch(e){}
-  render();
+  _openDB(function(){
+    _loadSongs(function(rows){
+      /* migrate from old localStorage once */
+      if(rows.length===0){
+        try{
+          var old=localStorage.getItem('chords_v3');
+          if(old){ rows=JSON.parse(old); }
+        }catch(e){}
+      }
+      rows.forEach(function(s){ if(!s.id) s.id='s'+Date.now()+Math.random(); });
+      songs=rows;
+      _loadMeta('playlists',function(pl){
+        /* migrate playlists from localStorage once */
+        if(!pl){
+          try{
+            var oldpl=localStorage.getItem('chords_pl_v1');
+            if(oldpl) pl=JSON.parse(oldpl);
+          }catch(e){}
+        }
+        playlists=pl||[];
+        render();
+        /* write migrated data back to IDB */
+        if(songs.length) songs.forEach(function(s){ _putSong(s); });
+        if(playlists.length) _putMeta('playlists',playlists);
+        try{ localStorage.removeItem('chords_v3'); localStorage.removeItem('chords_pl_v1'); }catch(e){}
+      });
+    });
+  });
 }
 function persist(){
-  try{ localStorage.setItem('chords_v3',JSON.stringify(songs)); }
-  catch(e){ showToast('⚠️ พื้นที่เก็บข้อมูลเต็ม'); }
+  songs.forEach(function(s){ _putSong(s); });
 }
 function persistPlaylists(){
-  try{ localStorage.setItem('chords_pl_v1',JSON.stringify(playlists)); }
-  catch(e){ showToast('⚠️ พื้นที่เก็บข้อมูลเต็ม'); }
+  _putMeta('playlists', playlists);
 }
 
 /* ============================================================
@@ -801,12 +899,25 @@ function saveSong(){
   var name=document.getElementById('songName').value.trim()||'ไม่มีชื่อ';
   var artist=document.getElementById('artistName').value.trim();
   if(!pending){ showToast('กรุณาเลือกภาพก่อน'); return; }
-  songs.push({id:'s'+Date.now(), name:name, artist:artist, img:pending});
-  persist(); render(); goHome();
-  showToast('💾 บันทึก "'+name+'" แล้ว');
+  var btn=document.getElementById('saveBtn');
+  btn.disabled=true; btn.textContent='⏳ กำลังบันทึก…';
+  _compress(pending, function(img){
+    var s={id:'s'+Date.now(), name:name, artist:artist, img:img};
+    songs.push(s);
+    _putSong(s, function(){
+      btn.disabled=false; btn.textContent='บันทึกเพลง';
+      render(); goHome();
+      showToast('💾 บันทึก "'+name+'" แล้ว');
+    });
+  });
 }
 function delSong(i){
-  if(confirm('ลบ "'+songs[i].name+'" ?')){ songs.splice(i,1); persist(); render(); }
+  if(confirm('ลบ "'+songs[i].name+'" ?')){
+    var id=songs[i].id;
+    songs.splice(i,1);
+    _delSong(id, function(){ render(); });
+    render();
+  }
 }
 
 /* ============================================================
@@ -1172,7 +1283,6 @@ function updateVoiceBtn(){
   else        { b.textContent='🎤 เสียง';   b.style.background='#222';    b.style.color='#888';    b.style.borderColor='#333'; }
 }
 
-  
 </script>
 </body>
 </html>
