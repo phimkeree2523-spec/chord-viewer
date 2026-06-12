@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ToolTrack">
+<meta name="theme-color" content="#E8E4F8">
+<title>ToolTrack — เช็คอินอุปกรณ์</title>
+<link rel="manifest" href="manifest.json">
+<!-- Apple touch icons (inline SVG as data URI) -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%23534AB7'/%3E%3Cpath fill='none' stroke='white' stroke-width='12' stroke-linecap='round' stroke-linejoin='round' d='M60 80 L80 60 L100 80 L90 90 L110 130 L130 110 L140 120 L120 140 L80 120 L70 130 L60 110 Z'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23534AB7'/%3E%3Cpath fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M10 14 L14 10 L18 14 L16 16 L20 22 L24 18 L26 20 L22 24 L16 21 L13 24 L10 21 Z'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.3.0/dist/tabler-icons.min.css">
+<style>
+html,body{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#F5F3FF}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --p-lavender:#E8E4F8;--p-lavender-d:#7B6FBF;--p-lavender-dk:#534AB7;
+  --p-mint:#DCF2E8;--p-mint-d:#2E8A60;
+  --p-peach:#FAE8DF;--p-peach-d:#C46B45;
+  --p-sky:#DDF0FB;--p-sky-d:#2B7BB0;
+  --p-yellow:#FBF1D0;--p-yellow-d:#9A7200;
+}
+body,html{-webkit-tap-highlight-color:transparent}
+.app{font-family:var(--font-sans);padding:0 0 5rem;max-width:430px;margin:0 auto}
+
+/* topbar */
+.topbar{background:#E8E4F8;padding:14px 16px 14px;display:flex;align-items:center;gap:10px;border-radius:0 0 20px 20px;margin-bottom:14px}
+.topbar-icon{width:36px;height:36px;background:var(--p-lavender-dk);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.topbar-icon i{font-size:18px;color:#fff}
+.topbar-title{font-size:16px;font-weight:500;color:var(--p-lavender-dk)}
+.topbar-sub{font-size:12px;color:var(--p-lavender-d);margin-top:1px}
+.topbar-right{margin-left:auto;display:flex;gap:8px}
+.topbar-tab{background:none;border:1.5px solid #C5BEEE;border-radius:20px;padding:6px 13px;font-size:12px;color:var(--p-lavender-d);cursor:pointer;font-family:inherit}
+.topbar-tab.active{background:var(--p-lavender-dk);color:#fff;border-color:var(--p-lavender-dk)}
+
+/* search bar */
+.search-bar{margin:0 16px 10px;display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #EDE9FA;border-radius:14px;padding:0 14px}
+.search-bar i{font-size:17px;color:#B0ABCF;flex-shrink:0}
+.search-bar input{flex:1;border:none;background:none;padding:11px 0;font-size:14px;color:#2C2830;font-family:inherit;outline:none}
+.search-bar input::placeholder{color:#C5C1DC}
+.search-clear{background:none;border:none;cursor:pointer;color:#B0ABCF;padding:4px;display:none}
+
+/* category pills */
+.cat-strip{display:flex;gap:7px;padding:0 16px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none}
+.cat-strip::-webkit-scrollbar{display:none}
+.cat-pill{flex-shrink:0;background:#F3F1FD;border:1px solid #DDD9F5;border-radius:20px;padding:6px 13px;font-size:12px;color:var(--p-lavender-d);cursor:pointer;font-family:inherit;white-space:nowrap}
+.cat-pill.active{background:var(--p-lavender-dk);color:#fff;border-color:var(--p-lavender-dk)}
+
+/* nav pill */
+.nav-bar{display:flex;align-items:center;justify-content:space-between;padding:0 16px;margin-bottom:10px}
+.nav-pill-btn{display:flex;align-items:center;gap:5px;background:var(--p-lavender);border:none;border-radius:20px;padding:8px 16px;font-size:13px;color:var(--p-lavender-dk);cursor:pointer;font-family:inherit}
+.nav-pill-btn:disabled{opacity:0.35;cursor:default}
+.prog-bubble{background:#fff;border:1.5px solid var(--p-lavender);border-radius:20px;padding:6px 14px;font-size:13px;color:var(--p-lavender-dk);font-weight:500}
+
+/* tool list (browse mode) */
+.tool-list{padding:0 16px;margin-bottom:12px}
+.tool-row{background:#fff;border:1px solid #EDE9FA;border-radius:14px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.tool-row:active{background:#F8F6FF}
+.tool-row-thumb{width:42px;height:42px;background:var(--p-lavender);border-radius:10px;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.tool-row-thumb img{width:100%;height:100%;object-fit:cover}
+.tool-row-thumb i{font-size:20px;color:#9F96DA}
+.tool-row-info{flex:1;min-width:0}
+.tool-row-name{font-size:13px;font-weight:500;color:#2C2830;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tool-row-cat{font-size:11px;color:#8B87A2;margin-top:2px}
+.tool-row-status{flex-shrink:0;display:flex;align-items:center;gap:4px}
+.dot-ok{width:8px;height:8px;border-radius:50%;background:#2E8A60}
+.dot-skip{width:8px;height:8px;border-radius:50%;background:#DDD9F5}
+.dot-none{width:8px;height:8px;border-radius:50%;background:#EDE9FA}
+.no-results{text-align:center;padding:32px 16px;color:#B0ABCF;font-size:14px}
+
+/* main card (checkin mode) */
+.card{background:#fff;border-radius:20px;margin:0 16px 14px;padding:16px;border:1px solid #EDE9FA}
+.photo-zone{width:100%;height:160px;background:var(--p-lavender);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;margin-bottom:14px;border:2px dashed #C5BEEE}
+.photo-zone img{width:100%;height:100%;object-fit:contain;border-radius:12px}
+.photo-hint{font-size:12px;color:var(--p-lavender-d);margin-top:6px}
+.photo-overlay{position:absolute;inset:0;background:rgba(83,74,183,0.55);display:none;align-items:center;justify-content:center;flex-direction:column;gap:4px}
+.photo-overlay i{font-size:28px;color:#fff}
+.photo-overlay span{font-size:12px;color:#fff}
+.photo-zone:active .photo-overlay{display:flex}
+.tool-header{margin-bottom:14px}
+.tool-cat-pill{display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;background:var(--p-sky);color:var(--p-sky-d);margin-bottom:5px}
+.tool-name-text{font-size:15px;font-weight:500;color:#2C2830;line-height:1.35}
+.field{margin-bottom:12px}
+.field-label{font-size:12px;color:#8B87A2;margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.req{color:#E87B6A;font-size:11px}
+select,input[type=text]{width:100%;font-size:14px;padding:10px 12px;border-radius:12px;border:1.5px solid #EDE9FA;background:#FAFAFE;color:#2C2830;font-family:inherit;outline:none;-webkit-appearance:none}
+select:focus,input[type=text]:focus{border-color:#9F96DA}
+.datetime-chip{background:var(--p-mint);border-radius:12px;padding:10px 12px;font-size:14px;color:var(--p-mint-d);display:flex;align-items:center;gap:8px}
+.add-loc-row{display:flex;gap:6px;margin-top:7px}
+.add-loc-row input{flex:1}
+.add-loc-btn{background:var(--p-lavender);color:var(--p-lavender-dk);border:none;border-radius:12px;padding:0 14px;font-size:13px;cursor:pointer;white-space:nowrap;font-family:inherit}
+.loc-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.loc-tag{font-size:13px;padding:7px 6px 7px 12px;background:#F3F1FD;border:1px solid #DDD9F5;border-radius:20px;color:var(--p-lavender-d);display:flex;align-items:center;gap:2px}
+.loc-tag button{background:#DDD9F5;border:none;cursor:pointer;color:var(--p-lavender-d);font-size:13px;padding:0;line-height:1;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.btn-save{background:linear-gradient(135deg,#9F96DA,#7B6FBF);color:#fff;border:none;border-radius:14px;padding:13px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-skip{background:var(--p-peach);color:var(--p-peach-d);border:none;border-radius:14px;padding:13px;font-size:14px;cursor:pointer;font-family:inherit}
+.saved-chip{text-align:center;margin-top:10px;font-size:13px;color:var(--p-mint-d);background:var(--p-mint);border-radius:20px;padding:6px 12px;display:none}
+
+/* add panel */
+.add-panel{background:var(--p-yellow);border-radius:16px;margin:0 16px 12px;padding:12px 14px;border:1px solid #F0E4A0}
+.add-panel-hdr{display:flex;align-items:center;gap:7px;cursor:pointer}
+.add-panel-hdr i.ico{font-size:16px;color:var(--p-yellow-d)}
+.add-panel-hdr span{font-size:13px;font-weight:500;color:var(--p-yellow-d);flex:1}
+.add-panel-hdr .chev{font-size:13px;color:var(--p-yellow-d)}
+.add-panel-body{display:none;margin-top:10px}
+.add-panel-body.open{display:block}
+.add-panel-body input{background:#fff;border-color:#F0E4A0;margin-bottom:7px}
+.btn-add-tool{width:100%;background:var(--p-yellow-d);color:#fff;border:none;border-radius:12px;padding:10px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit}
+
+/* bottom buttons */
+.sum-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:calc(100% - 32px);margin:0 16px;background:linear-gradient(135deg,#9F96DA,#7B6FBF);color:#fff;border:none;border-radius:16px;padding:14px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit}
+
+/* summary view */
+.sum-topbar{background:var(--p-mint);padding:14px 16px 12px;border-radius:0 0 20px 20px;margin-bottom:16px}
+.sum-topbar h2{font-size:16px;font-weight:500;color:var(--p-mint-d)}
+.sum-count-text{font-size:13px;color:var(--p-mint-d);margin-top:3px}
+.sum-list{padding:0 16px;margin-bottom:12px}
+.sum-item{background:#fff;border:1px solid #EDE9FA;border-radius:14px;padding:11px 13px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
+.sum-num{font-size:12px;color:#B0ABCF;min-width:20px;padding-top:1px}
+.sum-body{flex:1}
+.sum-name{font-size:13px;color:#2C2830;font-weight:500;line-height:1.3}
+.sum-meta{font-size:12px;color:#8B87A2;margin-top:3px}
+.badge-ok{display:inline-block;font-size:11px;padding:2px 9px;border-radius:20px;background:var(--p-mint);color:var(--p-mint-d);margin-top:4px}
+.badge-skip{display:inline-block;font-size:11px;padding:2px 9px;border-radius:20px;background:#F3F1FD;color:#B0ABCF;margin-top:4px}
+.export-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:calc(100% - 32px);margin:0 16px 8px;background:var(--p-mint-d);color:#fff;border:none;border-radius:16px;padding:13px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit}
+.back-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:calc(100% - 32px);margin:0 16px;background:#F3F1FD;color:var(--p-lavender-d);border:1px solid #DDD9F5;border-radius:16px;padding:12px;font-size:14px;cursor:pointer;font-family:inherit}
+.hidden{display:none}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<!-- FORM VIEW -->
+<div id="form-view">
+  <div class="topbar">
+    <div class="topbar-icon"><i class="ti ti-tool" aria-hidden="true"></i></div>
+    <div>
+      <div class="topbar-title">ToolTrack</div>
+      <div class="topbar-sub">เช็คอินอุปกรณ์ช่างไฟฟ้า</div>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-tab active" id="tab-browse" onclick="setMode('browse')"><i class="ti ti-layout-list" style="font-size:13px"></i> รายการ</button>
+      <button class="topbar-tab" id="tab-checkin" onclick="setMode('checkin')"><i class="ti ti-edit" style="font-size:13px"></i> เช็คอิน</button>
+    </div>
+  </div>
+
+  <!-- SEARCH + FILTER (shared) -->
+  <div class="search-bar">
+    <i class="ti ti-search" aria-hidden="true"></i>
+    <input type="text" id="search-input" placeholder="ค้นหาเครื่องมือ..." oninput="onSearch()">
+    <button class="search-clear" id="search-clear" onclick="clearSearch()"><i class="ti ti-x" style="font-size:14px"></i></button>
+  </div>
+  <div class="cat-strip" id="cat-strip"></div>
+
+  <!-- BROWSE MODE -->
+  <div id="browse-mode">
+    <div class="tool-list" id="tool-list"></div>
+    <div class="add-panel">
+      <div class="add-panel-hdr" onclick="toggleAddTool()">
+        <i class="ti ti-plus-circle ico"></i>
+        <span>เพิ่มรายการเครื่องมือใหม่</span>
+        <i class="ti ti-chevron-down chev" id="add-tool-chevron"></i>
+      </div>
+      <div class="add-panel-body" id="add-tool-body">
+        <input type="text" id="new-tool-name" placeholder="ชื่อเครื่องมือ *">
+        <input type="text" id="new-tool-cat" placeholder="หมวดหมู่ (เช่น อื่นๆ)">
+        <button class="btn-add-tool" onclick="addNewTool()"><i class="ti ti-plus"></i> เพิ่มเครื่องมือ</button>
+      </div>
+    </div>
+    <button class="sum-btn" onclick="showSummary()"><i class="ti ti-clipboard-list"></i> ดูสรุปทั้งหมด</button>
+  </div>
+
+  <!-- CHECKIN MODE -->
+  <div id="checkin-mode" class="hidden">
+    <div class="nav-bar">
+      <button class="nav-pill-btn" id="btn-prev" onclick="changeTool(-1)" disabled><i class="ti ti-arrow-left"></i> ก่อนหน้า</button>
+      <div class="prog-bubble" id="prog">1 / 27</div>
+      <button class="nav-pill-btn" id="btn-next" onclick="changeTool(1)">ถัดไป <i class="ti ti-arrow-right"></i></button>
+    </div>
+    <div class="card">
+      <input type="file" id="img-input" accept="image/*" style="display:none" onchange="onImgUpload(event)">
+      <div class="photo-zone" id="thumb-area" onclick="document.getElementById('img-input').click()">
+        <i class="ti ti-camera" style="font-size:34px;color:#9F96DA" aria-hidden="true"></i>
+        <span class="photo-hint">แตะเพื่ออัปโหลดรูปอุปกรณ์</span>
+        <div class="photo-overlay"><i class="ti ti-refresh"></i><span>เปลี่ยนรูป</span></div>
+      </div>
+      <div class="tool-header">
+        <div class="tool-cat-pill" id="tool-cat">—</div>
+        <div class="tool-name-text" id="tool-name">—</div>
+      </div>
+      <div class="field">
+        <div class="field-label"><i class="ti ti-user" style="font-size:13px"></i> พนักงาน <span class="req">*</span></div>
+        <select id="emp-select" onchange="onEmpChange()">
+          <option value="">— เลือกพนักงาน —</option>
+          <option>ประสง</option><option>อำนาจ</option><option>ณัฐพล</option>
+          <option>วิทยา</option><option>ทวีศัก</option><option>บำรุง</option>
+          <option>ชูเกียรติ</option>
+          <option value="__custom__">กำหนดเอง...</option>
+        </select>
+        <input type="text" id="emp-custom" placeholder="ใส่ชื่อพนักงาน" style="display:none;margin-top:7px">
+      </div>
+      <div class="field">
+        <div class="field-label"><i class="ti ti-map-pin" style="font-size:13px"></i> สถานที่</div>
+        <select id="loc-select" onchange="onLocChange()">
+          <option value="">— เลือกสถานที่ —</option>
+          <option value="__custom__">พิมพ์เอง...</option>
+        </select>
+        <input type="text" id="loc-custom" placeholder="พิมพ์ชื่อสถานที่" style="display:none;margin-top:7px">
+        <div class="add-loc-row">
+          <input type="text" id="loc-new" placeholder="เพิ่มสถานที่ใหม่...">
+          <button class="add-loc-btn" onclick="addLocation()"><i class="ti ti-plus"></i> เพิ่ม</button>
+        </div>
+        <div class="loc-tags" id="loc-tags"></div>
+      </div>
+      <div class="field">
+        <div class="field-label"><i class="ti ti-clock" style="font-size:13px"></i> วันที่และเวลา</div>
+        <div class="datetime-chip"><i class="ti ti-calendar-event" style="font-size:16px"></i><span id="datetime-display">—</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-save" onclick="submitEntry()"><i class="ti ti-check"></i> บันทึก</button>
+        <button class="btn-skip" onclick="skipEntry()">ข้ามรายการนี้</button>
+      </div>
+      <div class="saved-chip" id="saved-badge"><i class="ti ti-circle-check"></i> บันทึกแล้ว</div>
+    </div>
+  </div>
+</div>
+
+<!-- SUMMARY VIEW -->
+<div id="summary-view" class="hidden">
+  <div class="sum-topbar">
+    <h2>สรุปการเช็คอินอุปกรณ์</h2>
+    <div class="sum-count-text" id="sum-count"></div>
+  </div>
+  <div class="sum-list" id="summary-list"></div>
+  <button class="export-btn" onclick="exportCSV()"><i class="ti ti-download"></i> ส่งออก CSV</button>
+  <button class="back-btn" onclick="backToForm()"><i class="ti ti-arrow-left"></i> กลับแก้ไข</button>
+</div>
+
+</div>
+
+<script>
+const tools=[
+  {name:"เครื่องเชื่อมบัดกรีท่อพลาสติก ppr",cat:"อื่นๆ"},
+  {name:"คีมย้ำหางปลาไฮดรอลิคขนาดเล็ก 10-120 มิลลิเมตร",cat:"คีมย้ำหางปลาไฮดรอลิค"},
+  {name:"เครื่องเจียร 7 นิ้ว",cat:"หินเจียร ลูกหมู"},
+  {name:"เครื่องเจียร 7 นิ้วสีเจียว",cat:"หินเจียร ลูกหมู"},
+  {name:"เลื่อยขัดไฟฟ้า",cat:"อื่นๆ"},
+  {name:"เครื่องพิมพ์ปอกสายไฟ",cat:"อื่นๆ"},
+  {name:"เลื่อยสายพานแบตสีเหลือง",cat:"อื่นๆ"},
+  {name:"เลื่อยสายพานไฟฟ้า",cat:"อื่นๆ"},
+  {name:"เครื่องพั้นรู",cat:"อื่นๆ"},
+  {name:"เครื่องสกัดไฟฟ้า",cat:"อื่นๆ"},
+  {name:"เครื่องดูดฝุ่น (Stanley)",cat:"เครื่องดูดฝุ่น"},
+  {name:"เครื่องสูบน้ำ (ท่อสีฟ้า)",cat:"อื่นๆ"},
+  {name:"เครื่องสูบน้ำ (ปั๊มสีฟ้า)",cat:"อื่นๆ"},
+  {name:"เครื่องเจียร Dwalk 4 นิ้วสีเหลือง No1",cat:"อื่นๆ"},
+  {name:"พัดลมดูดอากาศ (3 ตัว)",cat:"พัดลม"},
+  {name:"ลาเบลเครื่องติดสติ๊กเกอร์ (Brother 1)",cat:"อื่นๆ"},
+  {name:"ลาเบลเครื่องติดสติ๊กเกอร์ (Brother 2)",cat:"อื่นๆ"},
+  {name:"น็อคเอาท์ไฮโดรลิค (ชุด 1)",cat:"เครื่องมือไฮโดลิก"},
+  {name:"น็อคเอาท์ไฮโดรลิค (ชุด 2)",cat:"เครื่องมือไฮโดลิก"},
+  {name:"เครื่องดูดฝุ่นใช้แบตเตอรี่ Makita",cat:"เครื่องดูดฝุ่น"},
+  {name:"เครื่องดูดฝุ่น (สีดำสแตนเลส)",cat:"เครื่องดูดฝุ่น"},
+  {name:"เครื่องดูดฝุ่น (สีเขียว)",cat:"เครื่องดูดฝุ่น"},
+  {name:"บันได 12 ขั้น (ในออฟฟิศ)",cat:"บันได"},
+  {name:"บันได 12 ขั้น (ด้านนอก)",cat:"บันได"},
+  {name:"บันไดพับ",cat:"บันได"},
+  {name:"พัดลมดูดอากาศ 12 นิ้วสีแดง",cat:"พัดลม"},
+  {name:"เครื่องดูดฝุ่นสีเขียว",cat:"เครื่องดูดฝุ่น"}
+];
+
+let current=0;
+let entries=new Array(tools.length).fill(null);
+let images=new Array(tools.length).fill(null);
+let locations=[];
+let searchQ='';
+let filterCat='ทั้งหมด';
+let currentMode='browse';
+
+function getNow(){
+  const d=new Date();
+  return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()+543} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+function updateClock(){document.getElementById('datetime-display').textContent=getNow();}
+
+/* ---- MODE ---- */
+function setMode(mode){
+  currentMode=mode;
+  document.getElementById('browse-mode').classList.toggle('hidden',mode!=='browse');
+  document.getElementById('checkin-mode').classList.toggle('hidden',mode!=='checkin');
+  document.getElementById('tab-browse').classList.toggle('active',mode==='browse');
+  document.getElementById('tab-checkin').classList.toggle('active',mode==='checkin');
+  if(mode==='browse') renderList();
+  else loadTool(current);
+}
+
+/* ---- SEARCH & FILTER ---- */
+function getCategories(){
+  const cats=[...new Set(tools.map(t=>t.cat))].sort();
+  return ['ทั้งหมด',...cats];
+}
+function renderCatStrip(){
+  const strip=document.getElementById('cat-strip');
+  strip.innerHTML='';
+  getCategories().forEach(c=>{
+    const b=document.createElement('button');
+    b.className='cat-pill'+(c===filterCat?' active':'');
+    b.textContent=c;
+    b.onclick=()=>{filterCat=c;renderCatStrip();renderList();};
+    strip.appendChild(b);
+  });
+}
+function onSearch(){
+  searchQ=document.getElementById('search-input').value;
+  document.getElementById('search-clear').style.display=searchQ?'flex':'none';
+  renderList();
+}
+function clearSearch(){
+  document.getElementById('search-input').value='';
+  searchQ='';
+  document.getElementById('search-clear').style.display='none';
+  renderList();
+}
+function getFilteredTools(){
+  return tools.map((t,i)=>({...t,idx:i})).filter(t=>{
+    const matchCat=filterCat==='ทั้งหมด'||t.cat===filterCat;
+    const matchQ=!searchQ||t.name.toLowerCase().includes(searchQ.toLowerCase())||t.cat.toLowerCase().includes(searchQ.toLowerCase());
+    return matchCat&&matchQ;
+  });
+}
+function renderList(){
+  const list=document.getElementById('tool-list');
+  const filtered=getFilteredTools();
+  list.innerHTML='';
+  if(!filtered.length){
+    list.innerHTML='<div class="no-results"><i class="ti ti-search-off" style="font-size:28px;display:block;margin-bottom:8px"></i>ไม่พบเครื่องมือที่ค้นหา</div>';
+    return;
+  }
+  filtered.forEach(t=>{
+    const d=document.createElement('div');
+    d.className='tool-row';
+    const e=entries[t.idx];
+    let statusDot='<span class="dot-none" title="ยังไม่บันทึก"></span>';
+    if(e) statusDot='<span class="dot-ok" title="บันทึกแล้ว"></span>';
+    const thumbHtml=images[t.idx]
+      ?`<div class="tool-row-thumb"><img src="${images[t.idx]}" alt=""></div>`
+      :`<div class="tool-row-thumb"><i class="ti ti-tool" aria-hidden="true"></i></div>`;
+    d.innerHTML=`${thumbHtml}<div class="tool-row-info"><div class="tool-row-name">${t.name}</div><div class="tool-row-cat">${t.cat}</div></div><div class="tool-row-status">${statusDot}<i class="ti ti-chevron-right" style="font-size:14px;color:#C5C1DC"></i></div>`;
+    d.onclick=()=>jumpToTool(t.idx);
+    list.appendChild(d);
+  });
+}
+function jumpToTool(idx){
+  current=idx;
+  setMode('checkin');
+}
+
+/* ---- LOC ---- */
+function renderLocSelect(selected){
+  const sel=document.getElementById('loc-select');
+  const cur=selected!==undefined?selected:sel.value;
+  sel.innerHTML='<option value="">— เลือกสถานที่ —</option>';
+  locations.forEach(l=>{const o=document.createElement('option');o.value=l;o.textContent=l;sel.appendChild(o);});
+  const co=document.createElement('option');co.value='__custom__';co.textContent='พิมพ์เอง...';sel.appendChild(co);
+  if(cur) sel.value=cur;
+}
+function renderLocTags(){
+  const ct=document.getElementById('loc-tags');ct.innerHTML='';
+  locations.forEach((l,i)=>{
+    const t=document.createElement('div');t.className='loc-tag';
+    t.innerHTML=`${l}<button onclick="removeLocation(${i})" title="ลบ"><i class="ti ti-x" style="font-size:11px"></i></button>`;
+    ct.appendChild(t);
+  });
+}
+function addLocation(){
+  const inp=document.getElementById('loc-new');const v=inp.value.trim();
+  if(!v||locations.includes(v))return;
+  locations.push(v);inp.value='';
+  renderLocSelect(v);document.getElementById('loc-custom').style.display='none';renderLocTags();
+}
+function removeLocation(i){
+  const removed=locations[i];locations.splice(i,1);
+  const cur=document.getElementById('loc-select').value;
+  renderLocSelect(cur===removed?'':cur);renderLocTags();
+}
+function onLocChange(){
+  const v=document.getElementById('loc-select').value;
+  const ci=document.getElementById('loc-custom');
+  ci.style.display=v==='__custom__'?'block':'none';
+  if(v!=='__custom__') ci.value='';
+}
+function onEmpChange(){
+  const v=document.getElementById('emp-select').value;
+  const ci=document.getElementById('emp-custom');
+  ci.style.display=v==='__custom__'?'block':'none';
+  if(v!=='__custom__') ci.value='';
+}
+function getEmp(){
+  const v=document.getElementById('emp-select').value;
+  if(v==='__custom__') return document.getElementById('emp-custom').value.trim();
+  return v;
+}
+function getLoc(){
+  const v=document.getElementById('loc-select').value;
+  if(v==='__custom__') return document.getElementById('loc-custom').value.trim();
+  return v;
+}
+
+/* ---- THUMB ---- */
+function onImgUpload(evt){
+  const file=evt.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{images[current]=e.target.result;showThumb(current);};
+  reader.readAsDataURL(file);
+}
+function showThumb(idx){
+  const area=document.getElementById('thumb-area');
+  if(images[idx]){
+    area.innerHTML=`<img src="${images[idx]}" alt="รูปอุปกรณ์"><div class="photo-overlay"><i class="ti ti-refresh"></i><span>เปลี่ยนรูป</span></div>`;
+  } else {
+    area.innerHTML=`<i class="ti ti-camera" style="font-size:34px;color:#9F96DA" aria-hidden="true"></i><span class="photo-hint">แตะเพื่ออัปโหลดรูปอุปกรณ์</span><div class="photo-overlay"><i class="ti ti-refresh"></i><span>เปลี่ยนรูป</span></div>`;
+  }
+  area.onclick=()=>document.getElementById('img-input').click();
+}
+
+/* ---- LOAD TOOL ---- */
+function loadTool(idx){
+  const t=tools[idx];
+  document.getElementById('tool-name').textContent=t.name;
+  document.getElementById('tool-cat').textContent=t.cat;
+  document.getElementById('prog').textContent=`${idx+1} / ${tools.length}`;
+  document.getElementById('btn-prev').disabled=idx===0;
+  document.getElementById('btn-next').disabled=idx===tools.length-1;
+  showThumb(idx);document.getElementById('img-input').value='';
+  const e=entries[idx];
+  const presetEmps=['ประสง','อำนาจ','ณัฐพล','วิทยา','ทวีศัก','บำรุง','ชูเกียรติ'];
+  if(e){
+    if(presetEmps.includes(e.emp)){document.getElementById('emp-select').value=e.emp;document.getElementById('emp-custom').style.display='none';}
+    else{document.getElementById('emp-select').value='__custom__';document.getElementById('emp-custom').style.display='block';document.getElementById('emp-custom').value=e.emp;}
+    if(locations.includes(e.location)){renderLocSelect(e.location);document.getElementById('loc-custom').style.display='none';}
+    else if(e.location){renderLocSelect('__custom__');document.getElementById('loc-custom').style.display='block';document.getElementById('loc-custom').value=e.location;}
+    else{renderLocSelect('');document.getElementById('loc-custom').style.display='none';}
+    showSavedBadge(true);
+  } else {
+    document.getElementById('emp-select').value='';document.getElementById('emp-custom').style.display='none';document.getElementById('emp-custom').value='';
+    renderLocSelect('');document.getElementById('loc-custom').style.display='none';document.getElementById('loc-custom').value='';
+    showSavedBadge(false);
+  }
+}
+function showSavedBadge(show){document.getElementById('saved-badge').style.display=show?'block':'none';}
+function submitEntry(){
+  const emp=getEmp();
+  const empSel=document.getElementById('emp-select');
+  if(!emp){empSel.style.borderColor='#E87B6A';return;}
+  empSel.style.borderColor='';
+  entries[current]={tool:tools[current].name,cat:tools[current].cat,emp,location:getLoc(),datetime:getNow()};
+  showSavedBadge(true);
+  if(current<tools.length-1) setTimeout(()=>changeTool(1),350);
+}
+function skipEntry(){entries[current]=null;showSavedBadge(false);if(current<tools.length-1) changeTool(1);}
+function changeTool(dir){current=Math.max(0,Math.min(tools.length-1,current+dir));loadTool(current);}
+
+/* ---- ADD TOOL ---- */
+function toggleAddTool(){
+  const body=document.getElementById('add-tool-body');
+  const chev=document.getElementById('add-tool-chevron');
+  const open=body.classList.toggle('open');
+  chev.className=open?'ti ti-chevron-up chev':'ti ti-chevron-down chev';
+}
+function addNewTool(){
+  const name=document.getElementById('new-tool-name').value.trim();
+  const cat=document.getElementById('new-tool-cat').value.trim()||'อื่นๆ';
+  if(!name){document.getElementById('new-tool-name').style.borderColor='#E87B6A';return;}
+  document.getElementById('new-tool-name').style.borderColor='';
+  tools.push({name,cat});entries.push(null);images.push(null);
+  document.getElementById('new-tool-name').value='';document.getElementById('new-tool-cat').value='';
+  document.getElementById('add-tool-body').classList.remove('open');
+  document.getElementById('add-tool-chevron').className='ti ti-chevron-down chev';
+  renderCatStrip();renderList();
+}
+
+/* ---- SUMMARY ---- */
+function showSummary(){
+  const saved=entries.filter(Boolean);
+  document.getElementById('sum-count').textContent=`บันทึกแล้ว ${saved.length} รายการ จาก ${tools.length} รายการ`;
+  const list=document.getElementById('summary-list');list.innerHTML='';
+  tools.forEach((t,i)=>{
+    const e=entries[i];const d=document.createElement('div');d.className='sum-item';
+    if(e){
+      d.innerHTML=`<span class="sum-num">${i+1}</span><div class="sum-body"><div class="sum-name">${t.name}</div><div class="sum-meta"><i class="ti ti-user" style="font-size:11px"></i> ${e.emp} &nbsp;<i class="ti ti-map-pin" style="font-size:11px"></i> ${e.location||'—'} &nbsp;<i class="ti ti-clock" style="font-size:11px"></i> ${e.datetime}</div><span class="badge-ok">✓ บันทึก</span></div>`;
+    } else {
+      d.innerHTML=`<span class="sum-num" style="opacity:.35">${i+1}</span><div class="sum-body" style="opacity:.45"><div class="sum-name">${t.name}</div><span class="badge-skip">ข้าม</span></div>`;
+    }
+    list.appendChild(d);
+  });
+  document.getElementById('form-view').classList.add('hidden');
+  document.getElementById('summary-view').classList.remove('hidden');
+}
+function backToForm(){
+  document.getElementById('summary-view').classList.add('hidden');
+  document.getElementById('form-view').classList.remove('hidden');
+}
+function exportCSV(){
+  let csv='ลำดับ,ชื่ออุปกรณ์,หมวดหมู่,พนักงาน,สถานที่,วันที่และเวลา\n';
+  entries.forEach((e,i)=>{if(e) csv+=`${i+1},"${e.tool}","${e.cat}","${e.emp}","${e.location||''}","${e.datetime}"\n`;});
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='tooltrack_checkin.csv';a.click();
+  URL.revokeObjectURL(url);
+}
+
+renderLocSelect();renderLocTags();renderCatStrip();renderList();setMode('browse');updateClock();setInterval(updateClock,30000);
+
+// PWA: register service worker
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
