@@ -2,1618 +2,525 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🎸 คอร์ดของฉัน</title>
-<link rel="manifest" id="manifestLink">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="คอร์ดของฉัน">
-<meta name="theme-color" content="#1a1a1a">
-<link rel="apple-touch-icon" id="appleIcon">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ToolTrack">
+<meta name="theme-color" content="#E8E4F8">
+<title>ToolTrack — เช็คอินอุปกรณ์</title>
+<link rel="manifest" href="manifest.json">
+<!-- Apple touch icons (inline SVG as data URI) -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%23534AB7'/%3E%3Cpath fill='none' stroke='white' stroke-width='12' stroke-linecap='round' stroke-linejoin='round' d='M60 80 L80 60 L100 80 L90 90 L110 130 L130 110 L140 120 L120 140 L80 120 L70 130 L60 110 Z'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23534AB7'/%3E%3Cpath fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M10 14 L14 10 L18 14 L16 16 L20 22 L24 18 L26 20 L22 24 L16 21 L13 24 L10 21 Z'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.3.0/dist/tabler-icons.min.css">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', sans-serif; background: #f5f4f0; color: #1a1a1a; min-height: 100vh; }
-.screen { display: none; min-height: 100vh; }
-.screen.active { display: block; }
-
-/* ── HOME ── */
-#home { background: #f5f4f0; }
-.home-top { background: #1a1a1a; color: #fff; padding: 40px 20px 28px; }
-.home-top h1 { font-size: 26px; font-weight: 700; }
-.home-top p  { font-size: 13px; color: #888; margin-top: 4px; }
-.home-body   { padding: 16px; }
-.add-btn { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; padding:16px; background:#fff; border:2px dashed #ccc; border-radius:16px; font-size:16px; color:#555; cursor:pointer; margin-bottom:20px; font-family:inherit; }
-.add-btn:active { background:#f0f0f0; }
-.section-label { font-size:12px; font-weight:600; color:#999; letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; }
-.song-list { display:flex; flex-direction:column; gap:8px; }
-.song-card  { display:flex; align-items:center; gap:14px; background:#fff; border-radius:14px; padding:14px 16px; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,.06); }
-.song-card:active { opacity:.7; }
-.song-icon  { width:46px; height:46px; border-radius:10px; background:#1a1a1a; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
-.song-info  { flex:1; min-width:0; }
-.song-name  { font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.song-artist{ font-size:13px; color:#888; margin-top:2px; }
-.song-del   { background:none; border:none; color:#ccc; font-size:20px; cursor:pointer; padding:4px 0 4px 10px; flex-shrink:0; }
-.song-del:active { color:#e74c3c; }
-.empty { text-align:center; padding:50px 20px; color:#bbb; font-size:15px; line-height:2; }
-
-/* ── ADD ── */
-#addScreen { background:#f5f4f0; }
-.nav-bar  { display:flex; align-items:center; gap:12px; padding:50px 16px 16px; background:#fff; border-bottom:1px solid #eee; }
-.nav-back { background:none; border:none; font-size:28px; cursor:pointer; color:#555; line-height:1; padding:0; font-family:inherit; }
-.nav-title{ font-size:18px; font-weight:600; }
-.form-body{ padding:20px 16px; }
-.f-label  { font-size:13px; color:#888; margin-bottom:6px; font-weight:500; display:block; }
-.f-input  { width:100%; padding:13px 14px; border:1.5px solid #e0e0e0; border-radius:12px; font-size:16px; background:#fff; font-family:inherit; color:#1a1a1a; margin-bottom:16px; }
-.f-input:focus { outline:none; border-color:#1a1a1a; }
-.upload-zone { width:100%; min-height:160px; border:2px dashed #d0d0d0; border-radius:16px; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer; position:relative; overflow:hidden; margin-bottom:8px; }
-.upload-zone input { position:absolute; inset:0; opacity:0; width:100%; height:100%; cursor:pointer; font-size:0; }
-.uz-ico { font-size:36px; }
-.uz-txt { font-size:15px; color:#666; font-weight:500; }
-.uz-sub { font-size:12px; color:#aaa; }
-#previewWrap { display:none; margin-bottom:16px; }
-.preview-img-box { position:relative; border-radius:12px; overflow:hidden; background:#eee; }
-#previewImg { width:100%; display:block; max-height:320px; object-fit:contain; background:#eee; }
-.crop-badge { position:absolute; top:10px; right:10px; background:rgba(243,156,18,.92); color:#fff; font-size:12px; font-weight:700; padding:5px 10px; border-radius:20px; display:none; pointer-events:none; }
-.btn-row { display:flex; gap:8px; margin-top:10px; }
-.crop-btn    { flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:12px; background:#fff8e1; border:1.5px solid #f0c040; border-radius:12px; font-size:15px; color:#7a5c00; cursor:pointer; font-family:inherit; font-weight:600; }
-.restore-btn { display:none; flex:1; align-items:center; justify-content:center; gap:6px; padding:12px; background:#fff0f0; border:1.5px solid #f0c0c0; border-radius:12px; font-size:15px; color:#8b0000; cursor:pointer; font-family:inherit; }
-.re-upload   { flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:12px; background:none; border:1.5px solid #ddd; border-radius:12px; font-size:15px; color:#666; cursor:pointer; font-family:inherit; }
-.save-btn { width:100%; padding:16px; background:#1a1a1a; color:#fff; border:none; border-radius:14px; font-size:17px; font-weight:600; cursor:pointer; font-family:inherit; margin-top:8px; }
-.save-btn:disabled { background:#ccc; cursor:not-allowed; }
-.save-btn:active:not(:disabled) { opacity:.8; }
-
-/* ── CROP SCREEN ── */
-#cropScreen { background:#111; flex-direction:column; height:100vh; overflow:hidden; }
-.crop-nav { background:#000; display:flex; align-items:center; justify-content:space-between; padding:48px 16px 14px; flex-shrink:0; }
-.crop-nav-title { font-size:15px; color:#fff; font-weight:600; }
-.crop-cancel  { background:none; border:none; color:#aaa; font-size:15px; cursor:pointer; font-family:inherit; padding:6px 0; }
-.crop-confirm { background:#f39c12; border:none; color:#fff; font-size:15px; font-weight:700; padding:9px 20px; border-radius:20px; cursor:pointer; font-family:inherit; }
-.crop-hint { background:#1a1a1a; color:#aaa; font-size:13px; text-align:center; padding:8px 16px; flex-shrink:0; }
-
-.crop-stage { flex:1; overflow:hidden; position:relative; display:flex; align-items:center; justify-content:center; background:#000; }
-#cropBgImg  { display:block; max-width:100%; max-height:100%; object-fit:contain; user-select:none; pointer-events:none; -webkit-user-drag:none; }
-
-/* dark masks */
-.crop-mask { position:absolute; background:rgba(0,0,0,.55); pointer-events:none; }
-
-/* selection box */
-#cropBox {
-  position:absolute;
-  border:2px solid #f39c12;
-  touch-action:none;
-  cursor:move;
-  z-index:5;
+html,body{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#F5F3FF}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --p-lavender:#E8E4F8;--p-lavender-d:#7B6FBF;--p-lavender-dk:#534AB7;
+  --p-mint:#DCF2E8;--p-mint-d:#2E8A60;
+  --p-peach:#FAE8DF;--p-peach-d:#C46B45;
+  --p-sky:#DDF0FB;--p-sky-d:#2B7BB0;
+  --p-yellow:#FBF1D0;--p-yellow-d:#9A7200;
 }
-#cropBox::before, #cropBox::after {
-  content:''; position:absolute; pointer-events:none;
-}
-#cropBox::before {
-  left:33.3%; right:33.3%; top:0; bottom:0;
-  border-left:1px solid rgba(255,255,255,.3);
-  border-right:1px solid rgba(255,255,255,.3);
-}
-#cropBox::after {
-  top:33.3%; bottom:33.3%; left:0; right:0;
-  border-top:1px solid rgba(255,255,255,.3);
-  border-bottom:1px solid rgba(255,255,255,.3);
-}
+body,html{-webkit-tap-highlight-color:transparent}
+.app{font-family:var(--font-sans);padding:0 0 5rem;max-width:430px;margin:0 auto}
 
-/* handles */
-.ch {
-  position:absolute; background:#fff; border-radius:3px;
-  touch-action:none; z-index:10;
-}
-/* corners — big square for easy touch */
-.ch-tl,.ch-tr,.ch-bl,.ch-br { width:22px; height:22px; }
-.ch-tl { top:-4px;    left:-4px;   cursor:nwse-resize; }
-.ch-tr { top:-4px;    right:-4px;  cursor:nesw-resize; }
-.ch-bl { bottom:-4px; left:-4px;   cursor:nesw-resize; }
-.ch-br { bottom:-4px; right:-4px;  cursor:nwse-resize; }
-/* edges */
-.ch-t,.ch-b { height:6px; width:44px; left:50%; transform:translateX(-50%); }
-.ch-t { top:-4px;    cursor:ns-resize; }
-.ch-b { bottom:-4px; cursor:ns-resize; }
-.ch-l,.ch-r { width:6px; height:44px; top:50%; transform:translateY(-50%); }
-.ch-l { left:-4px;  cursor:ew-resize; }
-.ch-r { right:-4px; cursor:ew-resize; }
+/* topbar */
+.topbar{background:#E8E4F8;padding:14px 16px 14px;display:flex;align-items:center;gap:10px;border-radius:0 0 20px 20px;margin-bottom:14px}
+.topbar-icon{width:36px;height:36px;background:var(--p-lavender-dk);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.topbar-icon i{font-size:18px;color:#fff}
+.topbar-title{font-size:16px;font-weight:500;color:var(--p-lavender-dk)}
+.topbar-sub{font-size:12px;color:var(--p-lavender-d);margin-top:1px}
+.topbar-right{margin-left:auto;display:flex;gap:8px}
+.topbar-tab{background:none;border:1.5px solid #C5BEEE;border-radius:20px;padding:6px 13px;font-size:12px;color:var(--p-lavender-d);cursor:pointer;font-family:inherit}
+.topbar-tab.active{background:var(--p-lavender-dk);color:#fff;border-color:var(--p-lavender-dk)}
 
-/* size label */
-#cropLabel {
-  position:absolute; top:-32px; left:50%; transform:translateX(-50%);
-  background:rgba(243,156,18,.9); color:#fff; font-size:12px; font-weight:700;
-  padding:3px 10px; border-radius:20px; pointer-events:none; white-space:nowrap; z-index:20;
-}
+/* search bar */
+.search-bar{margin:0 16px 10px;display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #EDE9FA;border-radius:14px;padding:0 14px}
+.search-bar i{font-size:17px;color:#B0ABCF;flex-shrink:0}
+.search-bar input{flex:1;border:none;background:none;padding:11px 0;font-size:14px;color:#2C2830;font-family:inherit;outline:none}
+.search-bar input::placeholder{color:#C5C1DC}
+.search-clear{background:none;border:none;cursor:pointer;color:#B0ABCF;padding:4px;display:none}
 
-.crop-bottom { background:#000; padding:12px 16px 32px; display:flex; gap:10px; flex-shrink:0; }
-.crop-reset   { flex:1; padding:13px; background:#333; border:none; color:#fff; border-radius:12px; font-size:15px; cursor:pointer; font-family:inherit; }
-.crop-sel-all { flex:1; padding:13px; background:#1a3a5c; border:none; color:#7ec8ff; border-radius:12px; font-size:15px; cursor:pointer; font-family:inherit; }
+/* category pills */
+.cat-strip{display:flex;gap:7px;padding:0 16px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none}
+.cat-strip::-webkit-scrollbar{display:none}
+.cat-pill{flex-shrink:0;background:#F3F1FD;border:1px solid #DDD9F5;border-radius:20px;padding:6px 13px;font-size:12px;color:var(--p-lavender-d);cursor:pointer;font-family:inherit;white-space:nowrap}
+.cat-pill.active{background:var(--p-lavender-dk);color:#fff;border-color:var(--p-lavender-dk)}
 
-/* ── VIEW ── */
-#viewScreen { background:#000; flex-direction:column; height:100vh; }
-.view-nav { background:#1a1a1a; display:flex; align-items:center; justify-content:space-between; padding:48px 14px 12px; flex-shrink:0; }
-.vn-back  { background:none; border:none; color:#fff; font-size:26px; cursor:pointer; padding:0; line-height:1; }
-.vn-title { font-size:15px; font-weight:600; color:#fff; flex:1; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:0 10px; }
-.scroll-btn { background:#fff; color:#1a1a1a; border:none; border-radius:20px; padding:7px 14px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap; }
-.scroll-btn.on { background:#f39c12; color:#fff; }
-.toolbar { background:#111; display:flex; align-items:center; gap:6px; padding:8px 14px; flex-shrink:0; }
-.z-btn { width:34px; height:34px; background:#333; border:none; border-radius:8px; font-size:20px; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.z-btn:active { background:#555; }
-.z-pct { font-size:13px; color:#aaa; min-width:44px; text-align:center; }
-.wake-pill { margin-left:auto; background:#1e4d2b; color:#4ade80; border-radius:20px; padding:4px 10px; font-size:11px; display:none; }
-.img-scroll { flex:1; overflow-y:auto; overflow-x:auto; -webkit-overflow-scrolling:touch; }
-.img-scroll img { display:block; }
-.speed-bar { background:#111; display:flex; align-items:center; gap:10px; padding:10px 16px 28px; flex-shrink:0; }
-.speed-bar label { font-size:13px; color:#888; white-space:nowrap; }
-.speed-bar input[type=range] { flex:1; accent-color:#f39c12; }
-.speed-bar span { font-size:13px; color:#aaa; min-width:18px; }
+/* nav pill */
+.nav-bar{display:flex;align-items:center;justify-content:space-between;padding:0 16px;margin-bottom:10px}
+.nav-pill-btn{display:flex;align-items:center;gap:5px;background:var(--p-lavender);border:none;border-radius:20px;padding:8px 16px;font-size:13px;color:var(--p-lavender-dk);cursor:pointer;font-family:inherit}
+.nav-pill-btn:disabled{opacity:0.35;cursor:default}
+.prog-bubble{background:#fff;border:1.5px solid var(--p-lavender);border-radius:20px;padding:6px 14px;font-size:13px;color:var(--p-lavender-dk);font-weight:500}
 
-/* ── TOAST ── */
-.toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(20px); background:#1a1a1a; color:#fff; padding:10px 20px; border-radius:20px; font-size:14px; opacity:0; pointer-events:none; transition:all .3s; z-index:9999; white-space:nowrap; }
-.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+/* tool list (browse mode) */
+.tool-list{padding:0 16px;margin-bottom:12px}
+.tool-row{background:#fff;border:1px solid #EDE9FA;border-radius:14px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.tool-row:active{background:#F8F6FF}
+.tool-row-thumb{width:42px;height:42px;background:var(--p-lavender);border-radius:10px;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.tool-row-thumb img{width:100%;height:100%;object-fit:cover}
+.tool-row-thumb i{font-size:20px;color:#9F96DA}
+.tool-row-info{flex:1;min-width:0}
+.tool-row-name{font-size:13px;font-weight:500;color:#2C2830;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tool-row-cat{font-size:11px;color:#8B87A2;margin-top:2px}
+.tool-row-status{flex-shrink:0;display:flex;align-items:center;gap:4px}
+.dot-ok{width:8px;height:8px;border-radius:50%;background:#2E8A60}
+.dot-skip{width:8px;height:8px;border-radius:50%;background:#DDD9F5}
+.dot-none{width:8px;height:8px;border-radius:50%;background:#EDE9FA}
+.no-results{text-align:center;padding:32px 16px;color:#B0ABCF;font-size:14px}
 
-/* ── HOME TABS ── */
-.home-tabs { display:flex; gap:0; background:#f5f4f0; padding:12px 16px 0; }
-.home-tab { flex:1; padding:9px 0; text-align:center; font-size:14px; font-weight:600; color:#999; border-bottom:2px solid transparent; cursor:pointer; }
-.home-tab.active { color:#1a1a1a; border-bottom:2px solid #1a1a1a; }
+/* main card (checkin mode) */
+.card{background:#fff;border-radius:20px;margin:0 16px 14px;padding:16px;border:1px solid #EDE9FA}
+.photo-zone{width:100%;height:160px;background:var(--p-lavender);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;margin-bottom:14px;border:2px dashed #C5BEEE}
+.photo-zone img{width:100%;height:100%;object-fit:contain;border-radius:12px}
+.photo-hint{font-size:12px;color:var(--p-lavender-d);margin-top:6px}
+.photo-overlay{position:absolute;inset:0;background:rgba(83,74,183,0.55);display:none;align-items:center;justify-content:center;flex-direction:column;gap:4px}
+.photo-overlay i{font-size:28px;color:#fff}
+.photo-overlay span{font-size:12px;color:#fff}
+.photo-zone:active .photo-overlay{display:flex}
+.tool-header{margin-bottom:14px}
+.tool-cat-pill{display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;background:var(--p-sky);color:var(--p-sky-d);margin-bottom:5px}
+.tool-name-text{font-size:15px;font-weight:500;color:#2C2830;line-height:1.35}
+.field{margin-bottom:12px}
+.field-label{font-size:12px;color:#8B87A2;margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.req{color:#E87B6A;font-size:11px}
+select,input[type=text]{width:100%;font-size:14px;padding:10px 12px;border-radius:12px;border:1.5px solid #EDE9FA;background:#FAFAFE;color:#2C2830;font-family:inherit;outline:none;-webkit-appearance:none}
+select:focus,input[type=text]:focus{border-color:#9F96DA}
+.datetime-chip{background:var(--p-mint);border-radius:12px;padding:10px 12px;font-size:14px;color:var(--p-mint-d);display:flex;align-items:center;gap:8px}
+.add-loc-row{display:flex;gap:6px;margin-top:7px}
+.add-loc-row input{flex:1}
+.add-loc-btn{background:var(--p-lavender);color:var(--p-lavender-dk);border:none;border-radius:12px;padding:0 14px;font-size:13px;cursor:pointer;white-space:nowrap;font-family:inherit}
+.loc-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.loc-tag{font-size:13px;padding:7px 6px 7px 12px;background:#F3F1FD;border:1px solid #DDD9F5;border-radius:20px;color:var(--p-lavender-d);display:flex;align-items:center;gap:2px}
+.loc-tag button{background:#DDD9F5;border:none;cursor:pointer;color:var(--p-lavender-d);font-size:13px;padding:0;line-height:1;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.btn-save{background:linear-gradient(135deg,#9F96DA,#7B6FBF);color:#fff;border:none;border-radius:14px;padding:13px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-skip{background:var(--p-peach);color:var(--p-peach-d);border:none;border-radius:14px;padding:13px;font-size:14px;cursor:pointer;font-family:inherit}
+.saved-chip{text-align:center;margin-top:10px;font-size:13px;color:var(--p-mint-d);background:var(--p-mint);border-radius:20px;padding:6px 12px;display:none}
 
-/* ── PLAYLIST SCREEN ── */
-#playlistScreen { background:#f5f4f0; }
-.pl-add-btn { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; padding:14px; background:#fff; border:2px dashed #ccc; border-radius:16px; font-size:15px; color:#555; cursor:pointer; margin-bottom:16px; font-family:inherit; }
-.pl-card { background:#fff; border-radius:14px; padding:14px 16px; margin-bottom:8px; box-shadow:0 1px 3px rgba(0,0,0,.06); cursor:pointer; display:flex; align-items:center; gap:12px; }
-.pl-card:active { opacity:.7; }
-.pl-icon { width:46px; height:46px; border-radius:10px; background:#1a3a5c; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
-.pl-info { flex:1; min-width:0; }
-.pl-name { font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.pl-count { font-size:13px; color:#888; margin-top:2px; }
-.pl-del { background:none; border:none; color:#ccc; font-size:20px; cursor:pointer; padding:4px 0 4px 10px; flex-shrink:0; }
-.pl-del:active { color:#e74c3c; }
-.pl-play-btn { background:#f39c12; border:none; color:#fff; border-radius:20px; padding:7px 14px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; flex-shrink:0; }
+/* add panel */
+.add-panel{background:var(--p-yellow);border-radius:16px;margin:0 16px 12px;padding:12px 14px;border:1px solid #F0E4A0}
+.add-panel-hdr{display:flex;align-items:center;gap:7px;cursor:pointer}
+.add-panel-hdr i.ico{font-size:16px;color:var(--p-yellow-d)}
+.add-panel-hdr span{font-size:13px;font-weight:500;color:var(--p-yellow-d);flex:1}
+.add-panel-hdr .chev{font-size:13px;color:var(--p-yellow-d)}
+.add-panel-body{display:none;margin-top:10px}
+.add-panel-body.open{display:block}
+.add-panel-body input{background:#fff;border-color:#F0E4A0;margin-bottom:7px}
+.btn-add-tool{width:100%;background:var(--p-yellow-d);color:#fff;border:none;border-radius:12px;padding:10px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit}
 
-/* ── EDIT PLAYLIST SCREEN ── */
-#editPlaylist { background:#f5f4f0; }
-.ep-section { font-size:12px; font-weight:600; color:#999; letter-spacing:1px; text-transform:uppercase; margin:16px 0 8px; }
-.ep-song-row { display:flex; align-items:center; gap:12px; background:#fff; border-radius:12px; padding:12px 14px; margin-bottom:6px; box-shadow:0 1px 2px rgba(0,0,0,.05); }
-.ep-song-row .song-icon { width:38px; height:38px; font-size:18px; flex-shrink:0; }
-.ep-song-info { flex:1; min-width:0; }
-.ep-song-name { font-size:15px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.ep-song-artist { font-size:12px; color:#888; }
-.ep-check { width:24px; height:24px; border-radius:50%; border:2px solid #ddd; background:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size:13px; }
-.ep-check.on { background:#1a1a1a; border-color:#1a1a1a; color:#fff; }
-.ep-order-badge { background:#f39c12; color:#fff; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; }
-.ep-drag { color:#ccc; font-size:20px; cursor:grab; padding:0 4px; flex-shrink:0; touch-action:none; }
+/* bottom buttons */
+.sum-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:calc(100% - 32px);margin:0 16px;background:linear-gradient(135deg,#9F96DA,#7B6FBF);color:#fff;border:none;border-radius:16px;padding:14px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit}
 
-/* ── UP-NEXT PANEL ── */
-.upnext-panel { background:#111; border-top:1px solid #222; flex-shrink:0; overflow:hidden; transition:max-height .3s ease; max-height:0; }
-.upnext-panel.open { max-height:200px; }
-.upnext-header { display:flex; align-items:center; justify-content:space-between; padding:8px 14px 6px; }
-.upnext-title { font-size:12px; font-weight:700; color:#888; letter-spacing:1px; text-transform:uppercase; }
-.upnext-toggle { background:none; border:none; color:#666; font-size:18px; cursor:pointer; padding:2px 4px; }
-.upnext-list { display:flex; gap:8px; padding:0 14px 12px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
-.upnext-list::-webkit-scrollbar { display:none; }
-.upnext-item { flex-shrink:0; background:#1e1e1e; border-radius:10px; padding:8px 12px; min-width:120px; max-width:160px; cursor:pointer; border:2px solid transparent; }
-.upnext-item.current { border-color:#f39c12; }
-.upnext-item:active { opacity:.7; }
-.upnext-num { font-size:10px; color:#666; margin-bottom:2px; }
-.upnext-name { font-size:13px; font-weight:600; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.upnext-artist { font-size:11px; color:#888; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
-/* playlist nav in view */
-.pl-nav-btn { background:#333; border:none; color:#fff; border-radius:20px; padding:7px 12px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap; }
-.pl-nav-btn:active { background:#555; }
-
-/* ══════════════════════════════════════════
-   LOOP PEDAL
-══════════════════════════════════════════ */
-#loopScreen { background:#0a0a0a; min-height:100vh; display:none; flex-direction:column; }
-#loopScreen.active { display:flex; }
-
-/* header */
-.lp-header { background:#111; padding:48px 16px 12px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
-.lp-title { font-size:17px; font-weight:700; color:#fff; }
-.lp-clear { background:none; border:1px solid #333; color:#666; border-radius:20px; padding:6px 14px; font-size:13px; cursor:pointer; font-family:inherit; }
-.lp-clear:active { color:#e74c3c; border-color:#e74c3c; }
-
-/* status bar */
-.lp-status-bar { background:#000; padding:8px 16px; text-align:center; flex-shrink:0; border-bottom:1px solid #1a1a1a; }
-.lp-status-txt { font-size:12px; color:#555; letter-spacing:.5px; }
-.lp-status-txt.active { color:#27ae60; }
-.lp-status-txt.rec { color:#e74c3c; }
-
-/* scrollable track list */
-.lp-tracks { flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:10px; }
-
-/* individual track card */
-.lp-track { background:#161616; border-radius:16px; border:1.5px solid #242424; overflow:hidden; transition:border-color .2s; }
-.lp-track.state-rec  { border-color:#e74c3c; box-shadow:0 0 0 3px rgba(231,76,60,.18); }
-.lp-track.state-play { border-color:#27ae60; }
-.lp-track.state-done { border-color:#2a3a2a; }
-
-/* track top row */
-.lp-track-top { display:flex; align-items:center; gap:10px; padding:12px 14px 8px; }
-.lp-track-num { width:26px; height:26px; border-radius:50%; background:#1e1e1e; color:#555; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.lp-track-num.rec  { background:#e74c3c; color:#fff; }
-.lp-track-num.play { background:#27ae60; color:#fff; }
-.lp-track-label { flex:1; font-size:13px; color:#666; }
-.lp-track-label.rec  { color:#e74c3c; }
-.lp-track-label.play { color:#27ae60; }
-.lp-del-btn { background:none; border:none; color:#333; font-size:18px; cursor:pointer; padding:2px 4px; flex-shrink:0; }
-.lp-del-btn:active { color:#e74c3c; }
-
-/* waveform */
-.lp-wave-wrap { padding:0 14px 4px; position:relative; height:44px; }
-.lp-wave { width:100%; height:44px; display:block; border-radius:8px; background:#0d0d0d; }
-.lp-ph { position:absolute; top:0; bottom:0; width:2px; background:#f39c12; border-radius:1px; pointer-events:none; opacity:0; left:0; }
-.lp-ph.on { opacity:1; }
-.lp-wave-hint { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:11px; color:#333; pointer-events:none; }
-.lp-wave-hint.hide { display:none; }
-
-/* BIG tap button */
-.lp-tap-btn {
-  margin:10px 14px 14px;
-  width:calc(100% - 28px);
-  padding:18px;
-  border-radius:14px;
-  border:none;
-  font-size:16px;
-  font-weight:700;
-  cursor:pointer;
-  font-family:inherit;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  transition:background .15s, transform .08s;
-  -webkit-tap-highlight-color:transparent;
-  user-select:none;
-}
-.lp-tap-btn:active { transform:scale(.97); }
-/* states */
-.lp-tap-btn.s-empty { background:#1e1e1e; color:#888; border:2px dashed #2a2a2a; }
-.lp-tap-btn.s-rec   { background:#e74c3c; color:#fff; animation:lp-pulse .7s infinite alternate; }
-.lp-tap-btn.s-play  { background:#1a3a1a; color:#27ae60; }
-.lp-tap-btn.s-muted { background:#1a1a1a; color:#555; border:2px solid #252525; }
-
-/* controls row (vol + mute) */
-.lp-ctrl-row { display:flex; align-items:center; gap:8px; padding:0 14px 12px; }
-.lp-vol { flex:1; accent-color:#f39c12; }
-.lp-mute { background:#222; border:none; color:#888; border-radius:8px; padding:5px 12px; font-size:12px; cursor:pointer; font-family:inherit; white-space:nowrap; }
-.lp-mute.on { background:#3a1a1a; color:#e74c3c; }
-
-/* add track */
-.lp-add-btn { margin:0 14px 28px; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:transparent; border:2px dashed #1e1e1e; border-radius:14px; font-size:14px; color:#3a3a3a; cursor:pointer; font-family:inherit; }
-.lp-add-btn:active { border-color:#444; color:#888; }
-
-@keyframes lp-pulse { from{opacity:1} to{opacity:.55} }
+/* summary view */
+.sum-topbar{background:var(--p-mint);padding:14px 16px 12px;border-radius:0 0 20px 20px;margin-bottom:16px}
+.sum-topbar h2{font-size:16px;font-weight:500;color:var(--p-mint-d)}
+.sum-count-text{font-size:13px;color:var(--p-mint-d);margin-top:3px}
+.sum-list{padding:0 16px;margin-bottom:12px}
+.sum-item{background:#fff;border:1px solid #EDE9FA;border-radius:14px;padding:11px 13px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
+.sum-num{font-size:12px;color:#B0ABCF;min-width:20px;padding-top:1px}
+.sum-body{flex:1}
+.sum-name{font-size:13px;color:#2C2830;font-weight:500;line-height:1.3}
+.sum-meta{font-size:12px;color:#8B87A2;margin-top:3px}
+.badge-ok{display:inline-block;font-size:11px;padding:2px 9px;border-radius:20px;background:var(--p-mint);color:var(--p-mint-d);margin-top:4px}
+.badge-skip{display:inline-block;font-size:11px;padding:2px 9px;border-radius:20px;background:#F3F1FD;color:#B0ABCF;margin-top:4px}
+.export-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:calc(100% - 32px);margin:0 16px 8px;background:var(--p-mint-d);color:#fff;border:none;border-radius:16px;padding:13px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit}
+.back-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:calc(100% - 32px);margin:0 16px;background:#F3F1FD;color:var(--p-lavender-d);border:1px solid #DDD9F5;border-radius:16px;padding:12px;font-size:14px;cursor:pointer;font-family:inherit}
+.hidden{display:none}
 </style>
 </head>
 <body>
 
-<div class="toast" id="toast"></div>
+<div class="app">
 
-<!-- HOME -->
-<div id="home" class="screen active">
-  <div class="home-top">
-    <h1>🎸 คอร์ดของฉัน</h1>
-    <p>เก็บภาพเนื้อเพลง + คอร์ดส่วนตัว</p>
+<!-- FORM VIEW -->
+<div id="form-view">
+  <div class="topbar">
+    <div class="topbar-icon"><i class="ti ti-tool" aria-hidden="true"></i></div>
+    <div>
+      <div class="topbar-title">ToolTrack</div>
+      <div class="topbar-sub">เช็คอินอุปกรณ์ช่างไฟฟ้า</div>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-tab active" id="tab-browse" onclick="setMode('browse')"><i class="ti ti-layout-list" style="font-size:13px"></i> รายการ</button>
+      <button class="topbar-tab" id="tab-checkin" onclick="setMode('checkin')"><i class="ti ti-edit" style="font-size:13px"></i> เช็คอิน</button>
+    </div>
   </div>
-  <div class="home-tabs">
-    <div class="home-tab active" id="tabSongs" onclick="switchTab('songs')">🎵 เพลง</div>
-    <div class="home-tab" id="tabPlaylists" onclick="switchTab('playlists')">📋 กลุ่มเพลง</div>
-    <div class="home-tab" id="tabLoop" onclick="goLoopRecorder()">🎙 ลูป</div>
+
+  <!-- SEARCH + FILTER (shared) -->
+  <div class="search-bar">
+    <i class="ti ti-search" aria-hidden="true"></i>
+    <input type="text" id="search-input" placeholder="ค้นหาเครื่องมือ..." oninput="onSearch()">
+    <button class="search-clear" id="search-clear" onclick="clearSearch()"><i class="ti ti-x" style="font-size:14px"></i></button>
   </div>
-  <div class="home-body">
-    <div id="installBar" style="display:none;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:12px 16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.08);">
-      <span style="font-size:22px;">📲</span>
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:14px;font-weight:600;">ติดตั้งเป็นแอปบนมือถือ</div>
-        <div style="font-size:12px;color:#888;margin-top:2px;">ใช้งานแบบออฟไลน์ได้</div>
+  <div class="cat-strip" id="cat-strip"></div>
+
+  <!-- BROWSE MODE -->
+  <div id="browse-mode">
+    <div class="tool-list" id="tool-list"></div>
+    <div class="add-panel">
+      <div class="add-panel-hdr" onclick="toggleAddTool()">
+        <i class="ti ti-plus-circle ico"></i>
+        <span>เพิ่มรายการเครื่องมือใหม่</span>
+        <i class="ti ti-chevron-down chev" id="add-tool-chevron"></i>
       </div>
-      <button onclick="installApp()" style="background:#1a1a1a;color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;">ติดตั้ง</button>
+      <div class="add-panel-body" id="add-tool-body">
+        <input type="text" id="new-tool-name" placeholder="ชื่อเครื่องมือ *">
+        <input type="text" id="new-tool-cat" placeholder="หมวดหมู่ (เช่น อื่นๆ)">
+        <button class="btn-add-tool" onclick="addNewTool()"><i class="ti ti-plus"></i> เพิ่มเครื่องมือ</button>
+      </div>
     </div>
-    <div id="iosBar" style="display:none;background:#fff3cd;border-radius:14px;padding:12px 16px;margin-bottom:14px;font-size:13px;color:#856404;line-height:1.8;border:1px solid #ffc107;">
-      ⚠️ <b>สำคัญสำหรับ iPhone/iPad:</b><br>
-      ต้องติดตั้งเป็นแอปก่อน ข้อมูลถึงจะไม่หาย<br>
-      แตะปุ่ม <b>แชร์</b> (☐↑) → <b>"Add to Home Screen"</b><br>
-      แล้วเปิดจาก icon บนหน้าจอเสมอ
-    </div>
-
-    <!-- SONGS TAB -->
-    <div id="tabContentSongs">
-      <button class="add-btn" onclick="goAdd()">＋ เพิ่มเพลงใหม่</button>
-      <div class="section-label">เพลงของฉัน</div>
-      <div class="song-list" id="songList"></div>
-      <div class="empty" id="emptyState">ยังไม่มีเพลง<br>กด "เพิ่มเพลงใหม่" ด้านบน 🎵</div>
-    </div>
-
-    <!-- PLAYLISTS TAB -->
-    <div id="tabContentPlaylists" style="display:none;">
-      <button class="pl-add-btn" onclick="goNewPlaylist()">＋ สร้างกลุ่มเพลงใหม่</button>
-      <div class="section-label">กลุ่มเพลงของฉัน</div>
-      <div id="playlistList"></div>
-      <div class="empty" id="emptyPlaylist" style="display:none;">ยังไม่มีกลุ่มเพลง<br>กด "สร้างกลุ่มเพลงใหม่" ด้านบน 📋</div>
-    </div>
+    <button class="sum-btn" onclick="showSummary()"><i class="ti ti-clipboard-list"></i> ดูสรุปทั้งหมด</button>
   </div>
-</div>
 
-<!-- ADD -->
-<div id="addScreen" class="screen">
-  <div class="nav-bar">
-    <button class="nav-back" onclick="goHome()">‹</button>
-    <span class="nav-title">เพิ่มเพลงใหม่</span>
-  </div>
-  <div class="form-body">
-    <label class="f-label">ชื่อเพลง</label>
-    <input class="f-input" type="text" id="songName" placeholder="เช่น แสงสุดท้าย" />
-    <label class="f-label">ศิลปิน (ไม่บังคับ)</label>
-    <input class="f-input" type="text" id="artistName" placeholder="เช่น Potato" />
-    <label class="f-label">ภาพเนื้อเพลง + คอร์ด</label>
-    <div class="upload-zone" id="uploadZone">
-      <input type="file" accept="image/*" id="fileInput" onchange="handleFile(this)" />
-      <span class="uz-ico">📷</span>
-      <span class="uz-txt">แตะเพื่อเลือกภาพ</span>
-      <span class="uz-sub">จากกล้องหรือคลังภาพ</span>
+  <!-- CHECKIN MODE -->
+  <div id="checkin-mode" class="hidden">
+    <div class="nav-bar">
+      <button class="nav-pill-btn" id="btn-prev" onclick="changeTool(-1)" disabled><i class="ti ti-arrow-left"></i> ก่อนหน้า</button>
+      <div class="prog-bubble" id="prog">1 / 27</div>
+      <button class="nav-pill-btn" id="btn-next" onclick="changeTool(1)">ถัดไป <i class="ti ti-arrow-right"></i></button>
     </div>
-    <div id="previewWrap">
-      <div class="preview-img-box">
-        <img id="previewImg" />
-        <div class="crop-badge" id="cropBadge">✂️ ตัดแล้ว</div>
+    <div class="card">
+      <input type="file" id="img-input" accept="image/*" style="display:none" onchange="onImgUpload(event)">
+      <div class="photo-zone" id="thumb-area" onclick="document.getElementById('img-input').click()">
+        <i class="ti ti-camera" style="font-size:34px;color:#9F96DA" aria-hidden="true"></i>
+        <span class="photo-hint">แตะเพื่ออัปโหลดรูปอุปกรณ์</span>
+        <div class="photo-overlay"><i class="ti ti-refresh"></i><span>เปลี่ยนรูป</span></div>
+      </div>
+      <div class="tool-header">
+        <div class="tool-cat-pill" id="tool-cat">—</div>
+        <div class="tool-name-text" id="tool-name">—</div>
+      </div>
+      <div class="field">
+        <div class="field-label"><i class="ti ti-user" style="font-size:13px"></i> พนักงาน <span class="req">*</span></div>
+        <select id="emp-select" onchange="onEmpChange()">
+          <option value="">— เลือกพนักงาน —</option>
+          <option>ประสง</option><option>อำนาจ</option><option>ณัฐพล</option>
+          <option>วิทยา</option><option>ทวีศัก</option><option>บำรุง</option>
+          <option>ชูเกียรติ</option>
+          <option value="__custom__">กำหนดเอง...</option>
+        </select>
+        <input type="text" id="emp-custom" placeholder="ใส่ชื่อพนักงาน" style="display:none;margin-top:7px">
+      </div>
+      <div class="field">
+        <div class="field-label"><i class="ti ti-map-pin" style="font-size:13px"></i> สถานที่</div>
+        <select id="loc-select" onchange="onLocChange()">
+          <option value="">— เลือกสถานที่ —</option>
+          <option value="__custom__">พิมพ์เอง...</option>
+        </select>
+        <input type="text" id="loc-custom" placeholder="พิมพ์ชื่อสถานที่" style="display:none;margin-top:7px">
+        <div class="add-loc-row">
+          <input type="text" id="loc-new" placeholder="เพิ่มสถานที่ใหม่...">
+          <button class="add-loc-btn" onclick="addLocation()"><i class="ti ti-plus"></i> เพิ่ม</button>
+        </div>
+        <div class="loc-tags" id="loc-tags"></div>
+      </div>
+      <div class="field">
+        <div class="field-label"><i class="ti ti-clock" style="font-size:13px"></i> วันที่และเวลา</div>
+        <div class="datetime-chip"><i class="ti ti-calendar-event" style="font-size:16px"></i><span id="datetime-display">—</span></div>
       </div>
       <div class="btn-row">
-        <button class="crop-btn" onclick="goCrop()">✂️ Crop ภาพ</button>
-        <button class="restore-btn" id="restoreBtn" onclick="restoreOriginal()">↩ ต้นฉบับ</button>
-        <button class="re-upload" onclick="reupload()">🔄 เปลี่ยน</button>
+        <button class="btn-save" onclick="submitEntry()"><i class="ti ti-check"></i> บันทึก</button>
+        <button class="btn-skip" onclick="skipEntry()">ข้ามรายการนี้</button>
       </div>
+      <div class="saved-chip" id="saved-badge"><i class="ti ti-circle-check"></i> บันทึกแล้ว</div>
     </div>
-    <button class="save-btn" id="saveBtn" onclick="saveSong()" disabled>บันทึกเพลง</button>
   </div>
 </div>
 
-<!-- CROP SCREEN -->
-<div id="cropScreen" class="screen">
-  <div class="crop-nav">
-    <button class="crop-cancel" onclick="cancelCrop()">ยกเลิก</button>
-    <span class="crop-nav-title">✂️ Crop ภาพ</span>
-    <button class="crop-confirm" onclick="confirmCrop()">ตัด ✓</button>
+<!-- SUMMARY VIEW -->
+<div id="summary-view" class="hidden">
+  <div class="sum-topbar">
+    <h2>สรุปการเช็คอินอุปกรณ์</h2>
+    <div class="sum-count-text" id="sum-count"></div>
   </div>
-  <div class="crop-hint">ลากมุม / ขอบ เพื่อปรับพื้นที่ตัด</div>
-
-  <div class="crop-stage" id="cropStage">
-    <img id="cropBgImg" draggable="false" />
-    <!-- shadow masks -->
-    <div class="crop-mask" id="mTop"></div>
-    <div class="crop-mask" id="mBottom"></div>
-    <div class="crop-mask" id="mLeft"></div>
-    <div class="crop-mask" id="mRight"></div>
-    <!-- selection box -->
-    <div id="cropBox">
-      <div id="cropLabel">–</div>
-      <div class="ch ch-tl" data-h="tl"></div>
-      <div class="ch ch-tr" data-h="tr"></div>
-      <div class="ch ch-bl" data-h="bl"></div>
-      <div class="ch ch-br" data-h="br"></div>
-      <div class="ch ch-t"  data-h="t"></div>
-      <div class="ch ch-b"  data-h="b"></div>
-      <div class="ch ch-l"  data-h="l"></div>
-      <div class="ch ch-r"  data-h="r"></div>
-    </div>
-  </div>
-
-  <div class="crop-bottom">
-    <button class="crop-reset"   onclick="cropReset()">↺ รีเซ็ต</button>
-    <button class="crop-sel-all" onclick="cropSelectAll()">⬜ เต็มภาพ</button>
-  </div>
+  <div class="sum-list" id="summary-list"></div>
+  <button class="export-btn" onclick="exportCSV()"><i class="ti ti-download"></i> ส่งออก CSV</button>
+  <button class="back-btn" onclick="backToForm()"><i class="ti ti-arrow-left"></i> กลับแก้ไข</button>
 </div>
 
-<!-- EDIT PLAYLIST -->
-<div id="editPlaylist" class="screen">
-  <div class="nav-bar">
-    <button class="nav-back" onclick="goHome()">‹</button>
-    <span class="nav-title" id="epTitle">กลุ่มเพลง</span>
-    <button onclick="savePlaylist()" style="background:none;border:none;color:#f39c12;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;padding:4px 0;">บันทึก</button>
-  </div>
-  <div class="form-body">
-    <label class="f-label">ชื่อกลุ่มเพลง</label>
-    <input class="f-input" type="text" id="epName" placeholder="เช่น เพลงงานวัด" />
-    <div class="ep-section">เลือกเพลง (ลำดับจะตามที่เลือก)</div>
-    <div id="epSongList"></div>
-    <div style="font-size:13px;color:#bbb;text-align:center;padding:8px 0;" id="epEmpty">ยังไม่มีเพลง กรุณาเพิ่มเพลงก่อน</div>
-  </div>
-</div>
-
-<!-- VIEW -->
-<div id="viewScreen" class="screen">
-  <div class="view-nav">
-    <button class="vn-back" onclick="stopScroll();goHome()">‹</button>
-    <span class="vn-title" id="vTitle"></span>
-    <button class="scroll-btn" id="scrollBtn" onclick="toggleScroll()">▶ เลื่อน</button>
-  </div>
-  <div class="toolbar">
-    <button class="z-btn" onclick="zoom(-10)">−</button>
-    <span class="z-pct" id="zPct">100%</span>
-    <button class="z-btn" onclick="zoom(10)">+</button>
-    <span style="font-size:12px;color:#666;margin-left:2px;">ซูม</span>
-    <span class="wake-pill" id="wakePill">🔆 ไม่ดับ</span>
-    <!-- playlist prev/next -->
-    <button class="pl-nav-btn" id="prevSongBtn" onclick="playlistPrev()" style="display:none;">‹ ก่อน</button>
-    <button class="pl-nav-btn" id="nextSongBtn" onclick="playlistNext()" style="display:none;">ถัดไป ›</button>
-  </div>
-  <div class="img-scroll" id="imgScroll">
-    <img id="viewImg" />
-  </div>
-  <!-- UP NEXT PANEL -->
-  <div class="upnext-panel" id="upnextPanel">
-    <div class="upnext-header">
-      <span class="upnext-title">▶ ลำดับเพลง</span>
-      <button class="upnext-toggle" onclick="toggleUpnext()">✕</button>
-    </div>
-    <div class="upnext-list" id="upnextList"></div>
-  </div>
-  <div class="speed-bar">
-    <label>ความเร็ว</label>
-    <input type="range" min="1" max="10" step="1" value="2" id="speedSlider"
-      oninput="document.getElementById('speedVal').textContent=this.value; restartIfOn()"/>
-    <span id="speedVal">2</span>
-  </div>
-</div>
-
-<!-- LOOP PEDAL -->
-<div id="loopScreen" class="screen">
-  <div class="lp-header">
-    <div style="display:flex;align-items:center;gap:10px;">
-      <button onclick="goHome()" style="background:none;border:none;color:#aaa;font-size:26px;cursor:pointer;padding:0;line-height:1;">‹</button>
-      <span class="lp-title">🎸 Loop Pedal</span>
-    </div>
-    <button class="lp-clear" onclick="lpClearAll()">🗑 ล้างทั้งหมด</button>
-  </div>
-  <div class="lp-status-bar">
-    <span class="lp-status-txt" id="lpStatusTxt">พร้อมใช้งาน — กดปุ่ม ⏺ บนแทร็กเพื่อเริ่มอัด</span>
-  </div>
-  <div class="lp-tracks" id="lpTracks"></div>
-  <button class="lp-add-btn" onclick="lpAddTrack()">＋ เพิ่มแทร็กใหม่</button>
 </div>
 
 <script>
-/* ============================================================
-   STATE
-============================================================ */
-var songs=[], playlists=[], pending=null, origUrl=null, scrollTmr=null, zoomLvl=100, wakeLock=null;
-/* playlist playback state */
-var currentPlaylist=null, currentPlIdx=0;
-/* edit playlist state */
-var editingPlIdx=-1, epSelected=[];
+const tools=[
+  {name:"เครื่องเชื่อมบัดกรีท่อพลาสติก ppr",cat:"อื่นๆ"},
+  {name:"คีมย้ำหางปลาไฮดรอลิคขนาดเล็ก 10-120 มิลลิเมตร",cat:"คีมย้ำหางปลาไฮดรอลิค"},
+  {name:"เครื่องเจียร 7 นิ้ว",cat:"หินเจียร ลูกหมู"},
+  {name:"เครื่องเจียร 7 นิ้วสีเจียว",cat:"หินเจียร ลูกหมู"},
+  {name:"เลื่อยขัดไฟฟ้า",cat:"อื่นๆ"},
+  {name:"เครื่องพิมพ์ปอกสายไฟ",cat:"อื่นๆ"},
+  {name:"เลื่อยสายพานแบตสีเหลือง",cat:"อื่นๆ"},
+  {name:"เลื่อยสายพานไฟฟ้า",cat:"อื่นๆ"},
+  {name:"เครื่องพั้นรู",cat:"อื่นๆ"},
+  {name:"เครื่องสกัดไฟฟ้า",cat:"อื่นๆ"},
+  {name:"เครื่องดูดฝุ่น (Stanley)",cat:"เครื่องดูดฝุ่น"},
+  {name:"เครื่องสูบน้ำ (ท่อสีฟ้า)",cat:"อื่นๆ"},
+  {name:"เครื่องสูบน้ำ (ปั๊มสีฟ้า)",cat:"อื่นๆ"},
+  {name:"เครื่องเจียร Dwalk 4 นิ้วสีเหลือง No1",cat:"อื่นๆ"},
+  {name:"พัดลมดูดอากาศ (3 ตัว)",cat:"พัดลม"},
+  {name:"ลาเบลเครื่องติดสติ๊กเกอร์ (Brother 1)",cat:"อื่นๆ"},
+  {name:"ลาเบลเครื่องติดสติ๊กเกอร์ (Brother 2)",cat:"อื่นๆ"},
+  {name:"น็อคเอาท์ไฮโดรลิค (ชุด 1)",cat:"เครื่องมือไฮโดลิก"},
+  {name:"น็อคเอาท์ไฮโดรลิค (ชุด 2)",cat:"เครื่องมือไฮโดลิก"},
+  {name:"เครื่องดูดฝุ่นใช้แบตเตอรี่ Makita",cat:"เครื่องดูดฝุ่น"},
+  {name:"เครื่องดูดฝุ่น (สีดำสแตนเลส)",cat:"เครื่องดูดฝุ่น"},
+  {name:"เครื่องดูดฝุ่น (สีเขียว)",cat:"เครื่องดูดฝุ่น"},
+  {name:"บันได 12 ขั้น (ในออฟฟิศ)",cat:"บันได"},
+  {name:"บันได 12 ขั้น (ด้านนอก)",cat:"บันได"},
+  {name:"บันไดพับ",cat:"บันได"},
+  {name:"พัดลมดูดอากาศ 12 นิ้วสีแดง",cat:"พัดลม"},
+  {name:"เครื่องดูดฝุ่นสีเขียว",cat:"เครื่องดูดฝุ่น"}
+];
 
-/* crop state — all coords in px relative to rendered image origin */
-var CS = {
-  imgRect: null,   // DOMRect of #cropBgImg
-  imgNat:  {w:1,h:1},
-  scale:   1,
-  box:     {x:0,y:0,w:200,h:200},
-  drag:    null    // {handle, startX, startY, origBox}
-};
+let current=0;
+let entries=new Array(tools.length).fill(null);
+let images=new Array(tools.length).fill(null);
+let locations=[];
+let searchQ='';
+let filterCat='ทั้งหมด';
+let currentMode='browse';
 
-/* ============================================================
-   TOAST
-============================================================ */
-var toastTmr=null;
-function showToast(msg){
-  var t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  if(toastTmr) clearTimeout(toastTmr);
-  toastTmr=setTimeout(function(){ t.classList.remove('show'); },2200);
+function getNow(){
+  const d=new Date();
+  return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()+543} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+function updateClock(){document.getElementById('datetime-display').textContent=getNow();}
+
+/* ---- MODE ---- */
+function setMode(mode){
+  currentMode=mode;
+  document.getElementById('browse-mode').classList.toggle('hidden',mode!=='browse');
+  document.getElementById('checkin-mode').classList.toggle('hidden',mode!=='checkin');
+  document.getElementById('tab-browse').classList.toggle('active',mode==='browse');
+  document.getElementById('tab-checkin').classList.toggle('active',mode==='checkin');
+  if(mode==='browse') renderList();
+  else loadTool(current);
 }
 
-/* ============================================================
-   STORAGE — IndexedDB (ไม่มีลิมิต 5MB เหมือน localStorage)
-   ย้ายจาก localStorage → IndexedDB เพื่อรองรับเพลงได้มากขึ้น
-   รูปภาพไม่ถูก compress เพิ่ม — คุณภาพเต็ม 100%
-============================================================ */
-var _db = null;
-
-function _openDB(cb){
-  if(_db){ cb(_db); return; }
-  var r = indexedDB.open('chords17', 1);
-  r.onupgradeneeded = function(e){
-    var db = e.target.result;
-    if(!db.objectStoreNames.contains('songs'))
-      db.createObjectStore('songs', {keyPath:'id'});
-    if(!db.objectStoreNames.contains('meta'))
-      db.createObjectStore('meta');
-  };
-  r.onsuccess = function(e){ _db = e.target.result; cb(_db); };
-  r.onerror   = function(){ showToast('⚠️ เปิด DB ไม่ได้'); };
+/* ---- SEARCH & FILTER ---- */
+function getCategories(){
+  const cats=[...new Set(tools.map(t=>t.cat))].sort();
+  return ['ทั้งหมด',...cats];
 }
-
-function _putSong(s, cb){
-  _openDB(function(db){
-    var tx = db.transaction('songs','readwrite');
-    tx.objectStore('songs').put(s);
-    tx.oncomplete = function(){ if(cb) cb(); };
-    tx.onabort = function(e){
-      var err = tx.error;
-      if(err && err.name === 'QuotaExceededError')
-        showToast('❌ พื้นที่เต็ม ลบเพลงเก่าออกก่อน');
-      else
-        showToast('⚠️ บันทึกไม่สำเร็จ');
-    };
+function renderCatStrip(){
+  const strip=document.getElementById('cat-strip');
+  strip.innerHTML='';
+  getCategories().forEach(c=>{
+    const b=document.createElement('button');
+    b.className='cat-pill'+(c===filterCat?' active':'');
+    b.textContent=c;
+    b.onclick=()=>{filterCat=c;renderCatStrip();renderList();};
+    strip.appendChild(b);
   });
 }
-function _delSong(id, cb){
-  _openDB(function(db){
-    var tx = db.transaction('songs','readwrite');
-    tx.objectStore('songs').delete(id);
-    tx.oncomplete = function(){ if(cb) cb(); };
+function onSearch(){
+  searchQ=document.getElementById('search-input').value;
+  document.getElementById('search-clear').style.display=searchQ?'flex':'none';
+  renderList();
+}
+function clearSearch(){
+  document.getElementById('search-input').value='';
+  searchQ='';
+  document.getElementById('search-clear').style.display='none';
+  renderList();
+}
+function getFilteredTools(){
+  return tools.map((t,i)=>({...t,idx:i})).filter(t=>{
+    const matchCat=filterCat==='ทั้งหมด'||t.cat===filterCat;
+    const matchQ=!searchQ||t.name.toLowerCase().includes(searchQ.toLowerCase())||t.cat.toLowerCase().includes(searchQ.toLowerCase());
+    return matchCat&&matchQ;
   });
 }
-function _putMeta(key, val, cb){
-  _openDB(function(db){
-    var tx = db.transaction('meta','readwrite');
-    tx.objectStore('meta').put(val, key);
-    tx.oncomplete = function(){ if(cb) cb(); };
-  });
-}
-
-function load(){
-  /* ขอ persistent storage ป้องกัน iOS/Android ล้างข้อมูล */
-  if(navigator.storage && navigator.storage.persist)
-    navigator.storage.persist().catch(function(){});
-
-  _openDB(function(db){
-    var tx = db.transaction('songs','readonly');
-    var req = tx.objectStore('songs').getAll();
-    req.onsuccess = function(){
-      var rows = req.result || [];
-      /* migrate จาก localStorage ครั้งแรก */
-      if(rows.length === 0){
-        try{
-          var old = localStorage.getItem('chords_v3');
-          if(old) rows = JSON.parse(old);
-        }catch(e){}
-      }
-      rows.forEach(function(s){ if(!s.id) s.id='s'+Date.now()+Math.random(); });
-      songs = rows;
-
-      var tx2 = db.transaction('meta','readonly');
-      var req2 = tx2.objectStore('meta').get('playlists');
-      req2.onsuccess = function(){
-        var pl = req2.result || null;
-        if(!pl){
-          try{ var oldpl=localStorage.getItem('chords_pl_v1'); if(oldpl) pl=JSON.parse(oldpl); }catch(e){}
-        }
-        playlists = pl || [];
-        render();
-        /* เขียน migrate กลับเข้า IDB */
-        songs.forEach(function(s){ _putSong(s); });
-        if(playlists.length) _putMeta('playlists', playlists);
-        /* ลบ localStorage เก่าออก */
-        try{ localStorage.removeItem('chords_v3'); localStorage.removeItem('chords_pl_v1'); }catch(e){}
-      };
-    };
-  });
-}
-
-function persist(){
-  songs.forEach(function(s){ _putSong(s); });
-}
-function persistPlaylists(){
-  _putMeta('playlists', playlists);
-}
-
-/* ============================================================
-   NAVIGATION
-============================================================ */
-function show(id){
-  document.querySelectorAll('.screen').forEach(function(s){
-    s.classList.remove('active'); s.style.display='none';
-  });
-  var el=document.getElementById(id);
-  el.style.display=(id==='viewScreen'||id==='cropScreen'||id==='loopScreen')?'flex':'block';
-  el.classList.add('active');
-}
-function goHome(){ show('home'); }
-function goAdd(){
-  ['songName','artistName'].forEach(function(id){ document.getElementById(id).value=''; });
-  document.getElementById('previewWrap').style.display='none';
-  document.getElementById('uploadZone').style.display='flex';
-  document.getElementById('saveBtn').disabled=true;
-  document.getElementById('cropBadge').style.display='none';
-  document.getElementById('restoreBtn').style.display='none';
-  pending=null; origUrl=null;
-  show('addScreen');
-}
-
-/* ============================================================
-   TABS
-============================================================ */
-function switchTab(tab){
-  document.getElementById('tabSongs').classList.toggle('active', tab==='songs');
-  document.getElementById('tabPlaylists').classList.toggle('active', tab==='playlists');
-  document.getElementById('tabContentSongs').style.display = tab==='songs'?'block':'none';
-  document.getElementById('tabContentPlaylists').style.display = tab==='playlists'?'block':'none';
-  if(tab==='playlists') renderPlaylists();
-}
-
-/* ============================================================
-   RENDER LIST
-============================================================ */
-function escHtml(t){ var d=document.createElement('div'); d.appendChild(document.createTextNode(t)); return d.innerHTML; }
-function render(){
-  var list=document.getElementById('songList');
-  var empty=document.getElementById('emptyState');
+function renderList(){
+  const list=document.getElementById('tool-list');
+  const filtered=getFilteredTools();
   list.innerHTML='';
-  empty.style.display=songs.length?'none':'block';
-  songs.forEach(function(s,i){
-    var c=document.createElement('div');
-    c.className='song-card';
-    c.innerHTML='<div class="song-icon">🎵</div>'
-      +'<div class="song-info"><div class="song-name">'+escHtml(s.name)+'</div>'
-      +'<div class="song-artist">'+(s.artist?escHtml(s.artist):'ไม่ระบุศิลปิน')+'</div></div>'
-      +'<button class="song-del" onclick="event.stopPropagation();delSong('+i+')">✕</button>';
-    c.addEventListener('click',function(){ openSong(i); });
-    list.appendChild(c);
-  });
-}
-
-function renderPlaylists(){
-  var list=document.getElementById('playlistList');
-  var empty=document.getElementById('emptyPlaylist');
-  list.innerHTML='';
-  if(!playlists.length){ empty.style.display='block'; return; }
-  empty.style.display='none';
-  playlists.forEach(function(pl,pi){
-    var card=document.createElement('div');
-    card.className='pl-card';
-    var cnt=pl.songIds.filter(function(id){ return songs.find(function(s){ return s.id===id; }); }).length;
-    card.innerHTML='<div class="pl-icon">📋</div>'
-      +'<div class="pl-info"><div class="pl-name">'+escHtml(pl.name)+'</div>'
-      +'<div class="pl-count">'+cnt+' เพลง</div></div>'
-      +'<button class="pl-play-btn" onclick="event.stopPropagation();playPlaylist('+pi+')">▶ เล่น</button>'
-      +'<button class="pl-del" onclick="event.stopPropagation();delPlaylist('+pi+')">✕</button>';
-    card.addEventListener('click',function(){ goEditPlaylist(pi); });
-    list.appendChild(card);
-  });
-}
-
-/* ============================================================
-   FILE UPLOAD
-============================================================ */
-function handleFile(inp){
-  var f=inp.files[0]; if(!f) return;
-  var r=new FileReader();
-  r.onload=function(e){
-    origUrl=e.target.result; pending=e.target.result;
-    document.getElementById('previewImg').src=pending;
-    document.getElementById('previewWrap').style.display='block';
-    document.getElementById('uploadZone').style.display='none';
-    document.getElementById('saveBtn').disabled=false;
-    document.getElementById('cropBadge').style.display='none';
-    document.getElementById('restoreBtn').style.display='none';
-  };
-  r.readAsDataURL(f);
-}
-function reupload(){
-  document.getElementById('previewWrap').style.display='none';
-  document.getElementById('uploadZone').style.display='flex';
-  document.getElementById('fileInput').value='';
-  document.getElementById('saveBtn').disabled=true;
-  document.getElementById('cropBadge').style.display='none';
-  document.getElementById('restoreBtn').style.display='none';
-  pending=null; origUrl=null;
-}
-function restoreOriginal(){
-  if(!origUrl) return;
-  pending=origUrl;
-  document.getElementById('previewImg').src=pending;
-  document.getElementById('cropBadge').style.display='none';
-  document.getElementById('restoreBtn').style.display='none';
-  showToast('↩ กลับภาพต้นฉบับแล้ว');
-}
-
-/* ============================================================
-   CROP — DOM overlay, handle-based (mobile-friendly)
-============================================================ */
-function goCrop(){
-  if(!origUrl){ showToast('กรุณาเลือกภาพก่อน'); return; }
-  show('cropScreen');
-  var bgImg=document.getElementById('cropBgImg');
-
-  function initCrop(){
-    requestAnimationFrame(function(){
-      var r=bgImg.getBoundingClientRect();
-      CS.imgRect=r;
-      CS.imgNat={w:bgImg.naturalWidth, h:bgImg.naturalHeight};
-      CS.scale=r.width/bgImg.naturalWidth;
-      // default: full image
-      CS.box={x:0,y:0,w:r.width,h:r.height};
-      updateCropUI();
-    });
+  if(!filtered.length){
+    list.innerHTML='<div class="no-results"><i class="ti ti-search-off" style="font-size:28px;display:block;margin-bottom:8px"></i>ไม่พบเครื่องมือที่ค้นหา</div>';
+    return;
   }
+  filtered.forEach(t=>{
+    const d=document.createElement('div');
+    d.className='tool-row';
+    const e=entries[t.idx];
+    let statusDot='<span class="dot-none" title="ยังไม่บันทึก"></span>';
+    if(e) statusDot='<span class="dot-ok" title="บันทึกแล้ว"></span>';
+    const thumbHtml=images[t.idx]
+      ?`<div class="tool-row-thumb"><img src="${images[t.idx]}" alt=""></div>`
+      :`<div class="tool-row-thumb"><i class="ti ti-tool" aria-hidden="true"></i></div>`;
+    d.innerHTML=`${thumbHtml}<div class="tool-row-info"><div class="tool-row-name">${t.name}</div><div class="tool-row-cat">${t.cat}</div></div><div class="tool-row-status">${statusDot}<i class="ti ti-chevron-right" style="font-size:14px;color:#C5C1DC"></i></div>`;
+    d.onclick=()=>jumpToTool(t.idx);
+    list.appendChild(d);
+  });
+}
+function jumpToTool(idx){
+  current=idx;
+  setMode('checkin');
+}
 
-  if(bgImg.src===origUrl && bgImg.complete && bgImg.naturalWidth){
-    initCrop();
+/* ---- LOC ---- */
+function renderLocSelect(selected){
+  const sel=document.getElementById('loc-select');
+  const cur=selected!==undefined?selected:sel.value;
+  sel.innerHTML='<option value="">— เลือกสถานที่ —</option>';
+  locations.forEach(l=>{const o=document.createElement('option');o.value=l;o.textContent=l;sel.appendChild(o);});
+  const co=document.createElement('option');co.value='__custom__';co.textContent='พิมพ์เอง...';sel.appendChild(co);
+  if(cur) sel.value=cur;
+}
+function renderLocTags(){
+  const ct=document.getElementById('loc-tags');ct.innerHTML='';
+  locations.forEach((l,i)=>{
+    const t=document.createElement('div');t.className='loc-tag';
+    t.innerHTML=`${l}<button onclick="removeLocation(${i})" title="ลบ"><i class="ti ti-x" style="font-size:11px"></i></button>`;
+    ct.appendChild(t);
+  });
+}
+function addLocation(){
+  const inp=document.getElementById('loc-new');const v=inp.value.trim();
+  if(!v||locations.includes(v))return;
+  locations.push(v);inp.value='';
+  renderLocSelect(v);document.getElementById('loc-custom').style.display='none';renderLocTags();
+}
+function removeLocation(i){
+  const removed=locations[i];locations.splice(i,1);
+  const cur=document.getElementById('loc-select').value;
+  renderLocSelect(cur===removed?'':cur);renderLocTags();
+}
+function onLocChange(){
+  const v=document.getElementById('loc-select').value;
+  const ci=document.getElementById('loc-custom');
+  ci.style.display=v==='__custom__'?'block':'none';
+  if(v!=='__custom__') ci.value='';
+}
+function onEmpChange(){
+  const v=document.getElementById('emp-select').value;
+  const ci=document.getElementById('emp-custom');
+  ci.style.display=v==='__custom__'?'block':'none';
+  if(v!=='__custom__') ci.value='';
+}
+function getEmp(){
+  const v=document.getElementById('emp-select').value;
+  if(v==='__custom__') return document.getElementById('emp-custom').value.trim();
+  return v;
+}
+function getLoc(){
+  const v=document.getElementById('loc-select').value;
+  if(v==='__custom__') return document.getElementById('loc-custom').value.trim();
+  return v;
+}
+
+/* ---- THUMB ---- */
+function onImgUpload(evt){
+  const file=evt.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{images[current]=e.target.result;showThumb(current);};
+  reader.readAsDataURL(file);
+}
+function showThumb(idx){
+  const area=document.getElementById('thumb-area');
+  if(images[idx]){
+    area.innerHTML=`<img src="${images[idx]}" alt="รูปอุปกรณ์"><div class="photo-overlay"><i class="ti ti-refresh"></i><span>เปลี่ยนรูป</span></div>`;
   } else {
-    bgImg.onload=initCrop;
-    bgImg.src=origUrl;
+    area.innerHTML=`<i class="ti ti-camera" style="font-size:34px;color:#9F96DA" aria-hidden="true"></i><span class="photo-hint">แตะเพื่ออัปโหลดรูปอุปกรณ์</span><div class="photo-overlay"><i class="ti ti-refresh"></i><span>เปลี่ยนรูป</span></div>`;
   }
+  area.onclick=()=>document.getElementById('img-input').click();
 }
 
-function cancelCrop(){ show('addScreen'); }
-
-/* Re-draw all DOM positions from CS.box */
-function updateCropUI(){
-  var b=CS.box;
-  var ir=CS.imgRect;
-  var stage=document.getElementById('cropStage');
-  var sr=stage.getBoundingClientRect();
-
-  // offset of image inside stage
-  var ox=ir.left-sr.left;
-  var oy=ir.top-sr.top;
-
-  // absolute coords of box in stage
-  var bx=ox+b.x, by=oy+b.y, bw=b.w, bh=b.h;
-
-  var box=document.getElementById('cropBox');
-  box.style.left=bx+'px';
-  box.style.top=by+'px';
-  box.style.width=bw+'px';
-  box.style.height=bh+'px';
-
-  // masks
-  var mT=document.getElementById('mTop');
-  var mB=document.getElementById('mBottom');
-  var mL=document.getElementById('mLeft');
-  var mR=document.getElementById('mRight');
-
-  mT.style.cssText='position:absolute;background:rgba(0,0,0,.55);pointer-events:none;'
-    +'top:0;left:0;right:0;height:'+by+'px;';
-  mB.style.cssText='position:absolute;background:rgba(0,0,0,.55);pointer-events:none;'
-    +'left:0;right:0;bottom:0;top:'+(by+bh)+'px;';
-  mL.style.cssText='position:absolute;background:rgba(0,0,0,.55);pointer-events:none;'
-    +'left:0;width:'+bx+'px;top:'+by+'px;height:'+bh+'px;';
-  mR.style.cssText='position:absolute;background:rgba(0,0,0,.55);pointer-events:none;'
-    +'right:0;left:'+(bx+bw)+'px;top:'+by+'px;height:'+bh+'px;';
-
-  // label
-  document.getElementById('cropLabel').textContent=
-    Math.round(bw/CS.scale)+'×'+Math.round(bh/CS.scale)+' px';
-}
-
-/* Clamp box to image bounds, min 40px */
-function clampBox(b){
-  var iw=CS.imgRect.width, ih=CS.imgRect.height;
-  b.w=Math.max(40,Math.min(b.w,iw));
-  b.h=Math.max(40,Math.min(b.h,ih));
-  b.x=Math.max(0,Math.min(b.x,iw-b.w));
-  b.y=Math.max(0,Math.min(b.y,ih-b.h));
-  return b;
-}
-
-/* Touch/mouse position from event */
-function ePoint(e){
-  var t=e.touches?e.touches[0]:(e.changedTouches?e.changedTouches[0]:e);
-  return {x:t.clientX, y:t.clientY};
-}
-
-/* Pointer down on a handle */
-function onHandleDown(e){
-  e.preventDefault(); e.stopPropagation();
-  var h=e.currentTarget.dataset.h;
-  var p=ePoint(e);
-  CS.drag={handle:h, startX:p.x, startY:p.y, origBox:Object.assign({},CS.box)};
-}
-
-/* Pointer down on the box itself (move) */
-function onBoxDown(e){
-  if(e.target.dataset.h) return; // let handle handle it
-  e.preventDefault();
-  var p=ePoint(e);
-  CS.drag={handle:'move', startX:p.x, startY:p.y, origBox:Object.assign({},CS.box)};
-}
-
-/* Pointer move anywhere on document */
-function onDocMove(e){
-  if(!CS.drag) return;
-  e.preventDefault();
-  var p=ePoint(e);
-  var dx=p.x-CS.drag.startX, dy=p.y-CS.drag.startY;
-  var o=CS.drag.origBox;
-  var nb=Object.assign({},o);
-
-  switch(CS.drag.handle){
-    case 'move': nb.x=o.x+dx; nb.y=o.y+dy; break;
-    case 'tl':   nb.x=o.x+dx; nb.y=o.y+dy; nb.w=o.w-dx; nb.h=o.h-dy; break;
-    case 'tr':                 nb.y=o.y+dy; nb.w=o.w+dx; nb.h=o.h-dy; break;
-    case 'bl':   nb.x=o.x+dx;              nb.w=o.w-dx; nb.h=o.h+dy; break;
-    case 'br':                              nb.w=o.w+dx; nb.h=o.h+dy; break;
-    case 't':                  nb.y=o.y+dy;              nb.h=o.h-dy; break;
-    case 'b':                                             nb.h=o.h+dy; break;
-    case 'l':    nb.x=o.x+dx;              nb.w=o.w-dx;               break;
-    case 'r':                              nb.w=o.w+dx;               break;
-  }
-  CS.box=clampBox(nb);
-  updateCropUI();
-}
-function onDocUp(){ CS.drag=null; }
-
-/* Attach handle events */
-document.querySelectorAll('.ch').forEach(function(h){
-  h.addEventListener('touchstart', onHandleDown, {passive:false});
-  h.addEventListener('mousedown',  onHandleDown);
-});
-document.getElementById('cropBox').addEventListener('touchstart', onBoxDown, {passive:false});
-document.getElementById('cropBox').addEventListener('mousedown',  onBoxDown);
-document.addEventListener('touchmove',  onDocMove, {passive:false});
-document.addEventListener('mousemove',  onDocMove);
-document.addEventListener('touchend',   onDocUp);
-document.addEventListener('mouseup',    onDocUp);
-
-/* Reset / select-all buttons */
-function cropReset(){
-  var iw=CS.imgRect.width, ih=CS.imgRect.height;
-  CS.box={x:Math.round(iw*.1), y:Math.round(ih*.1), w:Math.round(iw*.8), h:Math.round(ih*.8)};
-  updateCropUI();
-}
-function cropSelectAll(){
-  CS.box={x:0, y:0, w:CS.imgRect.width, h:CS.imgRect.height};
-  updateCropUI();
-}
-
-/* Confirm — render crop on offscreen canvas */
-function confirmCrop(){
-  var b=CS.box;
-  if(b.w<20||b.h<20){ showToast('⚠️ พื้นที่เล็กเกินไป'); return; }
-
-  var realX=b.x/CS.scale, realY=b.y/CS.scale;
-  var realW=b.w/CS.scale, realH=b.h/CS.scale;
-
-  var src=new Image();
-  src.onload=function(){
-    var out=document.createElement('canvas');
-    out.width=Math.round(realW); out.height=Math.round(realH);
-    out.getContext('2d').drawImage(src, realX, realY, realW, realH, 0, 0, realW, realH);
-    pending=out.toDataURL('image/jpeg',0.93);
-    document.getElementById('previewImg').src=pending;
-    document.getElementById('cropBadge').style.display='block';
-    document.getElementById('restoreBtn').style.display='flex';
-    show('addScreen');
-    showToast('✂️ ตัดภาพสำเร็จแล้ว!');
-  };
-  src.src=origUrl; // always crop from original
-}
-
-/* ============================================================
-   SAVE / DELETE
-============================================================ */
-function saveSong(){
-  var name=document.getElementById('songName').value.trim()||'ไม่มีชื่อ';
-  var artist=document.getElementById('artistName').value.trim();
-  if(!pending){ showToast('กรุณาเลือกภาพก่อน'); return; }
-  var btn=document.getElementById('saveBtn');
-  btn.disabled=true; btn.textContent='⏳ กำลังบันทึก…';
-  var s={id:'s'+Date.now(), name:name, artist:artist, img:pending};
-  songs.push(s);
-  _putSong(s, function(){
-    btn.disabled=false; btn.textContent='บันทึกเพลง';
-    render(); goHome();
-    showToast('💾 บันทึก "'+name+'" แล้ว');
-  });
-}
-function delSong(i){
-  if(confirm('ลบ "'+songs[i].name+'" ?')){
-    var id=songs[i].id;
-    songs.splice(i,1);
-    _delSong(id, function(){ render(); });
-    render();
-  }
-}
-
-/* ============================================================
-   VIEW
-============================================================ */
-function openSong(i, playlist, plIdx){
-  var s=songs[i];
-  // set playlist context
-  if(playlist !== undefined){
-    currentPlaylist=playlist;
-    currentPlIdx=plIdx;
+/* ---- LOAD TOOL ---- */
+function loadTool(idx){
+  const t=tools[idx];
+  document.getElementById('tool-name').textContent=t.name;
+  document.getElementById('tool-cat').textContent=t.cat;
+  document.getElementById('prog').textContent=`${idx+1} / ${tools.length}`;
+  document.getElementById('btn-prev').disabled=idx===0;
+  document.getElementById('btn-next').disabled=idx===tools.length-1;
+  showThumb(idx);document.getElementById('img-input').value='';
+  const e=entries[idx];
+  const presetEmps=['ประสง','อำนาจ','ณัฐพล','วิทยา','ทวีศัก','บำรุง','ชูเกียรติ'];
+  if(e){
+    if(presetEmps.includes(e.emp)){document.getElementById('emp-select').value=e.emp;document.getElementById('emp-custom').style.display='none';}
+    else{document.getElementById('emp-select').value='__custom__';document.getElementById('emp-custom').style.display='block';document.getElementById('emp-custom').value=e.emp;}
+    if(locations.includes(e.location)){renderLocSelect(e.location);document.getElementById('loc-custom').style.display='none';}
+    else if(e.location){renderLocSelect('__custom__');document.getElementById('loc-custom').style.display='block';document.getElementById('loc-custom').value=e.location;}
+    else{renderLocSelect('');document.getElementById('loc-custom').style.display='none';}
+    showSavedBadge(true);
   } else {
-    currentPlaylist=null;
-    currentPlIdx=0;
-  }
-  document.getElementById('vTitle').textContent=s.name;
-  document.getElementById('viewImg').src=s.img;
-  zoomLvl=100;
-  document.getElementById('zPct').textContent='100%';
-  document.getElementById('viewImg').style.width='100%';
-  document.getElementById('imgScroll').scrollTop=0;
-  stopScroll();
-  document.getElementById('scrollBtn').textContent='▶ เลื่อน';
-  document.getElementById('scrollBtn').classList.remove('on');
-  show('viewScreen');
-  acquireWake();
-  updatePlaylistNav();
-  renderUpnext();
-}
-
-function updatePlaylistNav(){
-  var hasPl = !!currentPlaylist;
-  var prevBtn=document.getElementById('prevSongBtn');
-  var nextBtn=document.getElementById('nextSongBtn');
-  prevBtn.style.display=hasPl?'inline-block':'none';
-  nextBtn.style.display=hasPl?'inline-block':'none';
-  if(hasPl){
-    prevBtn.style.opacity = currentPlIdx>0 ? '1':'0.3';
-    nextBtn.style.opacity = currentPlIdx<currentPlaylist.length-1 ? '1':'0.3';
-  }
-  var panel=document.getElementById('upnextPanel');
-  if(hasPl){ panel.classList.add('open'); } else { panel.classList.remove('open'); }
-}
-
-function renderUpnext(){
-  var list=document.getElementById('upnextList');
-  list.innerHTML='';
-  if(!currentPlaylist) return;
-  currentPlaylist.forEach(function(songIdx,pi){
-    var s=songs[songIdx];
-    if(!s) return;
-    var item=document.createElement('div');
-    item.className='upnext-item'+(pi===currentPlIdx?' current':'');
-    item.innerHTML='<div class="upnext-num">'+(pi+1)+'</div>'
-      +'<div class="upnext-name">'+escHtml(s.name)+'</div>'
-      +'<div class="upnext-artist">'+(s.artist||'–')+'</div>';
-    var idx=pi;
-    item.addEventListener('click',function(){ jumpPlaylist(idx); });
-    list.appendChild(item);
-  });
-  // scroll current into view
-  setTimeout(function(){
-    var items=list.querySelectorAll('.upnext-item');
-    if(items[currentPlIdx]) items[currentPlIdx].scrollIntoView({inline:'center',behavior:'smooth'});
-  },100);
-}
-
-function toggleUpnext(){
-  document.getElementById('upnextPanel').classList.remove('open');
-}
-
-function playlistNext(){
-  if(!currentPlaylist||currentPlIdx>=currentPlaylist.length-1) return;
-  jumpPlaylist(currentPlIdx+1);
-}
-function playlistPrev(){
-  if(!currentPlaylist||currentPlIdx<=0) return;
-  jumpPlaylist(currentPlIdx-1);
-}
-function jumpPlaylist(pi){
-  var songIdx=currentPlaylist[pi];
-  openSong(songIdx, currentPlaylist, pi);
-}
-
-/* ============================================================
-   PLAYLIST MANAGEMENT
-============================================================ */
-function goNewPlaylist(){
-  editingPlIdx=-1;
-  epSelected=[];
-  document.getElementById('epName').value='';
-  renderEpSongs();
-  document.getElementById('epTitle').textContent='สร้างกลุ่มเพลง';
-  show('editPlaylist');
-}
-function goEditPlaylist(pi){
-  editingPlIdx=pi;
-  var pl=playlists[pi];
-  document.getElementById('epName').value=pl.name;
-  // epSelected = indices into songs[] in order
-  epSelected=pl.songIds.map(function(id){
-    return songs.findIndex(function(s){ return s.id===id; });
-  }).filter(function(i){ return i>=0; });
-  renderEpSongs();
-  document.getElementById('epTitle').textContent='แก้ไขกลุ่มเพลง';
-  show('editPlaylist');
-}
-function renderEpSongs(){
-  var list=document.getElementById('epSongList');
-  var empty=document.getElementById('epEmpty');
-  list.innerHTML='';
-  if(!songs.length){ empty.style.display='block'; return; }
-  empty.style.display='none';
-  songs.forEach(function(s,i){
-    var orderIdx=epSelected.indexOf(i);
-    var isOn=orderIdx>=0;
-    var row=document.createElement('div');
-    row.className='ep-song-row';
-    row.innerHTML='<div class="song-icon ep-song-icon" style="width:38px;height:38px;font-size:18px;">🎵</div>'
-      +'<div class="ep-song-info"><div class="ep-song-name">'+escHtml(s.name)+'</div>'
-      +'<div class="ep-song-artist">'+(s.artist||'ไม่ระบุศิลปิน')+'</div></div>'
-      +(isOn?'<div class="ep-order-badge">'+(orderIdx+1)+'</div>':'')
-      +'<div class="ep-check'+(isOn?' on':'')+'">'+( isOn?'✓':'')+'</div>';
-    var idx=i;
-    row.addEventListener('click',function(){
-      var pos=epSelected.indexOf(idx);
-      if(pos>=0){ epSelected.splice(pos,1); } else { epSelected.push(idx); }
-      renderEpSongs();
-    });
-    list.appendChild(row);
-  });
-}
-function savePlaylist(){
-  var name=document.getElementById('epName').value.trim()||'กลุ่มเพลงใหม่';
-  if(!epSelected.length){ showToast('⚠️ กรุณาเลือกเพลงอย่างน้อย 1 เพลง'); return; }
-  var songIds=epSelected.map(function(i){ return songs[i].id; });
-  if(editingPlIdx>=0){
-    playlists[editingPlIdx]={name:name,songIds:songIds};
-    showToast('✅ บันทึก "'+name+'" แล้ว');
-  } else {
-    playlists.push({id:'pl'+Date.now(),name:name,songIds:songIds});
-    showToast('✅ สร้าง "'+name+'" แล้ว');
-  }
-  persistPlaylists();
-  goHome();
-  switchTab('playlists');
-}
-function delPlaylist(pi){
-  if(confirm('ลบกลุ่มเพลง "'+playlists[pi].name+'" ?')){
-    playlists.splice(pi,1); persistPlaylists(); renderPlaylists();
+    document.getElementById('emp-select').value='';document.getElementById('emp-custom').style.display='none';document.getElementById('emp-custom').value='';
+    renderLocSelect('');document.getElementById('loc-custom').style.display='none';document.getElementById('loc-custom').value='';
+    showSavedBadge(false);
   }
 }
-function playPlaylist(pi){
-  var pl=playlists[pi];
-  var indices=pl.songIds.map(function(id){
-    return songs.findIndex(function(s){ return s.id===id; });
-  }).filter(function(i){ return i>=0; });
-  if(!indices.length){ showToast('⚠️ ไม่มีเพลงในกลุ่มนี้'); return; }
-  openSong(indices[0], indices, 0);
+function showSavedBadge(show){document.getElementById('saved-badge').style.display=show?'block':'none';}
+function submitEntry(){
+  const emp=getEmp();
+  const empSel=document.getElementById('emp-select');
+  if(!emp){empSel.style.borderColor='#E87B6A';return;}
+  empSel.style.borderColor='';
+  entries[current]={tool:tools[current].name,cat:tools[current].cat,emp,location:getLoc(),datetime:getNow()};
+  showSavedBadge(true);
+  if(current<tools.length-1) setTimeout(()=>changeTool(1),350);
 }
-function zoom(d){
-  zoomLvl=Math.max(50,Math.min(400,zoomLvl+d));
-  document.getElementById('zPct').textContent=zoomLvl+'%';
-  document.getElementById('viewImg').style.width=zoomLvl+'%';
-}
-function toggleScroll(){
-  if(scrollTmr){
-    stopScroll();
-    document.getElementById('scrollBtn').textContent='▶ เลื่อน';
-    document.getElementById('scrollBtn').classList.remove('on');
-  } else {
-    startScroll();
-    document.getElementById('scrollBtn').textContent='⏸ หยุด';
-    document.getElementById('scrollBtn').classList.add('on');
-  }
-}
-function startScroll(){
-  var spd=parseInt(document.getElementById('speedSlider').value);
-  // px per tick (every 30ms): level 1=0.2px, level 10=2px
-  var pxPerTick = spd * 0.2;
-  var body=document.getElementById('imgScroll');
-  scrollTmr=setInterval(function(){
-    body.scrollTop+=pxPerTick;
-    if(body.scrollTop+body.clientHeight>=body.scrollHeight-4){
-      stopScroll();
-      document.getElementById('scrollBtn').textContent='▶ เลื่อน';
-      document.getElementById('scrollBtn').classList.remove('on');
-    }
-  },30);
-}
-function stopScroll(){ if(scrollTmr){ clearInterval(scrollTmr); scrollTmr=null; } }
-function restartIfOn(){ if(scrollTmr){ stopScroll(); startScroll(); } }
+function skipEntry(){entries[current]=null;showSavedBadge(false);if(current<tools.length-1) changeTool(1);}
+function changeTool(dir){current=Math.max(0,Math.min(tools.length-1,current+dir));loadTool(current);}
 
-// double-tap fullscreen
-var lastTap=0;
-document.getElementById('imgScroll').addEventListener('touchend',function(e){
-  var now=Date.now();
-  if(now-lastTap<300){
-    var el=document.getElementById('viewScreen');
-    if(!document.fullscreenElement&&!document.webkitFullscreenElement){
-      if(el.requestFullscreen) el.requestFullscreen();
-      else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+/* ---- ADD TOOL ---- */
+function toggleAddTool(){
+  const body=document.getElementById('add-tool-body');
+  const chev=document.getElementById('add-tool-chevron');
+  const open=body.classList.toggle('open');
+  chev.className=open?'ti ti-chevron-up chev':'ti ti-chevron-down chev';
+}
+function addNewTool(){
+  const name=document.getElementById('new-tool-name').value.trim();
+  const cat=document.getElementById('new-tool-cat').value.trim()||'อื่นๆ';
+  if(!name){document.getElementById('new-tool-name').style.borderColor='#E87B6A';return;}
+  document.getElementById('new-tool-name').style.borderColor='';
+  tools.push({name,cat});entries.push(null);images.push(null);
+  document.getElementById('new-tool-name').value='';document.getElementById('new-tool-cat').value='';
+  document.getElementById('add-tool-body').classList.remove('open');
+  document.getElementById('add-tool-chevron').className='ti ti-chevron-down chev';
+  renderCatStrip();renderList();
+}
+
+/* ---- SUMMARY ---- */
+function showSummary(){
+  const saved=entries.filter(Boolean);
+  document.getElementById('sum-count').textContent=`บันทึกแล้ว ${saved.length} รายการ จาก ${tools.length} รายการ`;
+  const list=document.getElementById('summary-list');list.innerHTML='';
+  tools.forEach((t,i)=>{
+    const e=entries[i];const d=document.createElement('div');d.className='sum-item';
+    if(e){
+      d.innerHTML=`<span class="sum-num">${i+1}</span><div class="sum-body"><div class="sum-name">${t.name}</div><div class="sum-meta"><i class="ti ti-user" style="font-size:11px"></i> ${e.emp} &nbsp;<i class="ti ti-map-pin" style="font-size:11px"></i> ${e.location||'—'} &nbsp;<i class="ti ti-clock" style="font-size:11px"></i> ${e.datetime}</div><span class="badge-ok">✓ บันทึก</span></div>`;
     } else {
-      if(document.exitFullscreen) document.exitFullscreen();
-      else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+      d.innerHTML=`<span class="sum-num" style="opacity:.35">${i+1}</span><div class="sum-body" style="opacity:.45"><div class="sum-name">${t.name}</div><span class="badge-skip">ข้าม</span></div>`;
     }
-    lastTap=0;
-  } else { lastTap=now; }
-});
-
-async function acquireWake(){
-  var pill=document.getElementById('wakePill');
-  try{
-    if('wakeLock' in navigator){
-      wakeLock=await navigator.wakeLock.request('screen');
-      pill.style.display='inline-block';
-      wakeLock.addEventListener('release',function(){ pill.style.display='none'; });
-    }
-  }catch(e){ pill.style.display='none'; }
-}
-
-/* ============================================================
-   PWA — inject manifest blob + register service worker
-============================================================ */
-(function(){
-  // ── App icon (simple SVG guitar emoji style) ──
-  var iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#1a1a1a"/><text y="340" x="256" text-anchor="middle" font-size="300">🎸</text></svg>';
-  var iconBlob = new Blob([iconSvg], {type:'image/svg+xml'});
-  var iconUrl  = URL.createObjectURL(iconBlob);
-
-  // apple-touch-icon
-  document.getElementById('appleIcon').href = iconUrl;
-
-  // ── Manifest ──
-  var manifest = {
-    name: 'คอร์ดของฉัน',
-    short_name: 'คอร์ด',
-    description: 'เก็บภาพเนื้อเพลง + คอร์ดกีตาร์ส่วนตัว',
-    start_url: location.href,
-    display: 'standalone',
-    orientation: 'portrait',
-    background_color: '#1a1a1a',
-    theme_color: '#1a1a1a',
-    icons: [
-      {src: iconUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable'}
-    ]
-  };
-  var mBlob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
-  var mUrl  = URL.createObjectURL(mBlob);
-  document.getElementById('manifestLink').href = mUrl;
-
-  // ── Service Worker (inline via blob) ──
-  var swCode = [
-    'var CACHE="chords-v1";',
-    'self.addEventListener("install",function(e){',
-    '  e.waitUntil(caches.open(CACHE).then(function(c){',
-    '    return c.addAll([location.href]);',
-    '  }));',
-    '  self.skipWaiting();',
-    '});',
-    'self.addEventListener("activate",function(e){',
-    '  e.waitUntil(clients.claim());',
-    '});',
-    'self.addEventListener("fetch",function(e){',
-    '  e.respondWith(',
-    '    caches.match(e.request).then(function(r){ return r||fetch(e.request); })',
-    '  );',
-    '});'
-  ].join('\n');
-  if('serviceWorker' in navigator){
-    var swBlob = new Blob([swCode], {type:'application/javascript'});
-    var swUrl  = URL.createObjectURL(swBlob);
-    navigator.serviceWorker.register(swUrl, {scope: '/'}).catch(function(){});
-  }
-})();
-
-/* ── Install prompt (Android Chrome) ── */
-var deferredInstall = null;
-window.addEventListener('beforeinstallprompt', function(e){
-  e.preventDefault();
-  deferredInstall = e;
-  document.getElementById('installBar').style.display = 'flex';
-});
-window.addEventListener('appinstalled', function(){
-  document.getElementById('installBar').style.display = 'none';
-  showToast('✅ ติดตั้งแอปสำเร็จแล้ว!');
-});
-function installApp(){
-  if(deferredInstall){
-    deferredInstall.prompt();
-    deferredInstall.userChoice.then(function(){ deferredInstall=null; });
-  }
-}
-
-/* ── iOS hint (all browsers on iOS, not standalone) ── */
-(function(){
-  var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  var isStandalone = ('standalone' in navigator) && navigator.standalone;
-  if(isIos && !isStandalone){
-    document.getElementById('iosBar').style.display = 'block';
-  }
-})();
-document.querySelectorAll('.screen').forEach(function(s){ s.style.display='none'; });
-load();
-show('home');
-
-/* ============================================================
-   LOOP PEDAL  — tap once to record, tap again to stop+loop
-   Each track is independent. First track sets the loop length.
-============================================================ */
-var LP = {
-  audioCtx:    null,
-  tracks:      [],   // array of track objects
-  loopLength:  0,    // seconds; set when first track finishes recording
-  loopStart:   0,    // audioCtx.currentTime when playback began
-  isPlaying:   false,
-  trackCounter:0
-};
-
-/* ── Boot ── */
-function goLoopRecorder(){
-  show('loopScreen');
-  if(!LP.audioCtx){
-    LP.audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-    if(!LP.tracks.length) lpAddTrack();
-  }
-  lpUpdateStatus();
-}
-
-/* ── AudioContext resume (needed after user gesture on iOS) ── */
-function lpEnsureCtx(){
-  if(LP.audioCtx && LP.audioCtx.state==='suspended') LP.audioCtx.resume();
-}
-
-/* ── Status bar ── */
-function lpUpdateStatus(){
-  var el=document.getElementById('lpStatusTxt');
-  if(!el) return;
-  var anyRec = LP.tracks.some(function(t){ return t.recording; });
-  var anyPlay= LP.isPlaying;
-  if(anyRec){
-    el.textContent='⏺ กำลังอัดเสียง… กดปุ่มอีกครั้งเพื่อหยุดและวนลูป';
-    el.className='lp-status-txt rec';
-  } else if(anyPlay){
-    var loopSec = LP.loopLength>0 ? LP.loopLength.toFixed(1)+'s' : '';
-    el.textContent='▶ วนลูปอยู่'+( loopSec?' ('+loopSec+')'  :'');
-    el.className='lp-status-txt active';
-  } else {
-    el.textContent='พร้อมใช้งาน — กดปุ่ม ⏺ บนแทร็กเพื่อเริ่มอัด';
-    el.className='lp-status-txt';
-  }
-}
-
-/* ═══════════════════════════════════════════
-   TAP — single button does everything
-   EMPTY  → start recording
-   REC    → stop + loop immediately
-   PLAYING→ mute/unmute (double-tap to re-record: long press handled by re-rec btn)
-═══════════════════════════════════════════ */
-function lpTap(id){
-  lpEnsureCtx();
-  var t = LP.tracks.find(function(x){ return x.id===id; });
-  if(!t) return;
-
-  if(t.recording){
-    // ── STOP recording → finalise → loop ──
-    lpStopRec(t);
-  } else if(!t.buffer){
-    // ── START recording ──
-    lpStartRec(t);
-  } else {
-    // ── has audio: mute/unmute ──
-    lpToggleMute(id);
-  }
-}
-
-/* ═══════════════════════════════════════════
-   RECORDING
-═══════════════════════════════════════════ */
-function lpStartRec(t){
-  navigator.mediaDevices.getUserMedia({audio:true,video:false}).then(function(stream){
-    t.stream   = stream;
-    t.chunks   = [];
-    t.recording= true;
-    t.recStart = LP.audioCtx.currentTime;
-    var mime   = lpGetMime();
-    var mr     = new MediaRecorder(stream, mime?{mimeType:mime}:{});
-    mr.ondataavailable = function(e){ if(e.data.size>0) t.chunks.push(e.data); };
-    mr.onstop  = function(){ lpFinalise(t); };
-    mr.start(100); // collect every 100ms for low latency
-    t.mediaRec = mr;
-    lpRenderTrackState(t);
-    lpUpdateStatus();
-  }).catch(function(err){
-    var msg='🎤 ไมค์: ';
-    if(err.name==='NotAllowedError'||err.name==='PermissionDeniedError')
-      msg='🚫 ไม่ได้รับอนุญาตใช้ไมค์ — กรุณาอนุญาตในการตั้งค่าเบราว์เซอร์';
-    else if(err.name==='NotFoundError')
-      msg='🎤 ไม่พบไมค์ในอุปกรณ์นี้';
-    else msg='⚠️ '+err.message;
-    showToast(msg);
+    list.appendChild(d);
   });
+  document.getElementById('form-view').classList.add('hidden');
+  document.getElementById('summary-view').classList.remove('hidden');
+}
+function backToForm(){
+  document.getElementById('summary-view').classList.add('hidden');
+  document.getElementById('form-view').classList.remove('hidden');
+}
+function exportCSV(){
+  let csv='ลำดับ,ชื่ออุปกรณ์,หมวดหมู่,พนักงาน,สถานที่,วันที่และเวลา\n';
+  entries.forEach((e,i)=>{if(e) csv+=`${i+1},"${e.tool}","${e.cat}","${e.emp}","${e.location||''}","${e.datetime}"\n`;});
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='tooltrack_checkin.csv';a.click();
+  URL.revokeObjectURL(url);
 }
 
-function lpStopRec(t){
-  if(!t.recording) return;
-  t.recording=false;
-  if(t.mediaRec && t.mediaRec.state!=='inactive') t.mediaRec.stop();
-  if(t.stream) t.stream.getTracks().forEach(function(tr){ tr.stop(); });
-  lpRenderTrackState(t);
-  lpUpdateStatus();
+renderLocSelect();renderLocTags();renderCatStrip();renderList();setMode('browse');updateClock();setInterval(updateClock,30000);
+
+// PWA: register service worker
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
-
-function lpGetMime(){
-  var types=['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4'];
-  for(var i=0;i<types.length;i++){ if(MediaRecorder.isTypeSupported(types[i])) return types[i]; }
-  return '';
-}
-
-/* ── Finalise: decode → set loopLength → start playing ── */
-function lpFinalise(t){
-  var blob = new Blob(t.chunks,{type: lpGetMime()||'audio/webm'});
-  var url  = URL.createObjectURL(blob);
-  var duration = LP.audioCtx.currentTime - t.recStart;
-  if(duration < 0.3){ showToast('⚠️ อัดสั้นเกินไป กรุณาลองใหม่'); lpRenderTrackState(t); return; }
-
-  // If this is the FIRST track, it defines the loop length
-  if(LP.loopLength===0){
-    LP.loopLength = duration;
-    LP.loopStart  = t.recStart; // loop reference point
-  }
-
-  fetch(url).then(function(r){ return r.arrayBuffer(); }).then(function(ab){
-    LP.audioCtx.decodeAudioData(ab, function(buf){
-      // Trim/pad buffer to exactly loopLength
-      var sr       = buf.sampleRate;
-      var samples  = Math.round(LP.loopLength * sr);
-      var trimmed  = LP.audioCtx.createBuffer(1, samples, sr);
-      var src      = buf.getChannelData(0);
-      var dst      = trimmed.getChannelData(0);
-      for(var i=0;i<samples;i++) dst[i] = i<src.length ? src[i] : 0;
-      t.buffer = trimmed;
-      URL.revokeObjectURL(url);
-
-      lpDrawWave(t);
-      lpStartPlayback(t);
-      lpRenderTrackState(t);
-      lpUpdateStatus();
-      showToast('✅ วนลูปแล้ว!');
-    }, function(){ showToast('⚠️ ถอดรหัสเสียงไม่สำเร็จ'); });
-  });
-}
-
-/* ═══════════════════════════════════════════
-   PLAYBACK
-═══════════════════════════════════════════ */
-function lpStartPlayback(t){
-  if(!t.buffer) return;
-  lpStopSource(t);
-  var src = LP.audioCtx.createBufferSource();
-  src.buffer  = t.buffer;
-  src.loop    = true;
-  src.loopEnd = LP.loopLength;
-  src.connect(t.gainNode);
-  // Sync to loop phase so all tracks align
-  var phase = LP.loopLength>0
-    ? (LP.audioCtx.currentTime - LP.loopStart) % LP.loopLength
-    : 0;
-  if(phase<0) phase=0;
-  src.start(0, phase);
-  t.sourceNode = src;
-  LP.isPlaying = true;
-  lpAnimatePh(t);
-}
-
-function lpStopSource(t){
-  if(t.sourceNode){ try{ t.sourceNode.stop(); }catch(e){} t.sourceNode=null; }
-}
-
-function lpStopAllPlayback(){
-  LP.tracks.forEach(function(t){ lpStopSource(t); });
-  LP.isPlaying=false;
-}
-
-/* ── Playhead animation ── */
-function lpAnimatePh(t){
-  if(!t.sourceNode||!t.phEl||!LP.loopLength) return;
-  var loopLen = LP.loopLength;
-  var ref     = LP.loopStart;
-  var phEl    = t.phEl;
-  phEl.classList.add('on');
-  function frame(){
-    if(!t.sourceNode){ phEl.classList.remove('on'); return; }
-    var elapsed = (LP.audioCtx.currentTime - ref) % loopLen;
-    var pct = elapsed / loopLen;
-    var w   = t.waveCanvas ? (t.waveCanvas.offsetWidth||300) : 300;
-    phEl.style.left = (pct*w)+'px';
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-}
-
-/* ═══════════════════════════════════════════
-   WAVEFORM
-═══════════════════════════════════════════ */
-function lpDrawWave(t){
-  var c=t.waveCanvas;
-  if(!c||!t.buffer) return;
-  var W=c.width=c.offsetWidth||300;
-  var H=c.height=44;
-  var ctx2=c.getContext('2d');
-  ctx2.clearRect(0,0,W,H);
-  var data=t.buffer.getChannelData(0);
-  var step=Math.ceil(data.length/W);
-  var grad=ctx2.createLinearGradient(0,0,W,0);
-  grad.addColorStop(0,'#27ae60'); grad.addColorStop(1,'#2ecc71');
-  ctx2.strokeStyle=grad;
-  ctx2.lineWidth=1.5;
-  ctx2.beginPath();
-  for(var x=0;x<W;x++){
-    var max=0;
-    for(var j=0;j<step;j++){
-      var v=Math.abs(data[x*step+j]||0);
-      if(v>max) max=v;
-    }
-    var y=(1-max)*H/2;
-    var y2=(1+max)*H/2;
-    ctx2.moveTo(x+.5,y); ctx2.lineTo(x+.5,y2);
-  }
-  ctx2.stroke();
-}
-
-/* ═══════════════════════════════════════════
-   MUTE / VOLUME
-═══════════════════════════════════════════ */
-function lpToggleMute(id){
-  var t=LP.tracks.find(function(x){ return x.id===id; });
-  if(!t) return;
-  t.muted=!t.muted;
-  t.gainNode.gain.value = t.muted?0:t.volume;
-  lpRenderTrackState(t);
-}
-function lpSetVol(id,val){
-  var t=LP.tracks.find(function(x){ return x.id===id; });
-  if(!t) return;
-  t.volume=parseFloat(val);
-  if(!t.muted) t.gainNode.gain.value=t.volume;
-}
-
-/* ── Re-record a track (clears buffer, starts fresh) ── */
-function lpReRec(id){
-  var t=LP.tracks.find(function(x){ return x.id===id; });
-  if(!t) return;
-  lpStopSource(t);
-  t.buffer=null; t.muted=false;
-  if(t.gainNode) t.gainNode.gain.value=t.volume;
-  // clear waveform
-  if(t.waveCanvas){
-    var c=t.waveCanvas;
-    c.getContext('2d').clearRect(0,0,c.width,c.height);
-  }
-  if(t.phEl) t.phEl.classList.remove('on');
-  lpRenderTrackState(t);
-  lpUpdateStatus();
-  // If this was the only track with audio and no others remain, reset loop length
-  var anyBuf=LP.tracks.some(function(x){ return !!x.buffer; });
-  if(!anyBuf){ LP.loopLength=0; LP.isPlaying=false; }
-  // Start recording immediately
-  lpStartRec(t);
-}
-
-/* ═══════════════════════════════════════════
-   ADD / DELETE TRACK
-═══════════════════════════════════════════ */
-function lpAddTrack(){
-  if(!LP.audioCtx){
-    LP.audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-  }
-  LP.trackCounter++;
-  var id=LP.trackCounter;
-  var gainNode=LP.audioCtx.createGain();
-  gainNode.connect(LP.audioCtx.destination);
-  var t={
-    id:id, buffer:null, sourceNode:null, gainNode:gainNode,
-    muted:false, recording:false, mediaRec:null, chunks:[],
-    stream:null, recStart:0, volume:0.85,
-    waveCanvas:null, phEl:null, tapBtn:null
-  };
-  LP.tracks.push(t);
-  gainNode.gain.value=t.volume;
-
-  // ── Build DOM ──
-  var el=document.createElement('div');
-  el.className='lp-track';
-  el.id='lp-track-'+id;
-  el.innerHTML=
-    '<div class="lp-track-top">'
-      +'<div class="lp-track-num" id="lp-num-'+id+'">'+id+'</div>'
-      +'<span class="lp-track-label" id="lp-label-'+id+'">ว่าง — กด ⏺ เพื่อเริ่ม</span>'
-      +'<button class="lp-del-btn" onclick="lpDelTrack('+id+')" title="ลบแทร็ก">🗑</button>'
-    +'</div>'
-    +'<div class="lp-wave-wrap">'
-      +'<canvas class="lp-wave" id="lp-wave-'+id+'"></canvas>'
-      +'<div class="lp-ph" id="lp-ph-'+id+'"></div>'
-      +'<div class="lp-wave-hint" id="lp-hint-'+id+'">ยังไม่มีเสียง</div>'
-    +'</div>'
-    // BIG TAP BUTTON
-    +'<button class="lp-tap-btn s-empty" id="lp-tap-'+id+'" onclick="lpTap('+id+')">'
-      +'⏺ เริ่มอัดเสียง'
-    +'</button>'
-    +'<div class="lp-ctrl-row">'
-      +'<span style="font-size:13px;color:#444;">🔊</span>'
-      +'<input type="range" class="lp-vol" min="0" max="1" step="0.02" value="0.85" oninput="lpSetVol('+id+',this.value)">'
-      +'<button class="lp-mute" id="lp-mute-'+id+'" onclick="lpToggleMute('+id+')">Mute</button>'
-      +'<button style="background:#1a1a1a;border:1px solid #333;color:#888;border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;font-family:inherit;" '
-        +'id="lp-rerec-'+id+'" onclick="lpReRec('+id+')" style="display:none" title="อัดใหม่">↺ อัดใหม่</button>'
-    +'</div>';
-
-  document.getElementById('lpTracks').appendChild(el);
-  t.waveCanvas = document.getElementById('lp-wave-'+id);
-  t.phEl       = document.getElementById('lp-ph-'+id);
-  t.tapBtn     = document.getElementById('lp-tap-'+id);
-  return t;
-}
-
-function lpDelTrack(id){
-  var idx=LP.tracks.findIndex(function(x){ return x.id===id; });
-  if(idx<0) return;
-  var t=LP.tracks[idx];
-  if(t.recording) lpStopRec(t);
-  lpStopSource(t);
-  LP.tracks.splice(idx,1);
-  var el=document.getElementById('lp-track-'+id);
-  if(el) el.remove();
-  var anyBuf=LP.tracks.some(function(x){ return !!x.buffer; });
-  if(!anyBuf){ LP.loopLength=0; LP.isPlaying=false; }
-  lpUpdateStatus();
-}
-
-function lpClearAll(){
-  if(!confirm('ล้างเสียงทั้งหมด?')) return;
-  lpStopAllPlayback();
-  LP.tracks.forEach(function(t){
-    if(t.recording) lpStopRec(t);
-    lpStopSource(t);
-    t.buffer=null; t.muted=false;
-    if(t.gainNode) t.gainNode.gain.value=t.volume;
-    if(t.waveCanvas){
-      var c=t.waveCanvas;
-      c.getContext('2d').clearRect(0,0,c.width,c.height);
-    }
-    if(t.phEl) t.phEl.classList.remove('on');
-    lpRenderTrackState(t);
-  });
-  LP.loopLength=0;
-  lpUpdateStatus();
-  showToast('🗑 ล้างเสียงทั้งหมดแล้ว');
-}
-
-/* ═══════════════════════════════════════════
-   RENDER TRACK STATE → update all visual
-═══════════════════════════════════════════ */
-function lpRenderTrackState(t){
-  var el   = document.getElementById('lp-track-'+t.id);
-  var num  = document.getElementById('lp-num-'+t.id);
-  var lbl  = document.getElementById('lp-label-'+t.id);
-  var tapB = t.tapBtn;
-  var muteB= document.getElementById('lp-mute-'+t.id);
-  var hint = document.getElementById('lp-hint-'+t.id);
-  var rerecB = document.getElementById('lp-rerec-'+t.id);
-  if(!el) return;
-
-  // remove all state classes
-  el.classList.remove('state-rec','state-play','state-done');
-
-  if(t.recording){
-    el.classList.add('state-rec');
-    if(num){ num.className='lp-track-num rec'; num.textContent=t.id; }
-    if(lbl){ lbl.className='lp-track-label rec'; lbl.textContent='⏺ กำลังอัด… กดอีกครั้งเพื่อหยุด'; }
-    if(tapB){ tapB.className='lp-tap-btn s-rec'; tapB.innerHTML='⏹ หยุดอัด'; }
-    if(hint) hint.classList.add('hide');
-    if(rerecB) rerecB.style.display='none';
-  } else if(t.buffer && !t.muted){
-    el.classList.add('state-play');
-    if(num){ num.className='lp-track-num play'; num.textContent=t.id; }
-    if(lbl){ lbl.className='lp-track-label play'; lbl.textContent='▶ วนลูปอยู่ — กดเพื่อ Mute'; }
-    if(tapB){ tapB.className='lp-tap-btn s-play'; tapB.innerHTML='🔊 กำลังเล่น (กด = Mute)'; }
-    if(hint) hint.classList.add('hide');
-    if(rerecB) rerecB.style.display='inline-flex';
-  } else if(t.buffer && t.muted){
-    el.classList.add('state-done');
-    if(num){ num.className='lp-track-num'; num.textContent=t.id; }
-    if(lbl){ lbl.className='lp-track-label'; lbl.textContent='🔇 ปิดเสียงอยู่ — กดเพื่อเปิด'; }
-    if(tapB){ tapB.className='lp-tap-btn s-muted'; tapB.innerHTML='🔇 Muted (กด = เปิดเสียง)'; }
-    if(hint) hint.classList.add('hide');
-    if(rerecB) rerecB.style.display='inline-flex';
-  } else {
-    // empty
-    if(num){ num.className='lp-track-num'; num.textContent=t.id; }
-    if(lbl){ lbl.className='lp-track-label'; lbl.textContent='ว่าง — กด ⏺ เพื่อเริ่ม'; }
-    if(tapB){ tapB.className='lp-tap-btn s-empty'; tapB.innerHTML='⏺ เริ่มอัดเสียง'; }
-    if(hint){ hint.classList.remove('hide'); hint.textContent='ยังไม่มีเสียง'; }
-    if(rerecB) rerecB.style.display='none';
-  }
-  if(muteB){ muteB.classList.toggle('on',!!t.muted); muteB.textContent=t.muted?'Muted':'Mute'; }
-}
-
 </script>
 </body>
 </html>
-
